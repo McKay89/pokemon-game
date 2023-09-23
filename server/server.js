@@ -18,8 +18,12 @@ app.use(cors({origin:'http://localhost:5173'}));
 app.get('/api/testdata', (req, res) => {
     const data = {
         name: "Vulpix",
-        attack: 20
-    }
+        attack: 20,
+        desc: {
+            en: "Bulbasaur test description",
+            hu: "Bulbasaur teszt leírás"
+        }
+    };
     res.json(data);
 })
 
