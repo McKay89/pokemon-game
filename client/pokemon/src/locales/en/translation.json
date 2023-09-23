@@ -1,4 +1,7 @@
 {
     "hello_world": "Hello World !",
-    "goodbye_world": "Goodbye World !"
+    "goodbye_world": "Goodbye World !",
+    "please_select_language": "Please select your language:",
+    "language_english": "English",
+    "language_hungarian": "Hungarian"
 }

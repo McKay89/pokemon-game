@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { Outlet, Link } from "react-router-dom";
 
-export default function Main() {
+export default function Main({translation}) {
     const [testData, setTestData] = useState({});
 
     useEffect(() => {
