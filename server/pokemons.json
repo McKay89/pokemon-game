@@ -1,0 +1,71 @@
+[
+    {
+        "id": "1",
+        "name": "Bulbasaur",
+        "generation": "I",
+        "card_img": "/images/cards/generation1/card_bulbasaur.png",
+        "pokemon_img": "/images/pokemons/generation1/bulbasaur.png",
+        "type": ["grass", "poison"],
+        "desc": {
+            "english": "",
+            "hungarian": ""
+        },
+        "base_stats": {
+            "hp": 45,
+            "attack": 49,
+            "defense": 49,
+            "second_attack": 65,
+            "second_defense": 65,
+            "speed": 45,
+            "intelligence": 0
+        },
+        "height": 0.7,
+        "weight": 6.9
+    },
+    {
+        "id": "2",
+        "name": "Ivysaur",
+        "generation": "I",
+        "card_img": "/images/cards/generation1/card_ivysaur.png",
+        "pokemon_img": "/images/pokemons/generation1/ivysaur.png",
+        "type": ["grass", "poison"],
+        "desc": {
+            "english": "",
+            "hungarian": ""
+        },
+        "base_stats": {
+            "hp": 60,
+            "attack": 62,
+            "defense": 63,
+            "second_attack": 80,
+            "second_defense": 80,
+            "speed": 60,
+            "intelligence": 0
+        },
+        "height": 1.0,
+        "weight": 13.0
+    },
+    {
+        "id": "3",
+        "name": "Venusaur",
+        "generation": "I",
+        "card_img": "/images/cards/generation1/card_venusaur.png",
+        "pokemon_img": "/images/pokemons/generation1/venusaur.png",
+        "type": ["grass", "poison"],
+        "desc": {
+            "english": "",
+            "hungarian": ""
+        },
+        "base_stats": {
+            "hp": 80,
+            "attack": 82,
+            "defense": 83,
+            "second_attack": 100,
+            "second_defense": 100,
+            "speed": 80,
+            "intelligence": 0
+        },
+        "height": 2.0,
+        "weight": 100.0
+    }
+]
