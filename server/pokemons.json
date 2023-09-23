@@ -7,8 +7,8 @@
         "pokemon_img": "/images/pokemons/generation1/bulbasaur.png",
         "type": ["grass", "poison"],
         "desc": {
-            "english": "",
-            "hungarian": ""
+            "en": "Bulbasaur test description",
+            "hu": "Bulbasaur teszt leírás"
         },
         "base_stats": {
             "hp": 45,
@@ -30,8 +30,8 @@
         "pokemon_img": "/images/pokemons/generation1/ivysaur.png",
         "type": ["grass", "poison"],
         "desc": {
-            "english": "",
-            "hungarian": ""
+            "en": "Ivysaur test description",
+            "hu": "Ivysaur teszt leírás"
         },
         "base_stats": {
             "hp": 60,
@@ -53,8 +53,8 @@
         "pokemon_img": "/images/pokemons/generation1/venusaur.png",
         "type": ["grass", "poison"],
         "desc": {
-            "english": "",
-            "hungarian": ""
+            "en": "Venusaur test description",
+            "hu": "Venusaur teszt leírás"
         },
         "base_stats": {
             "hp": 80,
