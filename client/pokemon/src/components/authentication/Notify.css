@@ -1,0 +1,83 @@
+.notify-container-active {
+    position: relative;
+    width: 100%;
+    height: 0;
+    background: #5f5a0d;
+    user-select: none;
+    animation: fadeIn 0.2s ease-in 1;
+    animation-fill-mode: forwards;
+}
+
+.notify-container-inactive {
+    position: relative;
+    width: 100%;
+    height: 81px;
+    background: #5f5a0d;
+    user-select: none;
+    animation: fadeOut 0.2s ease-in 1;
+    animation-fill-mode: forwards;
+}
+
+.notify-container-active > span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    color: #fff;
+    width: 320px;
+    opacity: 0;
+    animation: fadeInText 0.2s ease-in 1;
+    animation-fill-mode: forwards;
+    animation-delay: 0.2s;
+}
+
+.notify-container-inactive > span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    color: #fff;
+    width: 320px;
+    opacity: 1;
+    animation: fadeOutText 0.2s ease-in 1;
+    animation-fill-mode: forwards;
+    animation-delay: 0.2s;
+}
+
+@keyframes fadeIn {
+    0% {
+        height: 0;
+    }
+    100% {
+        height: 81px;
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        height: 81px;
+    }
+    100% {
+        height: 0;
+    }
+}
+
+@keyframes fadeInText {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOutText {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
