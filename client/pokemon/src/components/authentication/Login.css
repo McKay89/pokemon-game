@@ -1,0 +1,113 @@
+.login-container {
+    position: relative;
+    left: -400px;
+    width: 100%;
+    height: 70%;
+    background: #0000009e;
+    color: #000;
+    border-top: 1px solid #ffffffb5;
+    overflow-y: scroll;
+    animation: formAppear 0.5s ease-in 1;
+    animation-fill-mode: forwards;
+}
+
+.login-container::-webkit-scrollbar {
+    display: none;
+}
+
+.login-label {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    align-items: center;
+    color: #fff;
+    font-size: 24px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    user-select: none;
+}
+
+.form-container {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 80%;
+    color: #fff;
+    align-items: center;
+    text-align: center;
+    border-top: 1px solid #fff;
+    padding: 20px;
+}
+
+.login-field {
+    outline: none;
+    background: #0d001c;
+    font-size: 20px;
+    width: 250px;
+    height: 35px;
+    border: none;
+    border-top: 1px solid #ffffff5b;
+    border-bottom: 1px solid #ffffff5b;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.login-field::placeholder {
+    color: #d5d747a0;
+    text-align: center;
+    padding: 5px;
+}
+
+.login-field:hover {
+    background: #01292f;
+    border-top: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
+}
+
+.login-btn2 {
+    outline: none;
+    width: 150px;
+    height: 40px;
+    background: #29471b;
+    color: #fff;
+    transition: 0.3s;
+}
+
+.notify-container {
+    position: absolute;
+    width: 100%;
+    height: 81px;
+}
+
+.loading-screen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+.loading-text {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: #b4dd1d;
+    z-index: 10;
+}
+
+@keyframes formAppear {
+    0% {
+        left: -400px;
+    }
+    100% {
+        left: 0;
+    }
+}
