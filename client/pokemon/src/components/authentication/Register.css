@@ -1,0 +1,166 @@
+.register-container {
+    position: relative;
+    left: -400px;
+    width: 100%;
+    height: 70%;
+    background: #0000009e;
+    color: #000;
+    border-top: 1px solid #ffffffb5;
+    overflow-y: scroll;
+    animation: formAppear 0.5s ease-in 1;
+    animation-fill-mode: forwards;
+}
+
+.register-container::-webkit-scrollbar {
+    display: none;
+}
+
+.register-label {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    align-items: center;
+    color: #fff;
+    font-size: 24px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    user-select: none;
+}
+
+.form-container {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 80%;
+    color: #fff;
+    align-items: center;
+    text-align: center;
+    border-top: 1px solid #fff;
+    padding: 20px;
+}
+
+.register-field {
+    outline: none;
+    background: #0d001c;
+    font-size: 20px;
+    width: 250px;
+    height: 35px;
+    border: none;
+    border-top: 1px solid #ffffff5b;
+    border-bottom: 1px solid #ffffff5b;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.register-select-item {
+    outline: none;
+    width: 250px;
+    height: 35px;
+    color: #d5d747;
+    font-size: 20px;
+    background: #0d001c;
+    text-align: left;
+    padding-left: 10px;
+    border-top: 1px solid #ffffff5b;
+    border-bottom: 1px solid #ffffff5b;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.register-select-item:hover {
+    background: #01292f;
+    border-top: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
+}
+
+.register-field::placeholder {
+    color: #d5d747a0;
+    text-align: center;
+    padding: 5px;
+}
+
+.register-field:hover {
+    background: #01292f;
+    border-top: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
+}
+
+.register-checkform {
+    font-size: 20px;
+}
+
+.register-checkform > span > span {
+    font-weight: bold;
+    color: #41b782;
+    cursor: pointer;
+}
+
+.register-checkbox {
+    transform: scale(1.4);
+}
+
+.register-btn-active {
+    outline: none;
+    width: 150px;
+    height: 40px;
+    background: #29471b;
+    color: #fff;
+    transition: 0.3s;
+}
+
+.register-btn-active:hover {
+    background: #29471b88;
+}
+
+.register-btn-inactive {
+    outline: none;
+    width: 150px;
+    height: 40px;
+    background: #524848;
+    color: #fff;
+}
+
+#togglePassword {
+    position: relative;
+    margin-left: -30px;
+    cursor: pointer;
+}
+
+.notify-container {
+    position: absolute;
+    width: 100%;
+    height: 81px;
+}
+
+.loading-screen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+.loading-text {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: #b4dd1d;
+    z-index: 10;
+}
+
+@keyframes formAppear {
+    0% {
+        left: -400px;
+    }
+    100% {
+        left: 0;
+    }
+}
