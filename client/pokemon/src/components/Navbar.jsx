@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from "react-router-dom";
 import Register from "./authentication/Register";
 import Login from "./authentication/Login";
 import Tooltip from '@mui/material/Tooltip';
@@ -7,11 +8,11 @@ import VolumeSlider from './extras/VolumeSlider';
 import MusicPlayer from './audio/MusicPlayer';
 import "../styles/Navbar.css";
 import i18next from 'i18next';
-import { Link } from 'react-router-dom';
 
 
 
 export default function Navbar({translation, handleSidebarHover, user, login, handleLogout}) {
+  const navigate = useNavigate();
   const [fixSidebar, setFixSidebar] = useState(true);
   const [xpBar, setXpBar] = useState(0);
   const [newMessages, setNewMessages] = useState(4);
@@ -76,6 +77,10 @@ export default function Navbar({translation, handleSidebarHover, user, login, ha
 
   const handlerMusicStatus = () => {
     setMusicStatus(!musicStatus);
+  }
+
+  const navigateToPage = (page) => {
+    navigate(page);
   }
 
   useEffect(() => {
@@ -164,16 +169,17 @@ export default function Navbar({translation, handleSidebarHover, user, login, ha
               <hr />
               <div className="menu-buttons">
                 <ul className="menu-list-container">
-                  <Link className="menu-item-link" to={"/testdownload"}>
                     <li
                       onMouseOver={() => playSFX(sfxURLs.menuHoverSFX, soundsVolume)}
-                      onClick={() => playSFX(sfxURLs.menuClickSFX, soundsVolume)}
+                      onClick={() => {
+                        playSFX(sfxURLs.menuClickSFX, soundsVolume);
+                        navigateToPage("/testdownload");
+                      }}
                       className="menu-item"
                     >
                       <i style={{backgroundImage: "url(/images/icons/menu/gamepad.svg)"}} className="menu-icon menu-icon-gamepad"></i> &nbsp;
                       <span>{translation("menu_singleplayer_text")}</span>
                     </li>
-                  </Link>
                   <li
                     onMouseOver={() => playSFX(sfxURLs.menuHoverSFX, soundsVolume)}
                     onClick={() => playSFX(sfxURLs.menuClickSFX, soundsVolume)}
