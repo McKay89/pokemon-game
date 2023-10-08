@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation  } from "react-router-dom";
 import PropTypes from 'prop-types';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import { motion, AnimatePresence  } from 'framer-motion';
 import './style/TestDownload.css';
 
 function CircularProgressWithLabel(props) {
@@ -28,7 +30,34 @@ function CircularProgressWithLabel(props) {
 };
 
 export default function TestDownload({translation, sidebarHovered}) {
+    const navigate = useNavigate();
+    const location = useLocation();
     const [progress, setProgress] = React.useState(0);
+    const userDataJSON = localStorage.getItem('userData');
+
+    const pageTransition = {
+        initial: {
+            opacity: 0,
+            x: -200
+        },
+        animate: {
+            opacity: 1,
+            x: 0,
+            transition: { duration: 1 }
+        },
+        exit: {
+            opacity: 0,
+            x: 0,
+            transition: { type: 'tween', ease: 'easeOut', duration: 1 }
+        },
+    };
+
+    // Check user is logged in
+    useEffect(() => {
+        if(!userDataJSON) {
+            navigate("/");
+        }
+    }, [])
 
     // Load audio files
     useEffect(() => {
@@ -59,8 +88,19 @@ export default function TestDownload({translation, sidebarHovered}) {
         };
     }, []);
 
+    const handleGoHome = () => {
+        navigate('/');
+    };    
+
     return (
-        <div className={sidebarHovered ? 'download-container-hovered' : 'download-container'}>
+        <motion.div
+            key={location.pathname}
+            className={sidebarHovered ? 'download-container-hovered' : 'download-container'}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={pageTransition}
+        >
             { progress < 100 ?
                 <Box style={{ width: '100%' }}>
                     <CircularProgressWithLabel value={progress} />
@@ -70,6 +110,7 @@ export default function TestDownload({translation, sidebarHovered}) {
 
                 </div>
             }
-        </div>
+            <button  onClick={handleGoHome}>HOME</button>
+        </motion.div>
     );
 }

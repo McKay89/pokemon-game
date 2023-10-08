@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Route, Routes, Navigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+import { motion, AnimatePresence  } from 'framer-motion';
 import translationEN from "./locales/en/translation.json";
 import translationHU from "./locales/hu/translation.json";
 
@@ -33,6 +34,8 @@ i18n.use(initReactI18next).init({
 });
 
 function App() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const userDataJSON = localStorage.getItem('userData');
   const [user, setUser] = useState("")
   const { t } = useTranslation();
@@ -53,6 +56,7 @@ function App() {
     setUserData({logged: false});
     setLoggedIn(false);
     localStorage.removeItem('userData');
+    navigate("/");
   }
 
   useEffect(() => {
@@ -78,25 +82,29 @@ function App() {
       </div>
       <BackgroundCover />
       <div className="app-components">
-        <Routes>
-          <Route path='/' element= {
-            <Main
-              translation={t}
-              sidebarHovered={sidebarHovered}
-            />}
-          />
-          <Route path='/info' element={
-            <Info
-              translation={t}
-            />}
-          />
-          <Route path='/testdownload' element={
-            <TestDownload
-              translation={t}
-              sidebarHovered={sidebarHovered}
-            />}
-          />
-        </Routes>
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path='/' element= {
+                <Main
+                  translation={t}
+                  sidebarHovered={sidebarHovered}
+                />
+              }
+            />
+            <Route path='/info' element={
+              <Info
+                translation={t}
+              />}
+            />
+            <Route path='/testdownload' element={
+                <TestDownload
+                  translation={t}
+                  sidebarHovered={sidebarHovered}
+                />
+              }
+            />
+          </Routes>
+        </AnimatePresence>
       </div>
     </div>
   );
