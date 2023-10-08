@@ -10,12 +10,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@fseehawer/react-circular-slider": "^2.6.1",
+    "@mui/icons-material": "^5.14.11",
+    "@mui/material": "^5.14.11",
     "axios": "^1.5.0",
     "i18next": "^23.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.2.2",
-    "react-router-dom": "^6.16.0"
+    "react-loading": "^2.0.3",
+    "react-router-dom": "^6.16.0",
+    "react-tooltip": "^5.21.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
