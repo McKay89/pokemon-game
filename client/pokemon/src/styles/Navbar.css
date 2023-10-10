@@ -191,30 +191,26 @@
     text-transform: uppercase;
 }
 
-.xp-bar-container {
+.coin-container {
     position: relative;
-    display: flex;
-    flex-direction: row;
+    top: 10px;
+    width: fit-content;
+    height: 40px;
+    font-size: 20px;
 }
 
-.xp-bar {
-    position: relative;
-    top: 5px;
-    width: 122px;
-    height: 15px;
-    background: #a5a5a5;
-    border-radius: 8px;
-    border: 1px solid #fff;
+.fa-coins {
+    color: #6ccd0b;
 }
 
-.xp-bar-active {
+.level-data {
     position: absolute;
     top: 0;
-    left: 0;
-    height: 100%;
-    background: #128d02;
-    border-radius: 8px;
-    animation: xpbarAnim 10s ease-in infinite;
+    right: 50px;
+    font-size: 70px;
+    font-weight: 600;
+    transform: rotate(10deg);
+    color: #51bc0a49;
 }
 
 .login-btn {

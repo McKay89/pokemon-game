@@ -14,9 +14,6 @@ import i18next from 'i18next';
 export default function Navbar({translation, handleSidebarHover, user, login, handleLogout}) {
   const navigate = useNavigate();
   const [fixSidebar, setFixSidebar] = useState(true);
-  const [xpBar, setXpBar] = useState(0);
-  const [newMessages, setNewMessages] = useState(4);
-  const [newFriends, setNewFriends] = useState(0);
   const [registerOpened, setRegisterOpened] = useState(false);
   const [loginOpened, setLoginOpened] = useState(false);
   const [bgMusic, setBgMusic] = useState("./audio/music/Atom_Music_Audio_Divine.mp3");
@@ -80,15 +77,12 @@ export default function Navbar({translation, handleSidebarHover, user, login, ha
   }
 
   const navigateToPage = (page) => {
-    navigate(page);
+    if(page == "/profile") {
+      navigate(`/profile/${user.username}`, { state: { username: user.username } });
+    } else {
+      navigate(page);
+    }
   }
-
-  useEffect(() => {
-    // Calculate actual XP Bar length
-    let xpPercent = user.nextLevelXP / 100;
-    let actualPercent = user.actualXP / xpPercent;
-    setXpBar(actualPercent * 1.2);
-  }, [user])
 
   return (
     <div className="sidebar-main-container">
@@ -121,7 +115,7 @@ export default function Navbar({translation, handleSidebarHover, user, login, ha
                       TransitionComponent={Zoom}
                       TransitionProps={{ timeout: 600 }}
                   >
-                    <img className="avatar" src={user.avatar} />
+                    <img onClick={() => navigateToPage("/profile")} className="avatar" src={user.avatar} />
                   </Tooltip>
                   <br />
                   <button onClick={handleLogout} className="logout_btn">{translation("logout_btn_text")}</button>
@@ -129,21 +123,24 @@ export default function Navbar({translation, handleSidebarHover, user, login, ha
                 <div className="user-data">
                   <span className="user-username">{user.username}</span>
                   <span className="user-rule">{user.role}</span>
-                  <Tooltip
-                    title={<span style={{ color: "#fff", fontSize: "14px" }}>{user.xp} / 1000</span>}
-                    placement='bottom'
-                    arrow
-                    TransitionComponent={Zoom}
-                    TransitionProps={{ timeout: 600 }}
-                  >
-                    <div className="xp-bar-container">
-                      <span className="user-level">Lv {user.level}&nbsp;</span>
-                      <div className="xp-bar">
-                        <span style={{width: `${xpBar}px`}} className="xp-bar-active"></span>
+                  <div className="coin-container">
+                    <Tooltip
+                        title={<span style={{ color: "#fff", fontSize: "14px" }}>{user.coin} {translation("coin_amount_text")}</span>}
+                        placement='top'
+                        arrow
+                        TransitionComponent={Zoom}
+                        TransitionProps={{ timeout: 600 }}
+                    >
+                      <div className="coin-data">
+                        <i className="fa-solid fa-coins"></i>&nbsp;&nbsp;
+                        <span>{user.coin}</span>
                       </div>
-                      <span className="user-level">&nbsp;Lv {user.level + 1}</span>
-                    </div>
-                  </Tooltip>
+                    </Tooltip>
+                  </div>
+                  <div className="level-data">
+                    <span className="level-label">Lv</span>&nbsp;
+                    <span>{user.level}</span>
+                  </div>
                 </div>
               </>
             : registerOpened || loginOpened ?
@@ -169,7 +166,18 @@ export default function Navbar({translation, handleSidebarHover, user, login, ha
               <hr />
               <div className="menu-buttons">
                 <ul className="menu-list-container">
-                    <li
+                  <li
+                      onMouseOver={() => playSFX(sfxURLs.menuHoverSFX, soundsVolume)}
+                      onClick={() => {
+                        playSFX(sfxURLs.menuClickSFX, soundsVolume);
+                        navigateToPage("/");
+                      }}
+                      className="menu-item"
+                    >
+                      <i style={{backgroundImage: "url(/images/icons/menu/adventure.svg)"}} className="menu-icon"></i> &nbsp;
+                      <span>{translation("menu_adventuregame_text")}</span>
+                  </li>
+                  <li
                       onMouseOver={() => playSFX(sfxURLs.menuHoverSFX, soundsVolume)}
                       onClick={() => {
                         playSFX(sfxURLs.menuClickSFX, soundsVolume);
@@ -177,7 +185,7 @@ export default function Navbar({translation, handleSidebarHover, user, login, ha
                       }}
                       className="menu-item"
                     >
-                      <i style={{backgroundImage: "url(/images/icons/menu/gamepad.svg)"}} className="menu-icon menu-icon-gamepad"></i> &nbsp;
+                      <i style={{backgroundImage: "url(/images/icons/menu/arena.svg)"}} className="menu-icon"></i> &nbsp;
                       <span>{translation("menu_singleplayer_text")}</span>
                     </li>
                   <li
@@ -185,14 +193,14 @@ export default function Navbar({translation, handleSidebarHover, user, login, ha
                     onClick={() => playSFX(sfxURLs.menuClickSFX, soundsVolume)}
                     className="menu-item"
                   >
-                    <i style={{backgroundImage: "url(/images/icons/menu/online.svg)"}} className="menu-icon menu-icon-online"></i> &nbsp;
+                    <i style={{backgroundImage: "url(/images/icons/menu/online.svg)"}} className="menu-icon"></i> &nbsp;
                     <span>{translation("menu_multiplayer_text")}</span>
                   </li>
                   <li
                     onMouseOver={() => playSFX(sfxURLs.menuHoverSFX, soundsVolume)}
                     onClick={() => playSFX(sfxURLs.menuClickSFX, soundsVolume)}
                     className="menu-item">
-                    <i style={{backgroundImage: "url(/images/icons/menu/deck.svg)"}} className="menu-icon menu-icon-deck"></i> &nbsp;
+                    <i style={{backgroundImage: "url(/images/icons/menu/deck.svg)"}} className="menu-icon"></i> &nbsp;
                     <span>{translation("menu_deck_text")}</span>
                   </li>
                   <li
@@ -200,32 +208,8 @@ export default function Navbar({translation, handleSidebarHover, user, login, ha
                     onClick={() => playSFX(sfxURLs.menuClickSFX, soundsVolume)}
                     className="menu-item"
                   >
-                    <i style={{backgroundImage: "url(/images/icons/menu/cards.svg)"}} className="menu-icon menu-icon-cards"></i> &nbsp;
+                    <i style={{backgroundImage: "url(/images/icons/menu/cards.svg)"}} className="menu-icon"></i> &nbsp;
                     <span>{translation("menu_collection_text")}</span>
-                  </li>
-                </ul>
-              </div>
-              <span className="menu-text">{translation("menu_label_text2")}</span>
-              <hr />
-              <div className="menu-buttons">
-                <ul className="menu-list-container">
-                  <li
-                    onMouseOver={() => playSFX(sfxURLs.menuHoverSFX, soundsVolume)}
-                    onClick={() => playSFX(sfxURLs.menuClickSFX, soundsVolume)}
-                    className="menu-item"
-                  >
-                    <i style={{backgroundImage: "url(/images/icons/menu/message.svg)"}} className="menu-icon menu-icon-message"></i> &nbsp;
-                    <span>{translation("menu_messages_text")}</span>
-                    <span className={newMessages > 0 ? "menu-messages" : ''}>{newMessages > 0 ? newMessages : ''}</span>
-                  </li>
-                  <li
-                    onMouseOver={() => playSFX(sfxURLs.menuHoverSFX, soundsVolume)}
-                    onClick={() => playSFX(sfxURLs.menuClickSFX, soundsVolume)}
-                    className="menu-item"
-                  >
-                    <i style={{backgroundImage: "url(/images/icons/menu/friend.svg)"}} className="menu-icon menu-icon-friend"></i> &nbsp;
-                    <span>{translation("menu_friends_text")}</span>
-                    <span className={newFriends > 0 ? "menu-friends" : ''}>{newFriends > 0 ? newFriends : ''}</span>
                   </li>
                 </ul>
               </div>
