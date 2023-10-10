@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { motion, AnimatePresence  } from 'framer-motion';
+import { motion  } from 'framer-motion';
 import './style/TestDownload.css';
 
 function CircularProgressWithLabel(props) {
