@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import CircularSlider from '@fseehawer/react-circular-slider';
 
 export default function MusicSlider({translation, volume, changeVolume, musicStatus}) {
-    
-
     return (
         <CircularSlider
             width={80}
