@@ -21,8 +21,6 @@
     "menu_multiplayer_text": "Multiplayer Game",
     "menu_deck_text": "Deck Overview",
     "menu_collection_text": "Card Collection",
-    "menu_messages_text": "Messages",
-    "menu_friends_text": "Friends",
     "back_text": "Back",
     "register_label": "Registration",
     "register_username": "Username",
@@ -56,5 +54,9 @@
     "media_sounds_label": "Sounds",
     "music_turn_on": "Turn ON Music",
     "music_turn_off": "Turn OFF Music",
-    "audio_status_off": "OFF"
+    "audio_status_off": "OFF",
+    "profile_sidebar_overview": "Overview",
+    "profile_sidebar_messages": "Messages",
+    "profile_sidebar_friends": "Friends",
+    "profile_sidebar_settings": "Settings"
 }

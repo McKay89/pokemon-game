@@ -21,8 +21,6 @@
     "menu_multiplayer_text": "Online játék",
     "menu_deck_text": "Pakli áttekintése",
     "menu_collection_text": "Kártyagyűjtemény",
-    "menu_messages_text": "Üzenetek",
-    "menu_friends_text": "Barátok",
     "back_text": "Vissza",
     "register_label": "Regisztráció",
     "register_username": "Felhasználónév",
@@ -56,5 +54,9 @@
     "media_sounds_label": "Hangok",
     "music_turn_on": "Zene bekapcsolása",
     "music_turn_off": "Zene kikapcsolása",
-    "audio_status_off": "KI"
+    "audio_status_off": "KI",
+    "profile_sidebar_overview": "Áttekintés",
+    "profile_sidebar_messages": "Üzenetek",
+    "profile_sidebar_friends": "Barátok",
+    "profile_sidebar_settings": "Beállítások"
 }
