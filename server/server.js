@@ -36,7 +36,11 @@
         user: dbAdmin,
         password: dbPassword,
         server: dbHost, 
-        database: dbDatabase 
+        database: dbDatabase,
+        options: {
+            encrypt: false, // Ne használj SSL titkosítást
+            trustServerCertificate: true // Elfogadni az önt aláírt tanúsítványt
+        }
     };
 
     // Connect to database
@@ -139,7 +143,8 @@ app.post('/api/login', async (req, res) => {
                     role: getUser["role"],
                     level: getUser["level"],
                     xp: getUser["xp"],
-                    cards: getUser["cards"]
+                    cards: getUser["cards"],
+                    coin: getUser["coin"]
                 }
                 res.json(user);
             } else {
@@ -151,6 +156,25 @@ app.post('/api/login', async (req, res) => {
     }
 })
 
+// Get User Data //
+app.get('/api/user/get/:username', async (req, res) => {
+    const username = req.params.username;
+    const getUser = await getFromTable.findUserByName(dbRequest, username);
+    const userData = {
+        username: username,
+        email: getUser["email"],
+        avatar: getUser["avatar"],
+        birthday: getUser["birthday"],
+        regDate: getUser["reg_date"],
+        role: getUser["role"],
+        level: getUser["level"],
+        xp: getUser["xp"],
+        cards: getUser["cards"],
+        coin: getUser["coin"]
+    }
+
+    res.json(userData);
+})
 
 // SETUP SERVER ON PORT //
 app.listen(3001, () => console.log('Server started on port 3001'));

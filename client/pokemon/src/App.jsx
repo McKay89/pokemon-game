@@ -9,7 +9,7 @@ import translationEN from "./locales/en/translation.json";
 import translationHU from "./locales/hu/translation.json";
 
 import Main from './components/Main';
-import Info from './components/Info';
+import Profile from './components/pages/Profile';
 import Navbar from './components/Navbar';
 import TestDownload from './components/pages/TestDownload';
 import BackgroundCover from './components/BackgroundCover';
@@ -72,6 +72,7 @@ function App() {
   return ( 
     <div className="app-container" onContextMenu={handleContextMenu}>
       <div className="app-navbar">
+        {/* Sidebar Component */}
         <Navbar
           translation={t}
           handleSidebarHover={handleSidebarHover}
@@ -84,6 +85,7 @@ function App() {
       <div className="app-components">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
+            {/* Main Component */}
             <Route path='/' element= {
                 <Main
                   translation={t}
@@ -91,11 +93,14 @@ function App() {
                 />
               }
             />
-            <Route path='/info' element={
-              <Info
+            {/* Profile Component */}
+            <Route path='/profile/:username?' element={
+              <Profile
                 translation={t}
+                sidebarHovered={sidebarHovered}
               />}
             />
+            {/* TestDownload Component */}
             <Route path='/testdownload' element={
                 <TestDownload
                   translation={t}
