@@ -1,7 +1,7 @@
 import i18next from 'i18next';
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import "../styles/Main.css";
 
 export default function Main({translation, sidebarHovered}) {
@@ -18,12 +18,12 @@ export default function Main({translation, sidebarHovered}) {
       animate: {
         opacity: 1,
         x: 0,
-        transition: { duration: 1 }
+        transition: { duration: 0.5 }
       },
       exit: {
         opacity: 0,
         x: 0,
-        transition: { duration: 1 }
+        transition: { duration: 0.5 }
       },
     };
 
