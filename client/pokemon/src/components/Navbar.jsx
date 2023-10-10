@@ -200,7 +200,7 @@ export default function Navbar({translation, handleSidebarHover, user, login, ha
                     onMouseOver={() => playSFX(sfxURLs.menuHoverSFX, soundsVolume)}
                     onClick={() => playSFX(sfxURLs.menuClickSFX, soundsVolume)}
                     className="menu-item">
-                    <i style={{backgroundImage: "url(/images/icons/menu/deck.svg)"}} className="menu-icon"></i> &nbsp;
+                    <i style={{backgroundImage: "url(/images/icons/menu/deck.svg)", backgroundSize: "cover"}} className="menu-icon"></i> &nbsp;
                     <span>{translation("menu_deck_text")}</span>
                   </li>
                   <li
