@@ -25,7 +25,7 @@ function BackgroundCover() {
       <div>Töltés...</div>
       ) : null}
       <video className="video-background" autoPlay muted loop>
-        <source src="./video/menu/menu_bg_mewtwo.mp4" type="video/mp4" />
+        <source src="/video/menu/menu_bg_mewtwo.mp4" type="video/mp4" />
       </video>
       <div className="content">
         {/* Ide helyezd a komponens tartalmát */}
