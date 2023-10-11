@@ -16,13 +16,13 @@ export default function Navbar({translation, handleSidebarHover, user, login, ha
   const [fixSidebar, setFixSidebar] = useState(true);
   const [registerOpened, setRegisterOpened] = useState(false);
   const [loginOpened, setLoginOpened] = useState(false);
-  const [bgMusic, setBgMusic] = useState("./audio/music/Atom_Music_Audio_Divine.mp3");
+  const [bgMusic, setBgMusic] = useState("/audio/music/Atom_Music_Audio_Divine.mp3");
   const [bgMusicVolume, setBgMusicVolume] = useState(0.3);
   const [soundsVolume, setSoundsVolume] = useState(0.5);
   const [musicStatus, setMusicStatus] = useState(false);
   const [sfxURLs] = useState({
-    menuHoverSFX: "./audio/sounds/menu/sfx_menu_hover.mp3",
-    menuClickSFX: "./audio/sounds/menu/sfx_menu_click.mp3"
+    menuHoverSFX: "/audio/sounds/menu/sfx_menu_hover.mp3",
+    menuClickSFX: "/audio/sounds/menu/sfx_menu_click.mp3"
   });
 
   const playSFX = (url, volume) => {
@@ -200,7 +200,7 @@ export default function Navbar({translation, handleSidebarHover, user, login, ha
                     onMouseOver={() => playSFX(sfxURLs.menuHoverSFX, soundsVolume)}
                     onClick={() => playSFX(sfxURLs.menuClickSFX, soundsVolume)}
                     className="menu-item">
-                    <i style={{backgroundImage: "url(/images/icons/menu/deck.svg)"}} className="menu-icon"></i> &nbsp;
+                    <i style={{backgroundImage: "url(/images/icons/menu/deck.svg)", backgroundSize: "cover"}} className="menu-icon"></i> &nbsp;
                     <span>{translation("menu_deck_text")}</span>
                   </li>
                   <li
