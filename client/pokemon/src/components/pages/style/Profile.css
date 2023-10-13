@@ -83,6 +83,16 @@
     gap: 40px;
 }
 
+.profile-navbar-item-active {
+    position: relative;
+    width: 80px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: 0.3s;
+    color: #80e380;
+}
 
 .profile-navbar-item {
     position: relative;
