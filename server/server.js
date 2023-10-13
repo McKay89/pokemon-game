@@ -169,6 +169,7 @@ app.get('/api/user/get/:username', async (req, res) => {
         role: getUser["role"],
         level: getUser["level"],
         xp: getUser["xp"],
+        next_level_xp: getUser["next_level_xp"],
         cards: getUser["cards"],
         coin: getUser["coin"]
     }
