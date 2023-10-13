@@ -11,7 +11,7 @@ import i18next from 'i18next';
 
 
 
-export default function Navbar({translation, handleSidebarHover, user, login, handleLogout}) {
+export default function Navbar({translation, handleSidebarHover, user, login, handleLogout, jwtToken}) {
   const navigate = useNavigate();
   const [fixSidebar, setFixSidebar] = useState(true);
   const [registerOpened, setRegisterOpened] = useState(false);
