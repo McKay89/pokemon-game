@@ -58,5 +58,13 @@
     "profile_sidebar_overview": "Overview",
     "profile_sidebar_messages": "Messages",
     "profile_sidebar_friends": "Friends",
-    "profile_sidebar_settings": "Settings"
+    "profile_sidebar_settings": "Settings",
+    "profile_stat_arena": "Arena Wins",
+    "profile_stat_multiplayer": "Multiplayer Wins",
+    "profile_stat_cards": "Collection",
+    "profile_stat_arena_desc": "All your victories in Arena game mode",
+    "profile_stat_online_desc": "All your victories in Multiplayer game mode",
+    "profile_stat_cards_desc": "Your entire card collection",
+    "profile_xpbar_text": "points needed to reach the next level",
+    "back-to-the-main-menu": "Back to the Main Menu"
 }
