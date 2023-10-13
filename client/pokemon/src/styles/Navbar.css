@@ -5,7 +5,6 @@
     width: 20%;
     height: 100%;
     perspective: 600px;
-    /* background: #1e021c; */
     overflow: hidden;
     z-index: 1;
 }
