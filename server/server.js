@@ -10,7 +10,6 @@
 // EXPRESS //
     const express = require('express');
     const app = express();
-    const fs = require('fs');
     app.use(express.json());
     app.use(express.static(__dirname + '/public'));
     
@@ -22,6 +21,12 @@
     const dbAdmin = process.env.ADMIN_USER;
     const dbPassword = process.env.ADMIN_PASSWORD;
     const dbDatabase = process.env.DATABASE;
+
+// JWT //
+    const crypto = require('crypto');
+    const jwt = require('jsonwebtoken');
+    var { expressjwt: newjwt } = require("express-jwt");
+    const jwtSecret = crypto.randomBytes(32).toString('hex');
 
 // CORS POLICY //
     const cors = require('cors');
@@ -94,20 +99,6 @@
     }
 
 
-
-// Test GET //
-app.get('/api/testdata', (req, res) => {
-    const data = {
-        name: "Vulpix",
-        attack: 20,
-        desc: {
-            en: "Bulbasaur test description",
-            hu: "Bulbasaur teszt leírás"
-        }
-    };
-    res.json(data);
-})
-
 // Register //
 app.post('/api/register', async (req, res) => {
     const data = req.body;
@@ -132,29 +123,31 @@ app.post('/api/login', async (req, res) => {
         try {
             const userAuth = await compareHash(password, getUser["password"]);
             if(userAuth) {
-                user = {
+                const payload = {
+                    username: username,
+                    role: getUser["role"]
+                };
+                const token = jwt.sign(payload, jwtSecret, { expiresIn: '1h' });
+                res.json({ token, user: { 
                     notify: "login_success",
                     logged: true,
                     username: username,
-                    email: getUser["email"],
                     avatar: getUser["avatar"],
-                    birthday: getUser["birthday"],
-                    regDate: getUser["reg_date"],
                     role: getUser["role"],
                     level: getUser["level"],
-                    xp: getUser["xp"],
-                    cards: getUser["cards"],
                     coin: getUser["coin"]
-                }
-                res.json(user);
+                }});
             } else {
-                res.json(user);
+                res.status(401).json({ notify: 'login_user_not_found' });
             }
         } catch (err) {
             console.error(err.message);
+            res.status(500).json('Server error');
         }
     }
 })
+
+
 
 // Get User Data //
 app.get('/api/user/get/:username', async (req, res) => {
@@ -176,6 +169,16 @@ app.get('/api/user/get/:username', async (req, res) => {
 
     res.json(userData);
 })
+
+
+
+
+// CHECK VALID JWT //
+app.use(
+    newjwt({ secret: jwtSecret, algorithms: ['HS256'] }).unless({
+    path: ['/api/login', '/api/register'],
+    })
+);
 
 // SETUP SERVER ON PORT //
 app.listen(3001, () => console.log('Server started on port 3001'));
