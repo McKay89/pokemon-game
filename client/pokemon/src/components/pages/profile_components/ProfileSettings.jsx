@@ -28,6 +28,9 @@ export default function ProfileSettings({translation}) {
             animate="animate"
             exit="exit"
             variants={pageTransition}
+            style={{
+                backgroundImage: `url(/images/backgrounds/profile/profile_settings_bg.png)`
+            }}
         >
             <span>{translation("profile_sidebar_settings")}</span>
         </motion.div>

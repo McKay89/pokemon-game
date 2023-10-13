@@ -31,6 +31,9 @@ export default function ProfileFriends({translation}) {
             animate="animate"
             exit="exit"
             variants={pageTransition}
+            style={{
+                backgroundImage: `url(/images/backgrounds/profile/profile_friends_bg.png)`
+            }}
         >
             <span>{translation("profile_sidebar_friends")}</span>
         </motion.div>
