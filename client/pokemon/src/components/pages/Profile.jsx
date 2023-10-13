@@ -68,9 +68,9 @@ export default function Profile({translation, sidebarHovered}) {
 
     useEffect(() => {
         // Calculate actual XP Bar length
-        let xpPercent = 1000 / 100;
+        let xpPercent = userData.next_level_xp / 100;
         let actualPercent = userData.xp / xpPercent;
-        setXpBar(actualPercent * 1.2);
+        setXpBar(actualPercent * 2.52);
     }, [userData])
 
     const handleProfileComponent = (value) => {
@@ -86,90 +86,153 @@ export default function Profile({translation, sidebarHovered}) {
             exit="exit"
             variants={pageTransition}
         >
-            <div className="profile-box-container">
-                <div className="profile-light"></div>
-                <div className="profile-top-part">
-                    <div
-                        className="profile-avatar"
-                        style={{
-                            backgroundImage: `url(${userData.avatar})`
-                        }}
-                    >
-                    </div>
+            <div className="profile-light"></div>
+            <div className="profile-top-part">
+                <Tooltip
+                    title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("back-to-the-main-menu")}</span>}
+                    placement='right'
+                    arrow
+                    TransitionComponent={Zoom}
+                    TransitionProps={{ timeout: 600 }}
+                >
+                    <div className="profile-close" onClick={handleGoHome}><i class="fa-solid fa-rectangle-xmark"></i></div>
+                </Tooltip>
+                <div className="profile-top-avatar" style={{backgroundImage: `url(${userData.avatar})`}}></div>
+                <div className="profile-top-data">
+                    <span>{userData.username}</span>
+                    <span>{userData.role}</span>
                     <div className="profile-basic-data">
-                        <div className="xp-bar-container">
-                            <div className="xp-bar">  
-                                <span style={{width: `${xpBar}px`}} className="xp-bar-active"></span>
+                        <Tooltip
+                            title={<span style={{ color: "#fff", fontSize: "14px" }}>{userData.next_level_xp - userData.xp} {translation("profile_xpbar_text")}</span>}
+                            placement='bottom'
+                            arrow
+                            TransitionComponent={Zoom}
+                            TransitionProps={{ timeout: 600 }}
+                        >
+                            <div className="xp-bar-container">
+                                <div className="xp-bar">
+                                    <span>{userData.xp} / {userData.next_level_xp}</span>
+                                    <span style={{width: `${xpBar}px`}} className="xp-bar-active"></span>
+                                </div>
                             </div>
+                        </Tooltip>
+                    </div>
+                </div>
+                <div className="profile-top-datas">
+                    <div className="profile-top-data-item">
+                        <div className="data-item-icon">
+                            <span>Lv</span>
+                        </div>
+                        <div className="data-item-amount">
+                            <span>{userData.level}</span>
+                        </div>
+                    </div>
+                    <div className="profile-top-data-item">
+                        <div className="data-item-icon">
+                            <i className="fa-solid fa-coins"></i>
+                        </div>
+                        <div className="data-item-amount">
+                            <span>{userData.coin}</span>
+                        </div>
+                    </div>
+                    <div className="profile-top-data-item">
+                        <div className="data-item-icon">
+                            <i class="fa-solid fa-user-group"></i>
+                        </div>
+                        <div className="data-item-amount">
+                            <span>3</span>
                         </div>
                     </div>
                 </div>
-                <div className="profile-bottom-part">
-                    <div className="profile-sidebar">
-                        <hr />
-                        <Tooltip
-                            title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("profile_sidebar_overview")}</span>}
-                            placement='right'
-                            arrow
-                            TransitionComponent={Zoom}
-                            TransitionProps={{ timeout: 600 }}
-                        >
-                        <div className={profileComponent == "overview" ? "profile-sidebar-menu-active" : "profile-sidebar-menu"} onClick={() => handleProfileComponent("overview")}>
-                            <i className="fa-solid fa-address-card overview-icon"></i>
-                        </div>
-                        </Tooltip>
-                        <Tooltip
-                            title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("profile_sidebar_messages")}</span>}
-                            placement='right'
-                            arrow
-                            TransitionComponent={Zoom}
-                            TransitionProps={{ timeout: 600 }}
-                        >
-                        <div className={profileComponent == "messages" ? "profile-sidebar-menu-active" : "profile-sidebar-menu"} onClick={() => handleProfileComponent("messages")}>
-                            <i className="fa-solid fa-envelope messages-icon"></i>
-                        </div>
-                        </Tooltip>
-                        <Tooltip
-                            title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("profile_sidebar_friends")}</span>}
-                            placement='right'
-                            arrow
-                            TransitionComponent={Zoom}
-                            TransitionProps={{ timeout: 600 }}
-                        >
-                        <div className={profileComponent == "friends" ? "profile-sidebar-menu-active" : "profile-sidebar-menu"} onClick={() => handleProfileComponent("friends")}>
-                            <i className="fa-solid fa-user-group friends-icon"></i>
-                        </div>
-                        </Tooltip>
-                        <Tooltip
-                            title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("profile_sidebar_settings")}</span>}
-                            placement='right'
-                            arrow
-                            TransitionComponent={Zoom}
-                            TransitionProps={{ timeout: 600 }}
-                        >
-                        <div className={profileComponent == "settings" ? "profile-sidebar-menu-active profile-sidebar-bottom-menu" : "profile-sidebar-menu profile-sidebar-bottom-menu"} onClick={() => handleProfileComponent("settings")}>
-                            <i className="fa-solid fa-gear settings-icon"></i>
-                        </div>
-                        </Tooltip>
-                    </div>
-                    <div className="profile-content">
-                        <AnimatePresence mode="wait">
-                            { profileComponent == "overview" ?
-                                <ProfileOverview translation={translation} />
-                            : profileComponent == "messages" ?
-                                <ProfileMessages translation={translation} />
-                            : profileComponent == "friends" ?
-                                <ProfileFriends translation={translation} />
-                            : profileComponent == "settings" ?
-                                <ProfileSettings translation={translation} />
-                            : undefined
-                            }
-                        </AnimatePresence>
-                    </div>
-                </div>
-
             </div>
-                <button onClick={handleGoHome}>HOME</button>
+            <div className="profile-navbar-part">
+                <div className="profile-navbar-left">
+                    <Tooltip
+                        title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("profile_stat_arena_desc")}</span>}
+                        placement='top'
+                        arrow
+                        TransitionComponent={Zoom}
+                        TransitionProps={{ timeout: 600 }}
+                    >
+                        <div className="profile-navbar-stats">
+                            <span>33</span>
+                            <span>{translation("profile_stat_arena")}</span>
+                        </div>
+                    </Tooltip>
+                    <Tooltip
+                        title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("profile_stat_online_desc")}</span>}
+                        placement='top'
+                        arrow
+                        TransitionComponent={Zoom}
+                        TransitionProps={{ timeout: 600 }}
+                    >
+                        <div className="profile-navbar-stats">
+                            <span>12</span>
+                            <span>{translation("profile_stat_multiplayer")}</span>
+                        </div>
+                    </Tooltip>
+                    <Tooltip
+                        title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("profile_stat_cards_desc")}</span>}
+                        placement='top'
+                        arrow
+                        TransitionComponent={Zoom}
+                        TransitionProps={{ timeout: 600 }}
+                    >
+                        <div className="profile-navbar-stats">
+                            <span>84</span>
+                            <span>{translation("profile_stat_cards")}</span>
+                        </div>
+                    </Tooltip>
+                </div>
+                <div className="profile-navbar-right">
+                    <div className="profile-navbar-item" onClick={() => handleProfileComponent("overview")}>
+                        <div className="profile-navbar-item-icon">
+                            <i class="fa-solid fa-address-card"></i>
+                        </div>
+                        <div className="profile-navar-item-label">
+                            <span>{translation("profile_sidebar_overview")}</span>
+                        </div>
+                    </div>
+                    <div className="profile-navbar-item" onClick={() => handleProfileComponent("friends")}>
+                        <div className="profile-navbar-item-icon">
+                            <i class="fa-solid fa-user-group"></i>
+                        </div>
+                        <div className="profile-navar-item-label">
+                            <span>{translation("profile_sidebar_friends")}</span>
+                        </div>
+                    </div>
+                    <div className="profile-navbar-item" onClick={() => handleProfileComponent("messages")}>
+                        <div className="profile-navbar-item-icon">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <div className="profile-navar-item-label">
+                            <span>{translation("profile_sidebar_messages")}</span>
+                        </div>
+                    </div>
+                    <div className="profile-navbar-item" onClick={() => handleProfileComponent("settings")}>
+                        <div className="profile-navbar-item-icon">
+                            <i class="fa-solid fa-gear"></i>
+                        </div>
+                        <div className="profile-navar-item-label">
+                            <span>{translation("profile_sidebar_settings")}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="profile-bottom-part">
+                <AnimatePresence mode="wait">
+                    { profileComponent == "overview" ?
+                        <ProfileOverview translation={translation} />
+                    : profileComponent == "messages" ?
+                        <ProfileMessages translation={translation} />
+                    : profileComponent == "friends" ?
+                        <ProfileFriends translation={translation} />
+                    : profileComponent == "settings" ?
+                        <ProfileSettings translation={translation} />
+                    : undefined
+                    }
+                </AnimatePresence>
+            </div>
         </motion.div>
     );
 }
