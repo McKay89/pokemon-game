@@ -219,7 +219,7 @@ export default function Profile({translation, sidebarHovered}) {
                     </div>
                 </div>
             </div>
-            <div className="profile-bottom-part">
+            <div className="profile-content-part">
                 <AnimatePresence mode="wait">
                     { profileComponent == "overview" ?
                         <ProfileOverview translation={translation} />
