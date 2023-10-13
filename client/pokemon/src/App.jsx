@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
-import axios from "axios";
 import { useTranslation } from "react-i18next";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-import { motion, AnimatePresence  } from 'framer-motion';
+import { AnimatePresence  } from 'framer-motion';
 import translationEN from "./locales/en/translation.json";
 import translationHU from "./locales/hu/translation.json";
 
@@ -36,34 +35,25 @@ i18n.use(initReactI18next).init({
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
-  const userDataJSON = localStorage.getItem('userData');
-  const [user, setUser] = useState("")
   const { t } = useTranslation();
   const [sidebarHovered, setSidebarHovered] = useState(true);
   const [userData, setUserData] = useState({});
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [jwtToken, setJwtToken] = useState(null);
 
   const handleSidebarHover = (value) => {
     setSidebarHovered(value);
   }
 
   const fillUserData = (data) => {
-    setLoggedIn(true);
-    localStorage.setItem('userData', JSON.stringify(data));
+    setJwtToken(data.token);
+    setUserData(data.user);
   }
 
   const handleLogout = () => {
     setUserData({logged: false});
-    setLoggedIn(false);
-    localStorage.removeItem('userData');
+    setJwtToken(null);
     navigate("/");
   }
-
-  useEffect(() => {
-    if(userDataJSON) {
-      setUserData(JSON.parse(userDataJSON));
-    }
-  }, [loggedIn])
 
   const handleContextMenu = (e) => {
     e.preventDefault();
@@ -79,6 +69,7 @@ function App() {
           user={userData}
           login={fillUserData}
           handleLogout={handleLogout}
+          jwtToken={jwtToken}
         />
       </div>
       <BackgroundCover />
@@ -98,6 +89,7 @@ function App() {
               <Profile
                 translation={t}
                 sidebarHovered={sidebarHovered}
+                jwtToken={jwtToken}
               />}
             />
             {/* TestDownload Component */}
@@ -105,6 +97,7 @@ function App() {
                 <TestDownload
                   translation={t}
                   sidebarHovered={sidebarHovered}
+                  jwtToken={jwtToken}
                 />
               }
             />

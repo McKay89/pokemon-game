@@ -76,7 +76,7 @@ export default function Login({translation, login}) {
     }
 
     const checkLoginData = (data) => {
-        switch (data.notify) {
+        switch (data.user.notify) {
             case "login_user_not_found":
                 setNotifyText(translation("login_user_not_found"));
                 setNotify(true);
