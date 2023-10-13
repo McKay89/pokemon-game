@@ -25,7 +25,7 @@ export default function ProfileOverview({translation}) {
 
     return (
         <motion.div
-            key={location.pathname}
+            key="profile_overview"
             className="profile-overview-container"
             initial="initial"
             animate="animate"
