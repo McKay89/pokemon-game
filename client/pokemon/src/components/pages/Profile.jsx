@@ -7,15 +7,15 @@ import ProfileOverview from "./profile_components/ProfileOverview";
 import ProfileMessages from "./profile_components/ProfileMessages";
 import ProfileFriends from "./profile_components/ProfileFriends";
 import ProfileSettings from "./profile_components/ProfileSettings";
+import jwt_decode from 'jwt-decode';
 import './style/Profile.css';
 
-export default function Profile({translation, sidebarHovered}) {
+export default function Profile({translation, sidebarHovered, jwtToken}) {
     let { username } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
     const [xpBar, setXpBar] = useState(0);
     const [userData, setUserData] = useState({});
-    const userDataJSON = localStorage.getItem('userData');
     const [profileComponent, setProfileComponent] = useState("overview");
 
     const pageTransition = {
@@ -37,16 +37,23 @@ export default function Profile({translation, sidebarHovered}) {
 
     // Check user is logged in & get user data
     useEffect(() => {
-        const uDataJSON = JSON.parse(userDataJSON);
-        if(!userDataJSON) {
+        if(jwtToken == null) {
             navigate("/");
         } else {
-            if(uDataJSON.username == username) {
+            const decodedToken = jwt_decode(jwtToken);
+            if(decodedToken.username == username) {
                 const fetchUserData = async () => {
                     try {
-                        const getUserData = await fetch(`/api/user/get/${uDataJSON.username}`);
-                        const data = await getUserData.json();
-                        setUserData(data);
+                        const response = await fetch(`/api/user/get/${decodedToken.username}`, {
+                            headers: {
+                                Authorization: `Bearer ${jwtToken}`
+                            }
+                        });
+
+                        if(response.status === 200) {
+                            const data = await response.json();
+                            setUserData(data);
+                        }
                     } catch (err) {
                         console.log(err)
                     }
@@ -185,7 +192,7 @@ export default function Profile({translation, sidebarHovered}) {
                     </Tooltip>
                 </div>
                 <div className="profile-navbar-right">
-                    <div className="profile-navbar-item" onClick={() => handleProfileComponent("overview")}>
+                    <div className={profileComponent == "overview" ? "profile-navbar-item-active" : "profile-navbar-item"} onClick={() => handleProfileComponent("overview")}>
                         <div className="profile-navbar-item-icon">
                             <i class="fa-solid fa-address-card"></i>
                         </div>
@@ -193,7 +200,7 @@ export default function Profile({translation, sidebarHovered}) {
                             <span>{translation("profile_sidebar_overview")}</span>
                         </div>
                     </div>
-                    <div className="profile-navbar-item" onClick={() => handleProfileComponent("friends")}>
+                    <div className={profileComponent == "friends" ? "profile-navbar-item-active" : "profile-navbar-item"} onClick={() => handleProfileComponent("friends")}>
                         <div className="profile-navbar-item-icon">
                             <i class="fa-solid fa-user-group"></i>
                         </div>
@@ -201,7 +208,7 @@ export default function Profile({translation, sidebarHovered}) {
                             <span>{translation("profile_sidebar_friends")}</span>
                         </div>
                     </div>
-                    <div className="profile-navbar-item" onClick={() => handleProfileComponent("messages")}>
+                    <div className={profileComponent == "messages" ? "profile-navbar-item-active" : "profile-navbar-item"} onClick={() => handleProfileComponent("messages")}>
                         <div className="profile-navbar-item-icon">
                             <i class="fa-solid fa-envelope"></i>
                         </div>
@@ -209,7 +216,7 @@ export default function Profile({translation, sidebarHovered}) {
                             <span>{translation("profile_sidebar_messages")}</span>
                         </div>
                     </div>
-                    <div className="profile-navbar-item" onClick={() => handleProfileComponent("settings")}>
+                    <div className={profileComponent == "settings" ? "profile-navbar-item-active" : "profile-navbar-item"} onClick={() => handleProfileComponent("settings")}>
                         <div className="profile-navbar-item-icon">
                             <i class="fa-solid fa-gear"></i>
                         </div>
