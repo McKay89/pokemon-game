@@ -25,7 +25,7 @@ export default function ProfileFriends({translation}) {
 
     return (
         <motion.div
-            key={location.pathname}
+            key="profile_friends"
             className="profile-friends-container"
             initial="initial"
             animate="animate"

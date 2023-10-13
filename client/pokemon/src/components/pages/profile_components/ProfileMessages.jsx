@@ -25,7 +25,7 @@ export default function ProfileMessages({translation}) {
 
     return (
         <motion.div
-            key={location.pathname}
+            key="profile_messages"
             className="profile-messages-container"
             initial="initial"
             animate="animate"
