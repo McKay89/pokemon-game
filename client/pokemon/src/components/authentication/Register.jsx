@@ -7,7 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import InputAdornment from "@mui/material/InputAdornment";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Loading from 'react-loading';
+import Loading from '../extras/Loading';
 import Notify from "./Notify";
 import "./Register.css";
 
@@ -154,16 +154,10 @@ export default function Register({translation}) {
       <>
         <div className="register-container">
             { loading ?
-              <>
-                  <Loading
-                      type={"spin"}
-                      color={"#b4dd1d"}
-                      height={150}
-                      width={150}
-                      className="loading-screen"
-                  />
-                  <span className="loading-text">{translation("loading_register")}</span>
-              </>
+              <Loading 
+                text={translation("loading_register")}
+                scale={1.8}
+              />
             : undefined }
             <span className="register-label">{translation("register_label")}</span>
             { notify ?

@@ -66,5 +66,6 @@
     "profile_stat_online_desc": "Az összes győzelmed Online játékmódban",
     "profile_stat_cards_desc": "A teljes kártyagyűjteményed",
     "profile_xpbar_text": "pont szükséges a következő szint eléréséhez",
-    "back-to-the-main-menu": "Vissza a Főmenübe"
+    "back-to-the-main-menu": "Vissza a Főmenübe",
+    "loading_profile_data_text": "Profiladatok betöltése"
 }
