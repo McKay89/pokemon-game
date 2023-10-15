@@ -6,6 +6,35 @@
     height: 100%;
     background-size: 100% 100%;
     background-repeat: no-repeat;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.profile-overview-container::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #99c8d1;
+	border-radius: 10px;
+}
+
+.profile-overview-container::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: none;
+}
+
+.profile-overview-container::-webkit-scrollbar-thumb
+{
+	background-color: #3366FF;
+	border-radius: 10px;
+	background-image: -webkit-linear-gradient(0deg,
+	                                          rgba(255, 255, 255, 0.5) 25%,
+											  transparent 25%,
+											  transparent 50%,
+											  rgba(255, 255, 255, 0.5) 50%,
+											  rgba(255, 255, 255, 0.5) 75%,
+											  transparent 75%,
+											  transparent)
 }
 
 .profile-overview-container > span {
