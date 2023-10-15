@@ -1,4 +1,6 @@
-const insertIntoUsers = (request, data, hashedPassword) => {
+const insertIntoUsers = (sql, data, hashedPassword) => {
+    const request = new sql.Request();
+
     // Check if username or email are taken
     query = `SELECT * FROM users`;
     const checkUsernameEmail = () => {

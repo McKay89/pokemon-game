@@ -103,7 +103,7 @@
 app.post('/api/register', async (req, res) => {
     const data = req.body;
     const hashedPassword = await bCrypt(data.password);
-    const queryResponse = await insertIntoTable.insertIntoUsers(dbRequest, data, hashedPassword);
+    const queryResponse = await insertIntoTable.insertIntoUsers(sql, data, hashedPassword);
 
     res.json(queryResponse);
 })
@@ -112,7 +112,7 @@ app.post('/api/register', async (req, res) => {
 app.post('/api/login', async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
-    const getUser = await getFromTable.findUserByName(dbRequest, username);
+    const getUser = await getFromTable.findUserByName(sql, username);
     let user = {
         notify: "login_user_not_found"
     }
@@ -125,7 +125,8 @@ app.post('/api/login', async (req, res) => {
             if(userAuth) {
                 const payload = {
                     username: username,
-                    role: getUser["role"]
+                    role: getUser["role"],
+                    userId: getUser["id"]
                 };
                 const token = jwt.sign(payload, jwtSecret, { expiresIn: '1h' });
                 res.json({ token, user: { 
@@ -147,12 +148,17 @@ app.post('/api/login', async (req, res) => {
     }
 })
 
-
+// User Match Stats //
+app.get('/api/user/matchstats/:userId', async (req, res) => {
+    const userId = req.params.userId;
+    const stats = await getFromTable.getUserMatchStats(sql, userId);
+    res.json(stats);
+})
 
 // Get User Data //
 app.get('/api/user/get/:username', async (req, res) => {
     const username = req.params.username;
-    const getUser = await getFromTable.findUserByName(dbRequest, username);
+    const getUser = await getFromTable.findUserByName(sql, username);
     const userData = {
         username: username,
         email: getUser["email"],
