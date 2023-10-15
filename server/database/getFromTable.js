@@ -32,6 +32,7 @@ const findUserByName = (sql, username) => {
 
     return checkUser(username)
         .then(response => {
+            request.cancel();
             return response;
         })
         .catch(err => {
@@ -60,6 +61,7 @@ const getUserMatchStats = (sql, id) => {
 
     return checkStats(id)
         .then(response => {
+            request.cancel();
             return response;
         })
         .catch(err => {

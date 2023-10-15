@@ -70,6 +70,7 @@ const insertIntoUsers = (sql, data, hashedPassword) => {
 
     return checkUsernameEmail()
       .then(response => {
+        request.cancel();
         return String(response);
       })
       .catch(err => {
