@@ -8,6 +8,7 @@ import ProfileMessages from "./profile_components/ProfileMessages";
 import ProfileFriends from "./profile_components/ProfileFriends";
 import ProfileSettings from "./profile_components/ProfileSettings";
 import jwt_decode from 'jwt-decode';
+import Loading from "../extras/Loading";
 import './style/Profile.css';
 
 export default function Profile({translation, sidebarHovered, jwtToken}) {
@@ -18,6 +19,7 @@ export default function Profile({translation, sidebarHovered, jwtToken}) {
     const [userData, setUserData] = useState({});
     const [userMatchStats, setUserMatchStats] = useState(null);
     const [profileComponent, setProfileComponent] = useState("overview");
+    const [loading, setLoading] = useState(false);
 
     const pageTransition = {
         initial: {
@@ -41,53 +43,57 @@ export default function Profile({translation, sidebarHovered, jwtToken}) {
         if(jwtToken == null) {
             navigate("/");
         } else {
-            const decodedToken = jwt_decode(jwtToken);
-            if(decodedToken.username == username) {
-                // Fetching User Data //
-                const fetchUserData = async () => {
-                    try {
-                        const response = await fetch(`/api/user/get/${decodedToken.username}`, {
-                            headers: {
-                                Authorization: `Bearer ${jwtToken}`
+            setLoading(true);
+            setTimeout(() => {
+                const decodedToken = jwt_decode(jwtToken);
+                if(decodedToken.username == username) {
+                    // Fetching User Data //
+                    const fetchUserData = async () => {
+                        try {
+                            const response = await fetch(`/api/user/get/${decodedToken.username}`, {
+                                headers: {
+                                    Authorization: `Bearer ${jwtToken}`
+                                }
+                            });
+
+                            if(response.status === 200) {
+                                const data = await response.json();
+                                setUserData(data);
                             }
-                        });
-
-                        if(response.status === 200) {
-                            const data = await response.json();
-                            setUserData(data);
+                        } catch (err) {
+                            console.log(err)
                         }
-                    } catch (err) {
-                        console.log(err)
                     }
-                }
-                fetchUserData();
+                    fetchUserData();
 
-                // Fetching User Statistics //
-                const fetchUserStats = async () => {
-                    try {
-                        const response = await fetch(`/api/user/matchstats/${decodedToken.userId}`, {
-                            headers: {
-                                Authorization: `Bearer ${jwtToken}`
+                    // Fetching User Statistics //
+                    const fetchUserStats = async () => {
+                        try {
+                            const response = await fetch(`/api/user/matchstats/${decodedToken.userId}`, {
+                                headers: {
+                                    Authorization: `Bearer ${jwtToken}`
+                                }
+                            });
+
+                            if(response.status === 200) {
+                                const data = await response.json();
+                                setUserMatchStats(data);
+                                console.log(data);
                             }
-                        });
-
-                        if(response.status === 200) {
-                            const data = await response.json();
-                            setUserMatchStats(data);
-                            console.log(data);
+                        } catch (err) {
+                            console.log(err)
                         }
-                    } catch (err) {
-                        console.log(err)
                     }
-                }
-                fetchUserStats();
-            } else {
-                if(username == null || username == undefined || username === "") {
-                    navigate("/");
+                    fetchUserStats();
                 } else {
-                    // Fetch other user data
+                    if(username == null || username == undefined || username === "") {
+                        navigate("/");
+                    } else {
+                        // Fetch other user data
+                    }
                 }
-            }
+                setLoading(false);
+            }, 3000)
         }
     }, [])
 
@@ -115,153 +121,173 @@ export default function Profile({translation, sidebarHovered, jwtToken}) {
             exit="exit"
             variants={pageTransition}
         >
-            <div className="profile-light"></div>
-            <div className="profile-top-part">
-                <Tooltip
-                    title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("back-to-the-main-menu")}</span>}
-                    placement='right'
-                    arrow
-                    TransitionComponent={Zoom}
-                    TransitionProps={{ timeout: 600 }}
-                >
-                    <div className="profile-close" onClick={handleGoHome}><i class="fa-solid fa-rectangle-xmark"></i></div>
-                </Tooltip>
-                <div className="profile-top-avatar" style={{backgroundImage: `url(${userData.avatar})`}}></div>
-                <div className="profile-top-data">
-                    <span>{userData.username}</span>
-                    <span>{userData.role}</span>
-                    <div className="profile-basic-data">
+            { loading ?
+                <div className="profile-loading-screen">
+                    <Loading
+                        text={translation("loading_profile_data_text")}
+                        scale={2}
+                    />
+                </div>
+            :
+                <>
+                <div className="profile-light"></div>
+                <div className="profile-top-part">
+                    <Tooltip
+                        title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("back-to-the-main-menu")}</span>}
+                        placement='right'
+                        arrow
+                        TransitionComponent={Zoom}
+                        TransitionProps={{ timeout: 600 }}
+                    >
+                        <div className="profile-close" onClick={handleGoHome}><i class="fa-solid fa-rectangle-xmark"></i></div>
+                    </Tooltip>
+                    <div className="profile-top-avatar" style={{backgroundImage: `url(${userData.avatar})`}}></div>
+                    <div className="profile-top-data">
+                        <span>{userData.username}</span>
+                        <span>{userData.role}</span>
+                        <div className="profile-basic-data">
+                            <Tooltip
+                                title={<span style={{ color: "#fff", fontSize: "14px" }}>{userData.next_level_xp - userData.xp} {translation("profile_xpbar_text")}</span>}
+                                placement='bottom'
+                                arrow
+                                TransitionComponent={Zoom}
+                                TransitionProps={{ timeout: 600 }}
+                            >
+                                <div className="xp-bar-container">
+                                    <div className="xp-bar">
+                                        <span>{userData.xp} / {userData.next_level_xp}</span>
+                                        <span style={{width: `${xpBar}px`}} className="xp-bar-active"></span>
+                                    </div>
+                                </div>
+                            </Tooltip>
+                        </div>
+                    </div>
+                    <div className="profile-top-datas">
+                        <div className="profile-top-data-item">
+                            <div className="data-item-icon">
+                                <span>Lv</span>
+                            </div>
+                            <div className="data-item-amount">
+                                <span>{userData.level}</span>
+                            </div>
+                        </div>
+                        <div className="profile-top-data-item">
+                            <div className="data-item-icon">
+                                <i className="fa-solid fa-coins"></i>
+                            </div>
+                            <div className="data-item-amount">
+                                <span>{userData.coin}</span>
+                            </div>
+                        </div>
+                        <div className="profile-top-data-item">
+                            <div className="data-item-icon">
+                                <i class="fa-solid fa-user-group"></i>
+                            </div>
+                            <div className="data-item-amount">
+                                <span>3</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="profile-navbar-part">
+                    <div className="profile-navbar-left">
                         <Tooltip
-                            title={<span style={{ color: "#fff", fontSize: "14px" }}>{userData.next_level_xp - userData.xp} {translation("profile_xpbar_text")}</span>}
-                            placement='bottom'
+                            title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("profile_stat_arena_desc")}</span>}
+                            placement='top'
                             arrow
                             TransitionComponent={Zoom}
                             TransitionProps={{ timeout: 600 }}
                         >
-                            <div className="xp-bar-container">
-                                <div className="xp-bar">
-                                    <span>{userData.xp} / {userData.next_level_xp}</span>
-                                    <span style={{width: `${xpBar}px`}} className="xp-bar-active"></span>
-                                </div>
+                            <div className="profile-navbar-stats">
+                                <span>33</span>
+                                <span>{translation("profile_stat_arena")}</span>
+                            </div>
+                        </Tooltip>
+                        <Tooltip
+                            title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("profile_stat_online_desc")}</span>}
+                            placement='top'
+                            arrow
+                            TransitionComponent={Zoom}
+                            TransitionProps={{ timeout: 600 }}
+                        >
+                            <div className="profile-navbar-stats">
+                                <span>12</span>
+                                <span>{translation("profile_stat_multiplayer")}</span>
+                            </div>
+                        </Tooltip>
+                        <Tooltip
+                            title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("profile_stat_cards_desc")}</span>}
+                            placement='top'
+                            arrow
+                            TransitionComponent={Zoom}
+                            TransitionProps={{ timeout: 600 }}
+                        >
+                            <div className="profile-navbar-stats">
+                                <span>84</span>
+                                <span>{translation("profile_stat_cards")}</span>
                             </div>
                         </Tooltip>
                     </div>
-                </div>
-                <div className="profile-top-datas">
-                    <div className="profile-top-data-item">
-                        <div className="data-item-icon">
-                            <span>Lv</span>
+                    <div className="profile-navbar-right">
+                        <div className={profileComponent == "overview" ? "profile-navbar-item-active" : "profile-navbar-item"} onClick={() => handleProfileComponent("overview")}>
+                            <div className="profile-navbar-item-icon">
+                                <i class="fa-solid fa-address-card"></i>
+                            </div>
+                            <div className="profile-navar-item-label">
+                                <span>{translation("profile_sidebar_overview")}</span>
+                            </div>
                         </div>
-                        <div className="data-item-amount">
-                            <span>{userData.level}</span>
+                        <div className={profileComponent == "friends" ? "profile-navbar-item-active" : "profile-navbar-item"} onClick={() => handleProfileComponent("friends")}>
+                            <div className="profile-navbar-item-icon">
+                                <i class="fa-solid fa-user-group"></i>
+                            </div>
+                            <div className="profile-navar-item-label">
+                                <span>{translation("profile_sidebar_friends")}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div className="profile-top-data-item">
-                        <div className="data-item-icon">
-                            <i className="fa-solid fa-coins"></i>
+                        <div className={profileComponent == "messages" ? "profile-navbar-item-active" : "profile-navbar-item"} onClick={() => handleProfileComponent("messages")}>
+                            <div className="profile-navbar-item-icon">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div className="profile-navar-item-label">
+                                <span>{translation("profile_sidebar_messages")}</span>
+                            </div>
                         </div>
-                        <div className="data-item-amount">
-                            <span>{userData.coin}</span>
-                        </div>
-                    </div>
-                    <div className="profile-top-data-item">
-                        <div className="data-item-icon">
-                            <i class="fa-solid fa-user-group"></i>
-                        </div>
-                        <div className="data-item-amount">
-                            <span>3</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="profile-navbar-part">
-                <div className="profile-navbar-left">
-                    <Tooltip
-                        title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("profile_stat_arena_desc")}</span>}
-                        placement='top'
-                        arrow
-                        TransitionComponent={Zoom}
-                        TransitionProps={{ timeout: 600 }}
-                    >
-                        <div className="profile-navbar-stats">
-                            <span>33</span>
-                            <span>{translation("profile_stat_arena")}</span>
-                        </div>
-                    </Tooltip>
-                    <Tooltip
-                        title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("profile_stat_online_desc")}</span>}
-                        placement='top'
-                        arrow
-                        TransitionComponent={Zoom}
-                        TransitionProps={{ timeout: 600 }}
-                    >
-                        <div className="profile-navbar-stats">
-                            <span>12</span>
-                            <span>{translation("profile_stat_multiplayer")}</span>
-                        </div>
-                    </Tooltip>
-                    <Tooltip
-                        title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("profile_stat_cards_desc")}</span>}
-                        placement='top'
-                        arrow
-                        TransitionComponent={Zoom}
-                        TransitionProps={{ timeout: 600 }}
-                    >
-                        <div className="profile-navbar-stats">
-                            <span>84</span>
-                            <span>{translation("profile_stat_cards")}</span>
-                        </div>
-                    </Tooltip>
-                </div>
-                <div className="profile-navbar-right">
-                    <div className={profileComponent == "overview" ? "profile-navbar-item-active" : "profile-navbar-item"} onClick={() => handleProfileComponent("overview")}>
-                        <div className="profile-navbar-item-icon">
-                            <i class="fa-solid fa-address-card"></i>
-                        </div>
-                        <div className="profile-navar-item-label">
-                            <span>{translation("profile_sidebar_overview")}</span>
-                        </div>
-                    </div>
-                    <div className={profileComponent == "friends" ? "profile-navbar-item-active" : "profile-navbar-item"} onClick={() => handleProfileComponent("friends")}>
-                        <div className="profile-navbar-item-icon">
-                            <i class="fa-solid fa-user-group"></i>
-                        </div>
-                        <div className="profile-navar-item-label">
-                            <span>{translation("profile_sidebar_friends")}</span>
-                        </div>
-                    </div>
-                    <div className={profileComponent == "messages" ? "profile-navbar-item-active" : "profile-navbar-item"} onClick={() => handleProfileComponent("messages")}>
-                        <div className="profile-navbar-item-icon">
-                            <i class="fa-solid fa-envelope"></i>
-                        </div>
-                        <div className="profile-navar-item-label">
-                            <span>{translation("profile_sidebar_messages")}</span>
-                        </div>
-                    </div>
-                    <div className={profileComponent == "settings" ? "profile-navbar-item-active" : "profile-navbar-item"} onClick={() => handleProfileComponent("settings")}>
-                        <div className="profile-navbar-item-icon">
-                            <i class="fa-solid fa-gear"></i>
-                        </div>
-                        <div className="profile-navar-item-label">
-                            <span>{translation("profile_sidebar_settings")}</span>
+                        <div className={profileComponent == "settings" ? "profile-navbar-item-active" : "profile-navbar-item"} onClick={() => handleProfileComponent("settings")}>
+                            <div className="profile-navbar-item-icon">
+                                <i class="fa-solid fa-gear"></i>
+                            </div>
+                            <div className="profile-navar-item-label">
+                                <span>{translation("profile_sidebar_settings")}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="profile-content-part">
-                <AnimatePresence mode="wait">
-                    { profileComponent == "overview" ?
-                        <ProfileOverview translation={translation} />
-                    : profileComponent == "messages" ?
-                        <ProfileMessages translation={translation} />
-                    : profileComponent == "friends" ?
-                        <ProfileFriends translation={translation} />
-                    : profileComponent == "settings" ?
-                        <ProfileSettings translation={translation} />
-                    : undefined
-                    }
-                </AnimatePresence>
-            </div>
+                <div className="profile-content-part">
+                    <AnimatePresence mode="wait">
+                        { profileComponent == "overview" ?
+                            <ProfileOverview
+                                translation={translation}
+                                statistics={userMatchStats}
+                            />
+                        : profileComponent == "messages" ?
+                            <ProfileMessages
+                                translation={translation}
+                            />
+                        : profileComponent == "friends" ?
+                            <ProfileFriends
+                                translation={translation}
+                            />
+                        : profileComponent == "settings" ?
+                            <ProfileSettings
+                                translation={translation}
+                            />
+                        : undefined
+                        }
+                    </AnimatePresence>
+                </div>
+                </>
+            }
         </motion.div>
     );
 }
