@@ -3,7 +3,7 @@ import { useLocation} from "react-router-dom";
 import { motion } from 'framer-motion';
 import "./style/ProfileOverview.css";
 
-export default function ProfileOverview({translation}) {
+export default function ProfileOverview({translation, statistics}) {
     const location = useLocation();
 
     const pageTransition = {
