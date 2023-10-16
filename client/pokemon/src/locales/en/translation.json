@@ -67,5 +67,6 @@
     "profile_stat_cards_desc": "Your entire card collection",
     "profile_xpbar_text": "points needed to reach the next level",
     "back-to-the-main-menu": "Back to the Main Menu",
-    "loading_profile_data_text": "Loading profile data"
+    "loading_profile_data_text": "Loading profile data",
+    "loading_match_statistics_text": "Loading Match Statistics"
 }
