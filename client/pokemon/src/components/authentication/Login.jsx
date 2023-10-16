@@ -5,7 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import InputAdornment from "@mui/material/InputAdornment";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Loading from 'react-loading';
+import Loading from "../extras/Loading";
 import Notify from "./Notify";
 import "./Login.css";
 
@@ -76,7 +76,7 @@ export default function Login({translation, login}) {
     }
 
     const checkLoginData = (data) => {
-        switch (data.notify) {
+        switch (data.user.notify) {
             case "login_user_not_found":
                 setNotifyText(translation("login_user_not_found"));
                 setNotify(true);
@@ -105,16 +105,10 @@ export default function Login({translation, login}) {
     <>
         <div className="login-container">
             { loading ?
-                <>
-                    <Loading
-                        type={"spin"}
-                        color={"#b4dd1d"}
-                        height={150}
-                        width={150}
-                        className="loading-screen"
-                    />
-                    <span className="loading-text">{translation("loading_logging_in")}</span>
-                </>
+                <Loading 
+                    text={translation("loading_logging_in")}
+                    scale={1.8}
+                />
             : undefined }
             <span className="login-label">{translation("login_label")}</span>
             { notify ?

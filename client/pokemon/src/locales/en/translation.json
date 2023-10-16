@@ -13,7 +13,7 @@
     "user_level_text": "Level",
     "xp_bar_text": "Road to the next level",
     "menu_label_text1": "GAME",
-    "menu_label_text2": "SOCIAL",
+    "menu_label_text2": "CARD STUFF",
     "menu_label_text3": "MEDIA",
     "menu_label_text4": "LANGUAGE",
     "menu_adventuregame_text": "Adventure Game",
@@ -49,7 +49,7 @@
     "login_success": "Login is successful",
     "logout_btn_text": "Logout",
     "loading_logging_in": "Logging in...",
-    "loading_register": "Working...",
+    "loading_register": "Working on it...",
     "media_music_label": "Music",
     "media_sounds_label": "Sounds",
     "music_turn_on": "Turn ON Music",
@@ -58,5 +58,14 @@
     "profile_sidebar_overview": "Overview",
     "profile_sidebar_messages": "Messages",
     "profile_sidebar_friends": "Friends",
-    "profile_sidebar_settings": "Settings"
+    "profile_sidebar_settings": "Settings",
+    "profile_stat_arena": "Arena Wins",
+    "profile_stat_multiplayer": "Multiplayer Wins",
+    "profile_stat_cards": "Collection",
+    "profile_stat_arena_desc": "All your victories in Arena game mode",
+    "profile_stat_online_desc": "All your victories in Multiplayer game mode",
+    "profile_stat_cards_desc": "Your entire card collection",
+    "profile_xpbar_text": "points needed to reach the next level",
+    "back-to-the-main-menu": "Back to the Main Menu",
+    "loading_profile_data_text": "Loading profile data"
 }

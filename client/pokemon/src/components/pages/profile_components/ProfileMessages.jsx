@@ -25,12 +25,15 @@ export default function ProfileMessages({translation}) {
 
     return (
         <motion.div
-            key={location.pathname}
+            key="profile_messages"
             className="profile-messages-container"
             initial="initial"
             animate="animate"
             exit="exit"
             variants={pageTransition}
+            style={{
+                backgroundImage: `url(/images/backgrounds/profile/profile_messages_bg.png)`
+            }}
         >
             <span>{translation("profile_sidebar_messages")}</span>
         </motion.div>

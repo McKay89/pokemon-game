@@ -25,22 +25,7 @@ export default function Main({translation, sidebarHovered}) {
         x: 0,
         transition: { duration: 0.5 }
       },
-    };
-
-    useEffect(() => {
-      const fetchTestData = async () => {
-        try {
-          const response = await fetch('/api/testdata');
-          const data = await response.json();
-          setTestData(data);
-          setGameLanguage(i18next.language);
-        } catch (error) {
-          console.log(error);
-        }
-      }
-
-      fetchTestData();
-    }, [i18next.language])    
+    };  
 
     return (
         <motion.div

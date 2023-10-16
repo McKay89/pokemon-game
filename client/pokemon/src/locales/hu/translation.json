@@ -13,7 +13,7 @@
     "user_level_text": "Szint",
     "xp_bar_text": "Út a következő szinthez",
     "menu_label_text1": "JÁTÉK",
-    "menu_label_text2": "KÖZÖSSÉG",
+    "menu_label_text2": "KÁRTYA ÜGYEK",
     "menu_label_text3": "MÉDIA",
     "menu_label_text4": "NYELV",
     "menu_adventuregame_text": "Felfedező játék",
@@ -58,5 +58,14 @@
     "profile_sidebar_overview": "Áttekintés",
     "profile_sidebar_messages": "Üzenetek",
     "profile_sidebar_friends": "Barátok",
-    "profile_sidebar_settings": "Beállítások"
+    "profile_sidebar_settings": "Beállítások",
+    "profile_stat_arena": "Aréna győzelmek",
+    "profile_stat_multiplayer": "Online győzelmek",
+    "profile_stat_cards": "Gyűjtemény",
+    "profile_stat_arena_desc": "Az összes győzelmed Aréna játékmódban",
+    "profile_stat_online_desc": "Az összes győzelmed Online játékmódban",
+    "profile_stat_cards_desc": "A teljes kártyagyűjteményed",
+    "profile_xpbar_text": "pont szükséges a következő szint eléréséhez",
+    "back-to-the-main-menu": "Vissza a Főmenübe",
+    "loading_profile_data_text": "Profiladatok betöltése"
 }

@@ -29,11 +29,10 @@ function CircularProgressWithLabel(props) {
   value: PropTypes.number.isRequired,
 };
 
-export default function TestDownload({translation, sidebarHovered}) {
+export default function TestDownload({translation, sidebarHovered, jwtToken}) {
     const navigate = useNavigate();
     const location = useLocation();
     const [progress, setProgress] = React.useState(0);
-    const userDataJSON = localStorage.getItem('userData');
 
     const pageTransition = {
         initial: {
@@ -54,7 +53,7 @@ export default function TestDownload({translation, sidebarHovered}) {
 
     // Check user is logged in
     useEffect(() => {
-        if(!userDataJSON) {
+        if(jwtToken == null) {
             navigate("/");
         }
     }, [])

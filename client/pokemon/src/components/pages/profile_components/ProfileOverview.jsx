@@ -3,7 +3,7 @@ import { useLocation} from "react-router-dom";
 import { motion } from 'framer-motion';
 import "./style/ProfileOverview.css";
 
-export default function ProfileOverview({translation}) {
+export default function ProfileOverview({translation, statistics}) {
     const location = useLocation();
 
     const pageTransition = {
@@ -25,12 +25,15 @@ export default function ProfileOverview({translation}) {
 
     return (
         <motion.div
-            key={location.pathname}
+            key="profile_overview"
             className="profile-overview-container"
             initial="initial"
             animate="animate"
             exit="exit"
             variants={pageTransition}
+            style={{
+                backgroundImage: `url(/images/backgrounds/profile/profile_overview_bg.png)`
+            }}
         >
             <span>{translation("profile_sidebar_overview")}</span>
         </motion.div>

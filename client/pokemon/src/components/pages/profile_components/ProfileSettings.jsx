@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation} from "react-router-dom";
 import { motion } from 'framer-motion';
 import "./style/ProfileSettings.css";
 
 export default function ProfileSettings({translation}) {
-    const location = useLocation();
-
     const pageTransition = {
         initial: {
             opacity: 0,
@@ -25,12 +22,15 @@ export default function ProfileSettings({translation}) {
 
     return (
         <motion.div
-            key={location.pathname}
+            key="profile_fsettings"
             className="profile-settings-container"
             initial="initial"
             animate="animate"
             exit="exit"
             variants={pageTransition}
+            style={{
+                backgroundImage: `url(/images/backgrounds/profile/profile_settings_bg.png)`
+            }}
         >
             <span>{translation("profile_sidebar_settings")}</span>
         </motion.div>
