@@ -17,7 +17,7 @@ export default function Profile({translation, sidebarHovered, jwtToken}) {
     const location = useLocation();
     const [xpBar, setXpBar] = useState(0);
     const [userData, setUserData] = useState({});
-    const [userMatchStats, setUserMatchStats] = useState(null);
+    const [decodedToken, setDecodedToken] = useState({});
     const [profileComponent, setProfileComponent] = useState("overview");
     const [loading, setLoading] = useState(false);
 
@@ -45,12 +45,13 @@ export default function Profile({translation, sidebarHovered, jwtToken}) {
         } else {
             setLoading(true);
             setTimeout(() => {
-                const decodedToken = jwt_decode(jwtToken);
-                if(decodedToken.username == username) {
+                const decToken = jwt_decode(jwtToken);
+                setDecodedToken(decToken);
+                if(decToken.username == username) {
                     // Fetching User Data //
                     const fetchUserData = async () => {
                         try {
-                            const response = await fetch(`/api/user/get/${decodedToken.username}`, {
+                            const response = await fetch(`/api/user/get/${decToken.username}`, {
                                 headers: {
                                     Authorization: `Bearer ${jwtToken}`
                                 }
@@ -65,26 +66,6 @@ export default function Profile({translation, sidebarHovered, jwtToken}) {
                         }
                     }
                     fetchUserData();
-
-                    // Fetching User Statistics //
-                    const fetchUserStats = async () => {
-                        try {
-                            const response = await fetch(`/api/user/matchstats/${decodedToken.userId}`, {
-                                headers: {
-                                    Authorization: `Bearer ${jwtToken}`
-                                }
-                            });
-
-                            if(response.status === 200) {
-                                const data = await response.json();
-                                setUserMatchStats(data);
-                                console.log(data);
-                            }
-                        } catch (err) {
-                            console.log(err)
-                        }
-                    }
-                    fetchUserStats();
                 } else {
                     if(username == null || username == undefined || username === "") {
                         navigate("/");
@@ -268,7 +249,8 @@ export default function Profile({translation, sidebarHovered, jwtToken}) {
                         { profileComponent == "overview" ?
                             <ProfileOverview
                                 translation={translation}
-                                statistics={userMatchStats}
+                                userid={decodedToken.userId}
+                                token={jwtToken}
                             />
                         : profileComponent == "messages" ?
                             <ProfileMessages
