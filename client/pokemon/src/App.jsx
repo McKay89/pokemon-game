@@ -12,6 +12,7 @@ import Profile from './components/pages/Profile';
 import Navbar from './components/Navbar';
 import TestDownload from './components/pages/TestDownload';
 import BackgroundCover from './components/BackgroundCover';
+import CardCollection from './components/pages/CardCollection';
 import './App.css'
 
 const resources = {
@@ -95,6 +96,15 @@ function App() {
             {/* TestDownload Component */}
             <Route path='/testdownload' element={
                 <TestDownload
+                  translation={t}
+                  sidebarHovered={sidebarHovered}
+                  jwtToken={jwtToken}
+                />
+              }
+            />
+            {/* Card Collection Component */}
+            <Route path='/collection' element={
+                <CardCollection
                   translation={t}
                   sidebarHovered={sidebarHovered}
                   jwtToken={jwtToken}
