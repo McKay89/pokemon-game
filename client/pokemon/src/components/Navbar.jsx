@@ -207,7 +207,12 @@ export default function Navbar({translation, handleSidebarHover, user, login, ha
                   </li>
                   <li
                     onMouseOver={() => playSFX(sfxURLs.menuHoverSFX, soundsVolume)}
-                    onClick={() => playSFX(sfxURLs.menuClickSFX, soundsVolume)}
+                    onClick={
+                      () => {
+                        playSFX(sfxURLs.menuClickSFX, soundsVolume);
+                        navigateToPage("/collection");
+                      }
+                    }
                     className="menu-item"
                   >
                     <i style={{backgroundImage: "url(/images/icons/menu/cards.svg)"}} className="menu-icon"></i> &nbsp;
