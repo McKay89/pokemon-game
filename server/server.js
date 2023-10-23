@@ -12,7 +12,7 @@
     const app = express();
     app.use(express.json());
     app.use(express.static(__dirname + '/public'));
-    
+    var fs = require("fs");
 
 // DOTENV //
     require('dotenv').config()
@@ -101,18 +101,15 @@
 
 // Register //
 app.post('/api/register', async (req, res) => {
-    const data = req.body;
-    const hashedPassword = await bCrypt(data.password);
-    const queryResponse = await insertIntoTable.insertIntoUsers(sql, data, hashedPassword);
+    const hashedPassword = await bCrypt(req.body.password);
+    const queryResponse = await insertIntoTable.insertIntoUsers(sql, req.body, hashedPassword);
 
     res.json(queryResponse);
 })
 
 // Log-In //
 app.post('/api/login', async (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
-    const getUser = await getFromTable.findUserByName(sql, username);
+    const getUser = await getFromTable.findUserByName(sql, req.body.username);
     let user = {
         notify: "login_user_not_found"
     }
@@ -121,10 +118,10 @@ app.post('/api/login', async (req, res) => {
         res.json(user);
     } else {
         try {
-            const userAuth = await compareHash(password, getUser["password"]);
+            const userAuth = await compareHash(req.body.password, getUser["password"]);
             if(userAuth) {
                 const payload = {
-                    username: username,
+                    username: req.body.username,
                     role: getUser["role"],
                     userId: getUser["id"]
                 };
@@ -132,7 +129,7 @@ app.post('/api/login', async (req, res) => {
                 res.json({ token, user: { 
                     notify: "login_success",
                     logged: true,
-                    username: username,
+                    username: req.body.username,
                     avatar: getUser["avatar"],
                     role: getUser["role"],
                     level: getUser["level"],
@@ -150,17 +147,15 @@ app.post('/api/login', async (req, res) => {
 
 // User Match Stats //
 app.get('/api/user/matchstats/:userId', async (req, res) => {
-    const userId = req.params.userId;
-    const stats = await getFromTable.getUserMatchStats(sql, userId);
+    const stats = await getFromTable.getUserMatchStats(sql, parseInt(req.params.userId));
     res.json(stats);
 })
 
 // Get User Data //
 app.get('/api/user/get/:username', async (req, res) => {
-    const username = req.params.username;
-    const getUser = await getFromTable.findUserByName(sql, username);
+    const getUser = await getFromTable.findUserByName(sql, req.params.username);
     const userData = {
-        username: username,
+        username: req.params.username,
         email: getUser["email"],
         avatar: getUser["avatar"],
         birthday: getUser["birthday"],
@@ -176,6 +171,31 @@ app.get('/api/user/get/:username', async (req, res) => {
     res.json(userData);
 })
 
+// Get User Cards //
+app.get('/api/user/cards/:username', async (req, res) => {
+    const userCards = await getFromTable.getUserCardsByName(sql, req.params.username);
+    fs.readFile('./pokemons_data/pokemons.json', 'utf8', (err, data) => {
+        if (err) {
+            console.error('An error occured while reading JSON: ', err);
+            return res.status(500).send('An error occured while reading JSON.');
+        }
+        const jsonData = JSON.parse(data);
+        const allCards = [];
+
+        // Filling Cards Object
+        jsonData.forEach(card => {
+            if(Object.values(JSON.parse(userCards)).includes(card["id"])) {
+                allCards.push(card)
+            } else {
+                allCards.push({
+                    id: card["id"]
+                })
+            }
+        });
+
+        res.json(allCards);
+    });
+})
 
 
 
