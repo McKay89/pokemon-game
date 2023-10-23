@@ -50,7 +50,7 @@ export default function Login({translation, login}) {
             } else {
                 loginConfirmed();
             }
-        }, 3000)
+        }, 1000)
     }
 
     const loginConfirmed = async () => {

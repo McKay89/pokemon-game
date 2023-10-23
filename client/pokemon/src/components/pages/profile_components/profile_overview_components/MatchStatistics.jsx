@@ -8,28 +8,26 @@ export default function MatchStatistics({translation, userid, token}) {
 
     useEffect(() => {
         setLoading(true);
-        setTimeout(() => {
-            // Fetching User Statistics //
-            const fetchUserStats = async () => {
-                try {
-                    const response = await fetch(`/api/user/matchstats/${userid}`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    });
-
-                    if(response.status === 200) {
-                        const data = await response.json();
-                        setUserMatchStats(data);
-                        console.log(data);
+        // Fetching User Statistics //
+        const fetchUserStats = async () => {
+            try {
+                const response = await fetch(`/api/user/matchstats/${userid}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
                     }
-                } catch (err) {
-                    console.log(err)
+                });
+
+                if(response.status === 200) {
+                    const data = await response.json();
+                    setUserMatchStats(data);
+                    console.log(data);
                 }
+            } catch (err) {
+                console.log(err)
             }
-            fetchUserStats();
-            setLoading(false);
-        }, 3000);
+        }
+        fetchUserStats();
+        setLoading(false);
     }, [])
     
 
