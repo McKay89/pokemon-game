@@ -186,7 +186,7 @@ app.get('/api/user/get/:username', async (req, res) => {
 // Get User Cards //
 app.get('/api/user/cards/:username', async (req, res) => {
     const userCards = await getFromTable.getUserCardsByName(sql, req.params.username);
-    fs.readFile('./pokemons_data/pokemons.json', 'utf8', (err, data) => {
+    fs.readFile('./card_data/pokemon/pokemons.json', 'utf8', (err, data) => {
         if (err) {
             console.error('An error occured while reading JSON: ', err);
             return res.status(500).send('An error occured while reading JSON.');
