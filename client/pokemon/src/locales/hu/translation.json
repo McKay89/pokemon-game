@@ -70,6 +70,8 @@
     "loading_profile_data_text": "Profiladatok betöltése",
     "loading_match_statistics_text": "Meccs statisztika betöltése",
     "loading_user_cards_text": "Kártyakollekció betöltése",
+    "loading_background_text": "Háttér betöltése",
+    "cards_search_placeholder": "Szűrés név alapján",
 
 
 
@@ -194,7 +196,7 @@
     "pokemon_desc_seadra": "A hímek nevelik fel az utódokat. Amíg Seadra fiatalokat nevel, a hátukon lévő tüskék vastagabb és erősebb mérget bocsátanak ki.",
     "pokemon_desc_goldeen": "Hátsó, mell- és farokúszói vízben elegánsan hullámzanak. Ezért nevezik a Víz Táncosának.",
     "pokemon_desc_seaking": "Ősszel testében több zsír halmozódik fel, felkészülve arra, hogy párt találjon. Ekkor gyönyörű színeket ölt magára.",
-    "pokemon_desc_staryu": "Ha ellátogatsz egy tengerpartra nyár végén, Staryu-k egész csoportját is láthatod, Ahogy egyenletes ütemben ragyognak fel.",
+    "pokemon_desc_staryu": "Ha ellátogatsz egy tengerpartra nyár végén, Staryu-k egész csoportját is láthatod, ahogy egyenletes ütemben ragyognak fel.",
     "pokemon_desc_starmie": "Ennek a Pokémonnak van egy szerve, amit a mag-ja néven ismernek. A szerv hét színben ragyog, amikor a Starmie a hatékony pszichikai erejét felszabadítja.",
     "pokemon_desc_mr_mime": "Pantomim-szakértő, aki láthatatlan, de szilárd falakat képes létrehozni mozdulataival.",
     "pokemon_desc_scyther": "Éles sarlóival felszabdossa a füvet, olyan gyorsan mozog, hogy az emberi szem számára még követni is nehéz.",
