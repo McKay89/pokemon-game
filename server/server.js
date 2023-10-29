@@ -99,6 +99,22 @@
     }
 
 
+// JWT Validation //
+app.post('/api/jwt/verify', async (req, res) => {
+    const token = req.body.token;
+    if (!token) {
+        return res.status(401).json({ message: 'JWT Token is missing' });
+    }
+    
+    jwt.verify(token, jwtSecret, (err, decoded) => {
+        if (err) {
+          return res.status(403).json({ message: 'JWT Token is invalid !' });
+        }
+        
+        return res.status(200).json({data: token, message: 'JWT Token is valid !'});
+    });
+})
+
 // Register //
 app.post('/api/register', async (req, res) => {
     const hashedPassword = await bCrypt(req.body.password);
@@ -121,20 +137,16 @@ app.post('/api/login', async (req, res) => {
             const userAuth = await compareHash(req.body.password, getUser["password"]);
             if(userAuth) {
                 const payload = {
-                    username: req.body.username,
-                    role: getUser["role"],
-                    userId: getUser["id"]
-                };
-                const token = jwt.sign(payload, jwtSecret, { expiresIn: '1h' });
-                res.json({ token, user: { 
-                    notify: "login_success",
                     logged: true,
-                    username: req.body.username,
                     avatar: getUser["avatar"],
+                    username: req.body.username,
                     role: getUser["role"],
+                    userId: getUser["id"],
                     level: getUser["level"],
                     coin: getUser["coin"]
-                }});
+                };
+                const token = jwt.sign(payload, jwtSecret, { expiresIn: '24h' });
+                res.json({ token, notify: "login_success",});
             } else {
                 res.status(401).json({ notify: 'login_user_not_found' });
             }
@@ -199,10 +211,10 @@ app.get('/api/user/cards/:username', async (req, res) => {
 
 
 
-// CHECK VALID JWT //
+// ENDPOINTS IGNORES JWT //
 app.use(
     newjwt({ secret: jwtSecret, algorithms: ['HS256'] }).unless({
-    path: ['/api/login', '/api/register'],
+    path: ['/api/login', '/api/register', '/api/jwt/verify'],
     })
 );
 
