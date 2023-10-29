@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation} from "react-router-dom";
 import { motion } from 'framer-motion';
+import MatchStatistics from './profile_overview_components/MatchStatistics';
 import "./style/ProfileOverview.css";
 
-export default function ProfileOverview({translation, statistics}) {
+export default function ProfileOverview({translation, userid, token}) {
     const location = useLocation();
 
     const pageTransition = {
@@ -35,7 +36,18 @@ export default function ProfileOverview({translation, statistics}) {
                 backgroundImage: `url(/images/backgrounds/profile/profile_overview_bg.png)`
             }}
         >
-            <span>{translation("profile_sidebar_overview")}</span>
+            <div className="profile-overview-container">
+                <div className="profile-overview-left">
+                    <span>Left</span>
+                </div>
+                <div className="profile-overview-right">
+                    <MatchStatistics
+                        translation={translation}
+                        userid={userid}
+                        token={token}
+                    />
+                </div>
+            </div>
         </motion.div>
     );
 }
