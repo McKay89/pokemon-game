@@ -38,8 +38,39 @@ function App() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [sidebarHovered, setSidebarHovered] = useState(true);
-  const [userData, setUserData] = useState({});
   const [jwtToken, setJwtToken] = useState(null);
+  const [activeComponent, setActiveComponent] = useState("main");
+
+  useEffect(() => {
+    const storedData = localStorage.getItem('JWT');
+    if (storedData) {
+      // Check JWT Token
+      const JWTValidation = async () => {
+        try {
+          
+          const response = await fetch(`/api/jwt/verify`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({token: storedData})
+          })
+
+          if(response.status === 403) {
+            const data = await response.json();
+            localStorage.removeItem("JWT");
+            console.log(data.message);
+          } else if(response.status === 200) {
+            const data = await response.json();
+            setJwtToken(data.data);
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      JWTValidation();
+    }
+  }, [])
 
   const handleSidebarHover = (value) => {
     setSidebarHovered(value);
@@ -47,13 +78,17 @@ function App() {
 
   const fillUserData = (data) => {
     setJwtToken(data.token);
-    setUserData(data.user);
+    localStorage.setItem('JWT', data.token);
   }
 
   const handleLogout = () => {
-    setUserData({logged: false});
     setJwtToken(null);
+    localStorage.removeItem("JWT");
     navigate("/");
+  }
+
+  const handleActiveComponent = (value) => {
+    setActiveComponent(value);
   }
 
   const handleContextMenu = (e) => {
@@ -67,13 +102,17 @@ function App() {
         <Navbar
           translation={t}
           handleSidebarHover={handleSidebarHover}
-          user={userData}
           login={fillUserData}
           handleLogout={handleLogout}
           jwtToken={jwtToken}
+          activeComponent={handleActiveComponent}
         />
       </div>
-      <BackgroundCover />
+      {/* Background Component */}
+      <BackgroundCover
+        translation={t}
+        activeComponent={activeComponent}
+      />
       <div className="app-components">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
