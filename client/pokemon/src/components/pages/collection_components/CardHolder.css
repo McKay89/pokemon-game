@@ -1,0 +1,150 @@
+.cardholder-container {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: 100% 100%;
+    user-select: none;
+    transition: 0.3s;
+    animation: revealCard 0.2s ease-in 1;
+}
+
+.cardholder-container:hover {
+    transform: scale(1.1);
+}
+
+.mirror-image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: scaleY(-1);
+    opacity: 0.5;
+}
+
+.cardholder-health_1 {
+    position: absolute;
+    top: 287px;
+    right: 68px;
+    font-size: 27px;
+}
+
+.cardholder-health_2 {
+    position: absolute;
+    top: 287px;
+    right: 75px;
+    font-size: 27px;
+}
+
+.cardholder-attack_1 {
+    position: absolute;
+    bottom: 30px;
+    left: 85px;
+    font-size: 27px;
+}
+
+.cardholder-attack_2 {
+    position: absolute;
+    bottom: 30px;
+    left: 78px;
+    font-size: 27px;
+}
+
+.cardholder-attack_3 {
+    position: absolute;
+    bottom: 30px;
+    left: 70px;
+    font-size: 27px;
+}
+
+.cardholder-defense_1 {
+    position: absolute;
+    bottom: 30px;
+    left: 181px;
+    font-size: 27px;
+}
+
+.cardholder-defense_2 {
+    position: absolute;
+    bottom: 30px;
+    left: 174px;
+    font-size: 27px;
+}
+
+.cardholder-defense_3 {
+    position: absolute;
+    bottom: 30px;
+    left: 166px;
+    font-size: 27px;
+}
+
+.cardholder-speed_1 {
+    position: absolute;
+    bottom: 30px;
+    left: 271px;
+    font-size: 27px;
+}
+
+.cardholder-speed_2 {
+    position: absolute;
+    bottom: 30px;
+    left: 264px;
+    font-size: 27px;
+}
+
+.cardholder-speed_3 {
+    position: absolute;
+    bottom: 30px;
+    left: 256px;
+    font-size: 27px;
+}
+
+.cardholder-intelligence_1 {
+    position: absolute;
+    bottom: 30px;
+    left: 363px;
+    font-size: 27px;
+}
+
+.cardholder-intelligence_2 {
+    position: absolute;
+    bottom: 30px;
+    left: 356px;
+    font-size: 27px;
+}
+
+.cardholder-intelligence_3 {
+    position: absolute;
+    bottom: 30px;
+    left: 348px;
+    font-size: 27px;
+}
+
+.cardholder-desc {
+    position: absolute;
+    top: 355px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 355px;
+    height: 115px;
+    justify-content: center;
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    overflow-y: auto;
+}
+
+.cardholder-desc::-webkit-scrollbar {
+    display: none;
+}
+
+@keyframes revealCard {
+    0% {
+        opacity: 0;
+        transform: scale(1.2);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
