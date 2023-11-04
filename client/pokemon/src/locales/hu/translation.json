@@ -73,6 +73,13 @@
     "loading_background_text": "Háttér betöltése",
     "cards_search_placeholder": "Szűrés név alapján",
     "card_type_pokemon": "Pokémon Kártya",
+    "card_type_spell": "Varázs Kártya",
+    "card_type_trap": "Csapda Kártya",
+    "card_type_curse": "Átok Kártya",
+    "card_type_pokemons": "Pokémon Kártyák",
+    "card_type_spells": "Varázs Kártyák",
+    "card_type_traps": "TCsapda Kártyák",
+    "card_type_curses": "Átok Kártyák",
 
 
 

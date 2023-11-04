@@ -73,6 +73,13 @@
     "loading_background_text": "Loading Background",
     "cards_search_placeholder": "Filter by name",
     "card_type_pokemon": "Pokémon Card",
+    "card_type_spell": "Spell Card",
+    "card_type_trap": "Trap Card",
+    "card_type_curse": "Curse Card",
+    "card_type_pokemons": "Pokémon Cards",
+    "card_type_spells": "Spell Cards",
+    "card_type_traps": "Trap Cards",
+    "card_type_curses": "Curse Cards",
 
 
 
