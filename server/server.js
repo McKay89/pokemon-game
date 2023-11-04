@@ -200,7 +200,8 @@ app.get('/api/user/cards/:username', async (req, res) => {
                 allCards.push(card)
             } else {
                 allCards.push({
-                    id: card["id"]
+                    id: card["id"],
+                    card_type: card["card_type"]
                 })
             }
         });
