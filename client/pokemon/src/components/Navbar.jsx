@@ -225,7 +225,7 @@ export default function Navbar({translation, handleSidebarHover, login, handleLo
                     }
                     className="menu-item"
                   >
-                    <i style={{backgroundImage: "url(/images/icons/menu/cards.svg)"}} className="menu-icon"></i> &nbsp;
+                    <i style={{backgroundImage: "url(/images/icons/menu/pokeball.svg)"}} className="menu-icon"></i> &nbsp;
                     <span>{translation("menu_collection_text")}</span>
                   </li>
                 </ul>

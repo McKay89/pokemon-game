@@ -146,6 +146,56 @@
     background: #000000b4;
 }
 
+.collection-cards-amounts-container {
+    position: relative;
+    width: 100%;
+    height: 10%;
+    display: flex;
+    flex-direction: row;
+    user-select: none;
+    cursor: pointer;
+}
+
+.collection-cards-amount-type {
+    position: relative;
+    top: 10px;
+    height: 100%;
+    width: 25%;
+    text-align: center;
+    background: rgba(25, 25, 25, 0);
+    font-size: 20px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.collection-cards-amount-type-active {
+    position: relative;
+    top: 0%;
+    height: 100%;
+    width: 25%;
+    text-align: center;
+    background: rgba(25, 25, 25, 0.7);
+    font-size: 20px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.collection-cards-amount-type:hover {
+    background: rgba(25, 25, 25, 0.7);
+}
+
+.collection-cards-amount-type > span:nth-child(1),
+.collection-cards-amount-type-active > span:nth-child(1) {
+    font-size: 22px;
+    color: #bfd60f;
+    font-family: "OCR A Std", monospace;
+}
+
+.collection-cards-amount-type > span:nth-child(2),
+.collection-cards-amount-type-active > span:nth-child(2) {
+    text-transform: uppercase;
+}
+
 @keyframes cardShadowAnim {
     0% {
         box-shadow: 0px 0px 10px 3px rgba(149,222,26,0.75);

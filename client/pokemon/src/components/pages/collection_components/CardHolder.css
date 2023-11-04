@@ -14,110 +14,105 @@
     transform: scale(1.1);
 }
 
-.mirror-image-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transform: scaleY(-1);
-    opacity: 0.5;
+.cardholder-card-type {
+    position: absolute;
+    top: 280px;
+    left: 60px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.base-stat {
+    position: absolute;
+    font-size: 27px;
+    font-weight: bold;
 }
 
 .cardholder-health_1 {
-    position: absolute;
     top: 287px;
     right: 68px;
-    font-size: 27px;
+    font-weight: 400 !important;
 }
 
 .cardholder-health_2 {
-    position: absolute;
     top: 287px;
     right: 75px;
-    font-size: 27px;
+    font-weight: 400 !important;
 }
 
 .cardholder-attack_1 {
-    position: absolute;
-    bottom: 30px;
-    left: 85px;
-    font-size: 27px;
+    bottom: 27px;
+    left: 84px;
 }
 
 .cardholder-attack_2 {
-    position: absolute;
-    bottom: 30px;
-    left: 78px;
-    font-size: 27px;
+    bottom: 27px;
+    left: 75px;
 }
 
 .cardholder-attack_3 {
-    position: absolute;
-    bottom: 30px;
-    left: 70px;
-    font-size: 27px;
+    bottom: 27px;
+    left: 69px;
+}
+
+.cardholder-special-attack_1 {
+    bottom: 27px;
+    left: 155px;
+}
+
+.cardholder-special-attack_2 {
+    bottom: 27px;
+    left: 146px;
+}
+
+.cardholder-special-attack_3 {
+    bottom: 27px;
+    left: 138px;
 }
 
 .cardholder-defense_1 {
-    position: absolute;
-    bottom: 30px;
-    left: 181px;
-    font-size: 27px;
+    bottom: 27px;
+    left: 222px;
 }
 
 .cardholder-defense_2 {
-    position: absolute;
-    bottom: 30px;
-    left: 174px;
-    font-size: 27px;
+    bottom: 27px;
+    left: 215px;
 }
 
 .cardholder-defense_3 {
-    position: absolute;
-    bottom: 30px;
-    left: 166px;
-    font-size: 27px;
+    bottom: 27px;
+    left: 207px;
+}
+
+.cardholder-special-defense_1 {
+    bottom: 27px;
+    left: 285px;
+}
+
+.cardholder-special-defense_2 {
+    bottom: 27px;
+    left: 278px;
+}
+
+.cardholder-special-defense_3 {
+    bottom: 27px;
+    left: 269px;
 }
 
 .cardholder-speed_1 {
-    position: absolute;
-    bottom: 30px;
-    left: 271px;
-    font-size: 27px;
+    bottom: 27px;
+    left: 353px;
 }
 
 .cardholder-speed_2 {
-    position: absolute;
-    bottom: 30px;
-    left: 264px;
-    font-size: 27px;
+    bottom: 27px;
+    left: 345px;
 }
 
 .cardholder-speed_3 {
-    position: absolute;
-    bottom: 30px;
-    left: 256px;
-    font-size: 27px;
-}
-
-.cardholder-intelligence_1 {
-    position: absolute;
-    bottom: 30px;
-    left: 363px;
-    font-size: 27px;
-}
-
-.cardholder-intelligence_2 {
-    position: absolute;
-    bottom: 30px;
-    left: 356px;
-    font-size: 27px;
-}
-
-.cardholder-intelligence_3 {
-    position: absolute;
-    bottom: 30px;
-    left: 348px;
-    font-size: 27px;
+    bottom: 27px;
+    left: 337px;
 }
 
 .cardholder-desc {
