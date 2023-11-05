@@ -68,6 +68,8 @@
     "profile_xpbar_text": "pont szükséges a következő szint eléréséhez",
     "back-to-the-main-menu": "Vissza a Főmenübe",
     "loading_profile_data_text": "Profiladatok betöltése",
+    "profile_friends_friendslist_text": "Barátok",
+    "profile_friends_friendslist_requests_text": "Barátkérelmek",
     "loading_match_statistics_text": "Meccs statisztika betöltése",
     "loading_user_cards_text": "Kártyakollekció betöltése",
     "loading_background_text": "Háttér betöltése",
@@ -340,4 +342,5 @@
 
     
     "//pokemon_moves_comment": " POKEMON MOVES "
+
 }

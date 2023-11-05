@@ -68,6 +68,8 @@
     "profile_xpbar_text": "points needed to reach the next level",
     "back-to-the-main-menu": "Back to the Main Menu",
     "loading_profile_data_text": "Loading profile data",
+    "profile_friends_friendslist_text": "Friends",
+    "profile_friends_friendslist_requests_text": "Friends Requests",
     "loading_match_statistics_text": "Loading Match Statistics",
     "loading_user_cards_text": "Loading Card Collection",
     "loading_background_text": "Loading Background",
@@ -340,4 +342,5 @@
 
 
     "//pokemon_moves_comment": " POKEMON MOVES "
+
 }
