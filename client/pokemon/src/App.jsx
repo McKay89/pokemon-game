@@ -147,6 +147,7 @@ function App() {
                   translation={t}
                   sidebarHovered={sidebarHovered}
                   jwtToken={jwtToken}
+                  activeComponent={handleActiveComponent}
                 />
               }
             />

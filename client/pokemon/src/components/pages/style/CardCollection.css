@@ -63,7 +63,6 @@
     height: 80%;
     border-top: 3px solid #fff;
     border-bottom: 3px solid #fff;
-    background: #00000053;
     padding: 30px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -102,7 +101,6 @@
 .card-image-item {
     max-height: 100%;
     border-radius: 8px;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 }
   
 .img-fluid {
@@ -129,7 +127,7 @@
     top: 50%;
     left: 50%;
     transform: translateX(-50%);
-    width: 50%;
+    width: 100%;
     height: 40px;
     padding: 5px;
     background: #00000055;
@@ -137,7 +135,7 @@
     color: #fff;
     font-size: 18px;
     font-weight: bold;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
     outline: none;
     transition: 0.2s;
 }
@@ -152,19 +150,21 @@
     height: 10%;
     display: flex;
     flex-direction: row;
+    background: #bfd60f;
     user-select: none;
     cursor: pointer;
 }
 
 .collection-cards-amount-type {
     position: relative;
-    top: 10px;
+    top: 5px;
     height: 100%;
     width: 25%;
     text-align: center;
-    background: rgba(25, 25, 25, 0);
+    background: rgba(25, 25, 25, 1);
     font-size: 20px;
     font-weight: bold;
+    padding: 8px;
     transition: 0.3s;
 }
 
@@ -174,7 +174,7 @@
     height: 100%;
     width: 25%;
     text-align: center;
-    background: rgba(25, 25, 25, 0.7);
+    background: rgba(25, 25, 25, 0.8);
     font-size: 20px;
     font-weight: bold;
     transition: 0.3s;
@@ -194,6 +194,15 @@
 .collection-cards-amount-type > span:nth-child(2),
 .collection-cards-amount-type-active > span:nth-child(2) {
     text-transform: uppercase;
+}
+
+.detailed-filtering-text {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 18px;
+    font-weight: 600;
 }
 
 @keyframes cardShadowAnim {
