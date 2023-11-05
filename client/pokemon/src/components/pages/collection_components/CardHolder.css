@@ -133,6 +133,55 @@
     display: none;
 }
 
+.cardholder-health-tooltip {
+    position: absolute;
+    top: 278px;
+    right: 53px;
+    width: 70px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+.cardholder-attack-tooltip {
+    position: absolute;
+    bottom: 33px;
+    left: 62px;
+    width: 55px;
+    height: 80px;
+}
+
+.cardholder-special-attack-tooltip {
+    position: absolute;
+    bottom: 33px;
+    left: 133px;
+    width: 55px;
+    height: 80px;
+}
+
+.cardholder-defense-tooltip {
+    position: absolute;
+    bottom: 33px;
+    left: 202px;
+    width: 55px;
+    height: 80px;
+}
+
+.cardholder-special-defense-tooltip {
+    position: absolute;
+    bottom: 33px;
+    left: 265px;
+    width: 55px;
+    height: 80px;
+}
+
+.cardholder-speed-tooltip {
+    position: absolute;
+    bottom: 33px;
+    left: 333px;
+    width: 55px;
+    height: 80px;
+}
+
 @keyframes revealCard {
     0% {
         opacity: 0;
