@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation} from "react-router-dom";
 import { motion } from 'framer-motion';
 import "./style/ProfileFriends.css";
+import FriendsList from "./profile_friends_component/FriendsList";
 
 export default function ProfileFriends({translation}) {
     const location = useLocation();
@@ -35,7 +36,19 @@ export default function ProfileFriends({translation}) {
                 backgroundImage: `url(/images/backgrounds/profile/profile_friends_bg.png)`
             }}
         >
-            <span>{translation("profile_sidebar_friends")}</span>
+            <div className="profile-friends-friendslist-container">
+                <div className="profile-friends-friendslist">
+                    <FriendsList/>
+                </div>
+                <div className="profile-friends-friendslist-menu">
+                    <div className="profile-friends-friendslist-menu-friends">
+                        <span>{translation("profile_friends_friendslist_text")}</span>
+                    </div>
+                    <div className="profile-friends-friendslist-menu-friends-requests">
+                        <span>{translation("profile_friends_friendslist_requests_text")}</span>
+                    </div>
+                </div>
+            </div>
         </motion.div>
     );
 }
