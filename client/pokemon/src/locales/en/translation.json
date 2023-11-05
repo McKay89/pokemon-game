@@ -76,10 +76,17 @@
     "card_type_spell": "Spell Card",
     "card_type_trap": "Trap Card",
     "card_type_curse": "Curse Card",
-    "card_type_pokemons": "Pokémon Cards",
-    "card_type_spells": "Spell Cards",
-    "card_type_traps": "Trap Cards",
-    "card_type_curses": "Curse Cards",
+    "card_type_pokemons": "POKÉMON CARD",
+    "card_type_spells": "SPELL CARD",
+    "card_type_traps": "TRAP CARD",
+    "card_type_curses": "CURSE CARD",
+    "collection_detailed_filtering": "Detailed Filtering",
+    "pokemon_stat_health_tt": "Health",
+    "pokemon_stat_attack_tt": "Attack",
+    "pokemon_stat_special_attack_tt": "Special Attack",
+    "pokemon_stat_defense_tt": "Defense",
+    "pokemon_stat_special_defense_tt": "Special Defense",
+    "pokemon_stat_speed_tt": "Speed",
 
 
 

@@ -76,10 +76,17 @@
     "card_type_spell": "Varázs Kártya",
     "card_type_trap": "Csapda Kártya",
     "card_type_curse": "Átok Kártya",
-    "card_type_pokemons": "Pokémon Kártyák",
-    "card_type_spells": "Varázs Kártyák",
-    "card_type_traps": "TCsapda Kártyák",
-    "card_type_curses": "Átok Kártyák",
+    "card_type_pokemons": "POKÉMON KÁRTYA",
+    "card_type_spells": "VARÁZS KÁRTYA",
+    "card_type_traps": "CSAPDA KÁRTYA",
+    "card_type_curses": "ÁTOK KÁRTYA",
+    "collection_detailed_filtering": "Részletes szűrés",
+    "pokemon_stat_health_tt": "Életerő",
+    "pokemon_stat_attack_tt": "Támadás",
+    "pokemon_stat_special_attack_tt": "Speciális támadás",
+    "pokemon_stat_defense_tt": "Védekezés",
+    "pokemon_stat_special_defense_tt": "Speciális védekezés",
+    "pokemon_stat_speed_tt": "Sebesség",
 
 
 
