@@ -70,8 +70,6 @@
     "loading_profile_data_text": "Loading profile data",
     "profile_friends_friendslist_text": "Friends",
     "profile_friends_friendslist_requests_text": "Friends Requests",
-    "profile_friends_friendslist_text": "Friends",
-    "profile_friends_friendslist_requests_text": "Friends Requests",
     "loading_match_statistics_text": "Loading Match Statistics",
     "loading_user_cards_text": "Loading Card Collection",
     "loading_background_text": "Loading Background",
@@ -344,8 +342,4 @@
 
 
     "//pokemon_moves_comment": " POKEMON MOVES "
-=========
-    "profile_friends_friendslist_text": "Friends",
-    "profile_friends_friendslist_requests_text": "Friends Requests"
->>>>>>>>> Temporary merge branch 2
 }
