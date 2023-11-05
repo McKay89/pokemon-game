@@ -14,10 +14,10 @@ export default function CardCollection({translation, sidebarHovered, jwtToken}) 
     const [loading, setLoading] = useState(false);
     const [decodedToken, setDecodedToken] = useState({});
     const [userCards, setUserCards] = useState(null);
-    const [pokemonCards, setPokemonCards] = useState(null);
-    const [spellCards, setSpellCards] = useState(null);
-    const [trapCards, setTrapCards] = useState(null);
-    const [curseCards, setCurseCards] = useState(null);
+    const [pokemonCards, setPokemonCards] = useState([]);
+    const [spellCards, setSpellCards] = useState([]);
+    const [trapCards, setTrapCards] = useState([]);
+    const [curseCards, setCurseCards] = useState([]);
     const [filteredCards, setFilteredCards] = useState(null);
     const [choosenCard, setChoosenCard] = useState(null);
     const [filterCards, setFilterCards] = useState("");
