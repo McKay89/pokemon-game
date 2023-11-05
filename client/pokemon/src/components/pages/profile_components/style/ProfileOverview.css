@@ -37,10 +37,36 @@
 											  transparent)
 }
 
-.profile-overview-container > span {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 70px;
+.profile-overview-container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: row;
+}
+
+.profile-overview-left {
+	position: relative;
+	left: 0;
+	width: 60%;
+}
+
+.profile-overview-right {
+	position: relative;
+	right: 0;
+	width: 40%;
+}
+
+.match-statistics-container {
+	position: absolute;
+	top: 50px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 80%;
+	height: 500px;
+	background: #575757cf;
+	border-left: 4px solid #fff;
+	border-right: 4px solid #fff;
 }

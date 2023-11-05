@@ -17,7 +17,7 @@
     top: 60%;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 30px;
+    font-size: 20px !important;
 }
 
 .loading-bar {
