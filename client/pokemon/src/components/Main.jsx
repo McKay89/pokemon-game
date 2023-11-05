@@ -40,8 +40,8 @@ export default function Main({translation, sidebarHovered}) {
           <div className="mckay89">
             <span>Pokemon - The Card Game</span><br />
             <span>Developed by McKay89</span><br />
-            <span>Version: 0.1 (development phase)</span><br />
-            <span>Last update: 2023.10.07</span>
+            <span>Version ~ in development phase</span><br />
+            <span>Last update: 2023.11.04</span>
           </div>
           <Outlet /> 
         </motion.div>
