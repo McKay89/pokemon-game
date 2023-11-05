@@ -1,16 +1,27 @@
 import React, { useState, useEffect } from 'react';
+import Loading from './extras/Loading';
 import '../styles/BackgroundCover.css';
 
-function BackgroundCover() {
+export default function BackgroundCover({translation, activeComponent}) {
   const [loading, setLoading] = useState(true);
+  const [videoURL, setVideoURL] = useState("/video/menu/menu_bg_mewtwo.mp4");
 
   useEffect(() => {
+    setLoading(true);
     const video = document.createElement('video');
-    video.src = './video/menu/menu_bg_mewtwo.mp4';
+
+    if(activeComponent == "main") {
+      video.src = '/video/menu/menu_bg_mewtwo.mp4';
+      setVideoURL(video.src);
+    } else if(activeComponent == "collection") {
+      video.src = '/video/collection/sunrays.mp4';
+      setVideoURL(video.src);
+    }
 
     video.onloadeddata = () => {
-      setLoading(false);
+      video.classList.add("loaded");
       video.play();
+      setLoading(false);
     };
 
     video.load();
@@ -18,19 +29,19 @@ function BackgroundCover() {
     return () => {
       video.pause();
     };
-  }, []);
+  }, [activeComponent]);
 
-  return <div className="background-cover">
-    {loading ? (
-      <div>Töltés...</div>
-      ) : null}
-      <video className="video-background" autoPlay muted loop>
-        <source src="/video/menu/menu_bg_mewtwo.mp4" type="video/mp4" />
-      </video>
-      <div className="content">
-        {/* Ide helyezd a komponens tartalmát */}
-      </div>
-  </div>;
+  return (
+    <div className="background-cover">
+      {loading ? (
+        <div className="background-loading-container">
+          <Loading text={translation("loading_background_text")} scale={2.5} />
+        </div>
+      ) : (
+        <video className="video-background" autoPlay muted loop>
+          <source src={videoURL} type="video/mp4" />
+        </video>
+      )}
+    </div>
+  );
 }
-
-export default BackgroundCover;

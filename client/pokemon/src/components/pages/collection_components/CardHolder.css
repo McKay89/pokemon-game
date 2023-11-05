@@ -1,0 +1,145 @@
+.cardholder-container {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: 100% 100%;
+    user-select: none;
+    transition: 0.3s;
+    animation: revealCard 0.2s ease-in 1;
+}
+
+.cardholder-container:hover {
+    transform: scale(1.1);
+}
+
+.cardholder-card-type {
+    position: absolute;
+    top: 280px;
+    left: 60px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.base-stat {
+    position: absolute;
+    font-size: 27px;
+    font-weight: bold;
+}
+
+.cardholder-health_1 {
+    top: 287px;
+    right: 68px;
+    font-weight: 400 !important;
+}
+
+.cardholder-health_2 {
+    top: 287px;
+    right: 75px;
+    font-weight: 400 !important;
+}
+
+.cardholder-attack_1 {
+    bottom: 27px;
+    left: 84px;
+}
+
+.cardholder-attack_2 {
+    bottom: 27px;
+    left: 75px;
+}
+
+.cardholder-attack_3 {
+    bottom: 27px;
+    left: 69px;
+}
+
+.cardholder-special-attack_1 {
+    bottom: 27px;
+    left: 155px;
+}
+
+.cardholder-special-attack_2 {
+    bottom: 27px;
+    left: 146px;
+}
+
+.cardholder-special-attack_3 {
+    bottom: 27px;
+    left: 138px;
+}
+
+.cardholder-defense_1 {
+    bottom: 27px;
+    left: 222px;
+}
+
+.cardholder-defense_2 {
+    bottom: 27px;
+    left: 215px;
+}
+
+.cardholder-defense_3 {
+    bottom: 27px;
+    left: 207px;
+}
+
+.cardholder-special-defense_1 {
+    bottom: 27px;
+    left: 285px;
+}
+
+.cardholder-special-defense_2 {
+    bottom: 27px;
+    left: 278px;
+}
+
+.cardholder-special-defense_3 {
+    bottom: 27px;
+    left: 269px;
+}
+
+.cardholder-speed_1 {
+    bottom: 27px;
+    left: 353px;
+}
+
+.cardholder-speed_2 {
+    bottom: 27px;
+    left: 345px;
+}
+
+.cardholder-speed_3 {
+    bottom: 27px;
+    left: 337px;
+}
+
+.cardholder-desc {
+    position: absolute;
+    top: 355px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 355px;
+    height: 115px;
+    justify-content: center;
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    overflow-y: auto;
+}
+
+.cardholder-desc::-webkit-scrollbar {
+    display: none;
+}
+
+@keyframes revealCard {
+    0% {
+        opacity: 0;
+        transform: scale(1.2);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

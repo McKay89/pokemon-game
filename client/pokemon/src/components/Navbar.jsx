@@ -6,12 +6,13 @@ import Tooltip from '@mui/material/Tooltip';
 import Zoom from '@mui/material/Zoom';
 import VolumeSlider from './extras/VolumeSlider';
 import MusicPlayer from './audio/MusicPlayer';
+import JWTDecode from 'jwt-decode';
 import "../styles/Navbar.css";
 import i18next from 'i18next';
 
 
 
-export default function Navbar({translation, handleSidebarHover, user, login, handleLogout, jwtToken}) {
+export default function Navbar({translation, handleSidebarHover, login, handleLogout, jwtToken, activeComponent}) {
   const navigate = useNavigate();
   const [fixSidebar, setFixSidebar] = useState(true);
   const [registerOpened, setRegisterOpened] = useState(false);
@@ -20,10 +21,18 @@ export default function Navbar({translation, handleSidebarHover, user, login, ha
   const [bgMusicVolume, setBgMusicVolume] = useState(0.3);
   const [soundsVolume, setSoundsVolume] = useState(0.5);
   const [musicStatus, setMusicStatus] = useState(false);
+  const [decodedToken, setDecodedToken] = useState({logged: false});
   const [sfxURLs] = useState({
     menuHoverSFX: "/audio/sounds/menu/sfx_menu_hover.mp3",
     menuClickSFX: "/audio/sounds/menu/sfx_menu_click.mp3"
   });
+
+  useEffect(() => {
+    if(jwtToken != null) {
+      setDecodedToken(JWTDecode(jwtToken));
+    }
+  }, [jwtToken])
+  
 
   const playSFX = (url, volume) => {
     if(musicStatus) {
@@ -77,8 +86,10 @@ export default function Navbar({translation, handleSidebarHover, user, login, ha
   }
 
   const navigateToPage = (page) => {
+    page == "/collection" ? activeComponent("collection") : activeComponent("main");
+
     if(page == "/profile") {
-      navigate(`/profile/${user.username}`, { state: { username: user.username } });
+      navigate(`/profile/${decodedToken.username}`, { state: { username: decodedToken.username } });
     } else {
       navigate(page);
     }
@@ -105,7 +116,7 @@ export default function Navbar({translation, handleSidebarHover, user, login, ha
         </Tooltip>
         <div className="sidebar-container">
           <div className="user-container">
-            { user.logged ?
+            { decodedToken.logged ?
               <>
                 <div className="user-avatar">
                   <Tooltip
@@ -115,17 +126,17 @@ export default function Navbar({translation, handleSidebarHover, user, login, ha
                       TransitionComponent={Zoom}
                       TransitionProps={{ timeout: 600 }}
                   >
-                    <img onClick={() => navigateToPage("/profile")} className="avatar" src={user.avatar} />
+                    <img onClick={() => navigateToPage("/profile")} className="avatar" src={decodedToken.avatar} />
                   </Tooltip>
                   <br />
                   <button onClick={handleLogout} className="logout_btn">{translation("logout_btn_text")}</button>
                 </div>
                 <div className="user-data">
-                  <span className="user-username">{user.username}</span>
-                  <span className="user-rule">{user.role}</span>
+                  <span className="user-username">{decodedToken.username}</span>
+                  <span className="user-rule">{decodedToken.role}</span>
                   <div className="coin-container">
                     <Tooltip
-                        title={<span style={{ color: "#fff", fontSize: "14px" }}>{user.coin} {translation("coin_amount_text")}</span>}
+                        title={<span style={{ color: "#fff", fontSize: "14px" }}>{decodedToken.coin} {translation("coin_amount_text")}</span>}
                         placement='top'
                         arrow
                         TransitionComponent={Zoom}
@@ -133,13 +144,13 @@ export default function Navbar({translation, handleSidebarHover, user, login, ha
                     >
                       <div className="coin-data">
                         <i className="fa-solid fa-coins"></i>&nbsp;&nbsp;
-                        <span>{user.coin}</span>
+                        <span>{decodedToken.coin}</span>
                       </div>
                     </Tooltip>
                   </div>
                   <div className="level-data">
                     <span className="level-label">Lv</span>&nbsp;
-                    <span>{user.level}</span>
+                    <span>{decodedToken.level}</span>
                   </div>
                 </div>
               </>
@@ -160,7 +171,7 @@ export default function Navbar({translation, handleSidebarHover, user, login, ha
               </>
             }
           </div>
-          { user.logged ?
+          { decodedToken.logged ?
             <div className="menu-container">
               <span className="menu-text">{translation("menu_label_text1")}</span>
               <hr />
@@ -169,8 +180,7 @@ export default function Navbar({translation, handleSidebarHover, user, login, ha
                   <li
                       onMouseOver={() => playSFX(sfxURLs.menuHoverSFX, soundsVolume)}
                       onClick={() => {
-                        playSFX(sfxURLs.menuClickSFX, soundsVolume);
-                        navigateToPage("/");
+                        playSFX(sfxURLs.menuClickSFX, soundsVolume)
                       }}
                       className="menu-item"
                     >
@@ -207,10 +217,15 @@ export default function Navbar({translation, handleSidebarHover, user, login, ha
                   </li>
                   <li
                     onMouseOver={() => playSFX(sfxURLs.menuHoverSFX, soundsVolume)}
-                    onClick={() => playSFX(sfxURLs.menuClickSFX, soundsVolume)}
+                    onClick={
+                      () => {
+                        playSFX(sfxURLs.menuClickSFX, soundsVolume);
+                        navigateToPage("/collection");
+                      }
+                    }
                     className="menu-item"
                   >
-                    <i style={{backgroundImage: "url(/images/icons/menu/cards.svg)"}} className="menu-icon"></i> &nbsp;
+                    <i style={{backgroundImage: "url(/images/icons/menu/pokeball.svg)"}} className="menu-icon"></i> &nbsp;
                     <span>{translation("menu_collection_text")}</span>
                   </li>
                 </ul>
