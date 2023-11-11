@@ -86,7 +86,7 @@ export default function Navbar({translation, handleSidebarHover, login, handleLo
   }
 
   const navigateToPage = (page) => {
-    page == "/collection" ? activeComponent("collection") : activeComponent("main");
+    page == "/collection" ? activeComponent("collection") : page == "/adventure" ? activeComponent("adventure") : activeComponent("main");
 
     if(page == "/profile") {
       navigate(`/profile/${decodedToken.username}`, { state: { username: decodedToken.username } });
@@ -180,7 +180,8 @@ export default function Navbar({translation, handleSidebarHover, login, handleLo
                   <li
                       onMouseOver={() => playSFX(sfxURLs.menuHoverSFX, soundsVolume)}
                       onClick={() => {
-                        playSFX(sfxURLs.menuClickSFX, soundsVolume)
+                        playSFX(sfxURLs.menuClickSFX, soundsVolume);
+                        navigateToPage("/adventure");
                       }}
                       className="menu-item"
                     >

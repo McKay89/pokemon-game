@@ -16,15 +16,22 @@ export default function BackgroundCover({translation, activeComponent}) {
     } else if(activeComponent == "collection") {
       video.src = '/video/collection/sunrays.mp4';
       setVideoURL(video.src);
+    } else if(activeComponent == "adventure") {
+      video.src = '';
+      setVideoURL(video.src);
     }
 
-    video.onloadeddata = () => {
-      video.classList.add("loaded");
-      video.play();
+    if(activeComponent != "adventure") {
+      video.onloadeddata = () => {
+        video.classList.add("loaded");
+        video.play();
+        setLoading(false);
+      };
+  
+      video.load();
+    } else {
       setLoading(false);
-    };
-
-    video.load();
+    }
 
     return () => {
       video.pause();
@@ -37,10 +44,12 @@ export default function BackgroundCover({translation, activeComponent}) {
         <div className="background-loading-container">
           <Loading text={translation("loading_background_text")} scale={2.5} />
         </div>
-      ) : (
+      ) : activeComponent != "adventure" ? (
         <video className="video-background" autoPlay muted loop>
           <source src={videoURL} type="video/mp4" />
         </video>
+      ) : (
+        <div className="video-background"></div>
       )}
     </div>
   );

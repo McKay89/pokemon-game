@@ -131,7 +131,7 @@ export default function CardHolder({choosenCard, translation}) {
 
                     {/* DESCRIPTION */}
                         <div className="cardholder-desc">
-                            {translation(choosenCard.desc)}
+                            {translation("pokemons:" + choosenCard.desc)}
                         </div>
                 </>
             : undefined }

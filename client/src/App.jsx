@@ -6,6 +6,8 @@ import { initReactI18next } from "react-i18next";
 import { AnimatePresence  } from 'framer-motion';
 import translationEN from "./locales/en/translation.json";
 import translationHU from "./locales/hu/translation.json";
+import translationPokemonsEN from "./locales/en/pokemons.json";
+import translationPokemonsHU from "./locales/hu/pokemons.json";
 
 import Main from './components/Main';
 import Profile from './components/pages/Profile';
@@ -13,14 +15,17 @@ import Navbar from './components/Navbar';
 import TestDownload from './components/pages/TestDownload';
 import BackgroundCover from './components/BackgroundCover';
 import CardCollection from './components/pages/CardCollection';
+import AdventureMap from './components/adventure/AdventureMap';
 import './App.css'
 
 const resources = {
   en: {
     translation: translationEN,
+    pokemons: translationPokemonsEN
   },
   hu: {
     translation: translationHU,
+    pokemons: translationPokemonsHU
   },
 };
 
@@ -63,6 +68,9 @@ function App() {
           } else if(response.status === 200) {
             const data = await response.json();
             setJwtToken(data.data);
+          } else {
+            // CATCH OTHER
+            console.log("")
           }
         } catch (err) {
           console.log(err);
@@ -148,6 +156,15 @@ function App() {
                   sidebarHovered={sidebarHovered}
                   jwtToken={jwtToken}
                   activeComponent={handleActiveComponent}
+                />
+              }
+            />
+            {/* Adventure Game Component */}
+            <Route path='/adventure' element={
+                <AdventureMap
+                  translation={t}
+                  sidebarHovered={sidebarHovered}
+                  jwtToken={jwtToken}
                 />
               }
             />

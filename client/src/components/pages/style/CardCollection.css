@@ -177,6 +177,7 @@
     background: rgba(25, 25, 25, 0.8);
     font-size: 20px;
     font-weight: bold;
+    padding: 8px;
     transition: 0.3s;
 }
 

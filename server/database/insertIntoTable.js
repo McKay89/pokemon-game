@@ -53,7 +53,7 @@ const insertIntoUsers = (sql, data, hashedPassword) => {
                   request.input('avatar', '/images/users/default_' + data.gender + '.png')
                   request.input('level', 1)
                   request.input('xp', 0)
-                  request.input('cards', '{}')
+                  request.input('cards', '[]')
   
                   request.query(insert, function (err, result) {
                       if (err) {

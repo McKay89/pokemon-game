@@ -1,0 +1,33 @@
+.adventure-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 90%;
+    height: 100%;
+    transition: 1s;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.adventure-container-hovered {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80%;
+    height: 100%;
+    transition: 1s;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+
+.adventure-game-canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #000000;
+    border: 3px solid #d79c9c;
+}
