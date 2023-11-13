@@ -13,6 +13,7 @@ import RectangularCollision from './collisions/RectangularCollision';
 import { Dungeon001 } from './collisions';
 import { Boundary, Sprite } from './classes';
 import GameData from './data/GameData';
+import Gif from '../../assets_tmp/adventure/gif/campfire.png';
 import './style/AdventureMap.css';
 
 export default function AdventureMap({translation, sidebarHovered, jwtToken, activeComponent}) {
@@ -23,6 +24,57 @@ export default function AdventureMap({translation, sidebarHovered, jwtToken, act
     const gameData = GameData();
     const Collisions = {
         dungeon001: Dungeon001()
+    }
+    let lastKey = '';
+    const keys = {
+        w: {
+            pressed: false
+        },
+        a: {
+            pressed: false
+        },
+        s: {
+            pressed: false
+        },
+        d: {
+            pressed: false
+        }
+    }
+    let images = {
+        background: {
+            image: new Image(),
+            path: DungeonMap,
+            sprite: null
+        },
+        foreground: {
+            image: new Image(),
+            path: DungeonForeground,
+            sprite: null
+        },
+        player: {
+            moveDown: {
+                image: new Image(),
+                path: PlayerDownImage
+            },
+            moveLeft: {
+                image: new Image(),
+                path: PlayerLeftImage
+            },
+            moveRight: {
+                image: new Image(),
+                path: PlayerRightImage
+            },
+            moveUp: {
+                image: new Image(),
+                path: PlayerUpImage
+            },
+            sprite: null
+        },
+        testAnim: {
+            image: new Image(),
+            path: Gif,
+            sprite: null
+        }
     }
 
     const pageTransition = {
@@ -46,21 +98,21 @@ export default function AdventureMap({translation, sidebarHovered, jwtToken, act
         },
     };
 
-    // Create Canvas & Player
-    useEffect(() => {
-        const canvas = document.querySelector("canvas");
-        const c = canvas.getContext("2d");
-        canvas.width = gameData.canvas.width;
-        canvas.height = gameData.canvas.height;
-
-        // Collect Map by rows
+    // Collect Map by rows
+    const createCollisionMap = () => {
         const CollisionsMap = [];
+
         for(let i = 0; i < Collisions.dungeon001.length; i+= 70) {
             CollisionsMap.push(Collisions.dungeon001.slice(i, 70 + i));
         }
 
+        return CollisionsMap;
+    }
+
+    // Create Boundaries
+    const createBoundaries = (CollisionsMap) => {
         const boundaries = [];
-        // Create boundaries
+
         CollisionsMap.forEach((row, i) => {
             row.forEach((symbol, j) => {
                 if(symbol === 369) {
@@ -74,256 +126,247 @@ export default function AdventureMap({translation, sidebarHovered, jwtToken, act
             })
         })
 
-        // Map: Dungeon - 001 (Image)
-        const image = new Image();
-        image.src = DungeonMap;
+        return boundaries;
+    }
 
-        // Map: Dungeon - 001 (Foreground Objects) (Image)
-        const foregroundImage = new Image();
-        foregroundImage.src = DungeonForeground;
+    // Create Images
+    const createImages = () => {
+        // Background
+            images.background.image.src = images.background.path;
+        // Foreground
+            images.foreground.image.src = images.foreground.path;
+        // Player
+            images.player.moveDown.image.src = images.player.moveDown.path;
+            images.player.moveLeft.image.src = images.player.moveLeft.path;
+            images.player.moveRight.image.src = images.player.moveRight.path;
+            images.player.moveUp.image.src = images.player.moveUp.path;
+        // Test Animation
+            images.testAnim.image.src = images.testAnim.path;
+    }
 
-        // Player Move Down (Image)
-        const playerDownImage = new Image();
-        playerDownImage.src = PlayerDownImage;
+    const createSprite = (position, image, frames = { max: 1 }, sprites = {}, object = { height: 1, width: 1 }, type = "object", animation = { speed: 1 }) => {
+        return new Sprite({
+            position: position,
+            image: image,
+            frames: frames,
+            sprites: sprites,
+            object: object,
+            type: type,
+            animation: animation
+        })
+    }
 
-        // Player Move Up (Image)
-        const playerUpImage = new Image();
-        playerUpImage.src = PlayerUpImage;
-
-        // Player Move Left (Image)
-        const playerLeftImage = new Image();
-        playerLeftImage.src = PlayerLeftImage;
-
-        // Player Move Right (Image)
-        const playerRightImage = new Image();
-        playerRightImage.src = PlayerRightImage;
-
-        // Create Player Sprite
-        const player = new Sprite({
-            position: {
+    const preparePlayerSprite = (canvas) => {
+        images.player.sprite = createSprite(
+            { 
                 x: canvas.width / 2 - 288 / 4 / 2,
                 y: canvas.height / 2 - 69 / 2
             },
-            image: playerDownImage,
-            frames: {
-                max: 6
+            images.player.moveDown.image,
+            { max: 6 },
+            { 
+                up: images.player.moveUp.image,
+                left: images.player.moveLeft.image,
+                right: images.player.moveRight.image,
+                down: images.player.moveDown.image
             },
-            sprites: {
-                up: playerUpImage,
-                left: playerLeftImage,
-                right: playerRightImage,
-                down: playerDownImage
-            },
-            player: {
+            { 
                 height: 1.3,
                 width: 5
-            }
-        })
+            },
+            "player",
+            { speed: 8 }
+        );
+    }
 
-        // Create Background Sprite
-        const background = new Sprite({
-            position: {
+    const prepareBackgroundSprite = (canvas) => {
+        images.background.sprite = createSprite(
+            { 
                 x: gameData.maps.dungeon_001.offset.x,
                 y: gameData.maps.dungeon_001.offset.y
             },
-            image: image
-        });
+            images.background.image,
+            undefined, undefined, undefined, undefined, undefined
+        );
+    }
 
-        // Create Foreground Sprite
-        const foreground = new Sprite({
-            position: {
+    const prepareForegroundSprite = (canvas) => {
+        images.foreground.sprite = createSprite(
+            { 
                 x: gameData.maps.dungeon_001.offset.x,
                 y: gameData.maps.dungeon_001.offset.y
             },
-            image: foregroundImage
-        });
+            images.foreground.image,
+            undefined, undefined, undefined, undefined, undefined
+        );
+    }
 
-        // Keys pressed
-        const keys = {
-            w: {
-                pressed: false
+    const prepareTestAnimSprite = (canvas) => {
+        images.testAnim.sprite = createSprite(
+            { 
+                x: 708,
+                y: 660
             },
-            a: {
-                pressed: false
+            images.testAnim.image,
+            { max: 4 },
+            undefined,
+            { 
+                height: 2,
+                width: 2
             },
-            s: {
-                pressed: false
-            },
-            d: {
-                pressed: false
+            "object",
+            { speed: 10 }
+        );
+    }
+
+    // Handle Key Down Events
+    const handleKeyDown = (event) => {
+        switch (event.key) {
+            case "w":
+                keys.w.pressed = true;
+                lastKey = "up";
+                break;
+            case "a":
+                keys.a.pressed = true;
+                lastKey = "left";
+                break;
+            case "s":
+                keys.s.pressed = true;
+                lastKey = "down";
+                break;
+            case "d":
+                keys.d.pressed = true;
+                lastKey = "right";
+                break;
+            default:
+                break;
+        }
+    }
+
+    // Handle Key Up Events
+    const handleKeyUp = (event) => {
+        switch (event.key) {
+            case "w":
+                keys.w.pressed = false;
+                break;
+            case "a":
+                keys.a.pressed = false;
+                break;
+            case "s":
+                keys.s.pressed = false;
+                break;
+            case "d":
+                keys.d.pressed = false;
+                break;
+            default:
+                break;
+        }
+    }
+
+    // Handle Character Move Logic
+    const handleCharacterMove = (boundaries, movableObjects, moving, direction, coordX, coordY) => {
+        images.player.sprite.moving = true;
+        images.player.sprite.image = direction;
+
+        for(let i = 0; i < boundaries.length; i++) {
+            const boundary = boundaries[i];
+            // Handle Collision //
+            if(
+                RectangularCollision({
+                    rectangle1: images.player.sprite,
+                    rectangle2: {...boundary, position: {
+                        x: boundary.position.x + coordX,
+                        y: boundary.position.y + coordY
+                    }}
+                })
+            ) {
+                moving = false;
+                break;
             }
         }
+        
+        if(moving)
+        movableObjects.forEach(movable => {
+            if(coordX == 0) movable.position.y += coordY;
+            else movable.position.x += coordX;
+        })
+    }
+
+    // Create Canvas & Player
+    useEffect(() => {
+        // Canvas Settings
+        const canvas = document.querySelector("canvas");
+        const c = canvas.getContext("2d");
+        canvas.width = gameData.canvas.width;
+        canvas.height = gameData.canvas.height;
+        
+        // Create Collisions & Boundaries
+        const CollisionsMap = createCollisionMap();
+        const boundaries = createBoundaries(CollisionsMap);
+
+        // Create Images
+        createImages();
+
+        // Create Player Sprite
+        preparePlayerSprite(canvas);
+
+        // Create Background Sprite
+        prepareBackgroundSprite(canvas);
+
+        // Create Foreground Sprite
+        prepareForegroundSprite(canvas);
+
+        // Create Test GIF Sprite
+        prepareTestAnimSprite(canvas);
 
         // Collect Sprites which can moving
-        const movables = [background, ...boundaries, foreground];
+        const movableObjects = [
+            images.background.sprite,
+            images.foreground.sprite,
+            images.testAnim.sprite,
+            ...boundaries
+        ]
 
         // Start Frame Animation
         const startAnimate = () => {
             window.requestAnimationFrame(startAnimate);
 
-            // Draw Sprites
-            background.draw(c);
+            // Draw Background & Boundaries
+            images.background.sprite.draw(c);
             boundaries.forEach(boundary => {
                 boundary.draw(c);
             })
-            player.draw(c);
-            foreground.draw(c);
+
+            // Draw Objects
+            images.testAnim.sprite.draw(c);
+
+            // Draw Player & Foreground Object
+            images.player.sprite.draw(c);
+            images.foreground.sprite.draw(c);
+            
 
             // Moves //
             let moving = true;
-            player.moving = false;
+            images.player.sprite.moving = false;
             
+            // Move UP
             if(keys.w.pressed && lastKey === "up") {
-                player.moving = true;
-                player.image = player.sprites.up;
-
-                for(let i = 0; i < boundaries.length; i++) {
-                    const boundary = boundaries[i];
-                    // Collision //
-                    if(
-                        RectangularCollision({
-                            rectangle1: player,
-                            rectangle2: {...boundary, position: {
-                                x: boundary.position.x,
-                                y: boundary.position.y + 3
-                            }}
-                        })
-                    ) {
-                        moving = false;
-                        break;
-                    }
-                }
-                
-                if(moving)
-                movables.forEach(movable => {
-                    movable.position.y += 3;
-                })
+                handleCharacterMove(boundaries, movableObjects, moving, images.player.sprite.sprites.up, 0, 3);
             }
+            // Move DOWN
             if(keys.s.pressed && lastKey === "down") {
-                player.moving = true;
-                player.image = player.sprites.down;
-
-                for(let i = 0; i < boundaries.length; i++) {
-                    const boundary = boundaries[i];
-                    // Collision //
-                    if(
-                        RectangularCollision({
-                            rectangle1: player,
-                            rectangle2: {...boundary, position: {
-                                x: boundary.position.x,
-                                y: boundary.position.y - 3
-                            }}
-                        })
-                    ) {
-                        moving = false;
-                        break;
-                    }
-                }
-                
-                if(moving)
-                movables.forEach(movable => {
-                    movable.position.y -= 3;
-                })
+                handleCharacterMove(boundaries, movableObjects, moving, images.player.sprite.sprites.down, 0, -3);
             }
+            // Move LEFT
             if(keys.a.pressed && lastKey === "left") {
-                player.moving = true;
-                player.image = player.sprites.left;
-
-                for(let i = 0; i < boundaries.length; i++) {
-                    const boundary = boundaries[i];
-                    // Collision //
-                    if(
-                        RectangularCollision({
-                            rectangle1: player,
-                            rectangle2: {...boundary, position: {
-                                x: boundary.position.x + 3,
-                                y: boundary.position.y
-                            }}
-                        })
-                    ) {
-                        moving = false;
-                        break;
-                    }
-                }
-                
-                if(moving)
-                movables.forEach(movable => {
-                    movable.position.x += 3;
-                })
+                handleCharacterMove(boundaries, movableObjects, moving, images.player.sprite.sprites.left, 3, 0);
             }
+            // Move RIGHT
             if(keys.d.pressed && lastKey === "right") {
-                player.moving = true;
-                player.image = player.sprites.right;
-
-                for(let i = 0; i < boundaries.length; i++) {
-                    const boundary = boundaries[i];
-                    // Collision //
-                    if(
-                        RectangularCollision({
-                            rectangle1: player,
-                            rectangle2: {...boundary, position: {
-                                x: boundary.position.x - 3,
-                                y: boundary.position.y
-                            }}
-                        })
-                    ) {
-                        moving = false;
-                        break;
-                    }
-                }
-                
-                if(moving)
-                movables.forEach(movable => {
-                    movable.position.x -= 3;
-                })
+                handleCharacterMove(boundaries, movableObjects, moving, images.player.sprite.sprites.right, -3, 0);
             }
         }
         startAnimate();
-
-        // Handle Key Down Events
-        let lastKey = '';
-        const handleKeyDown = (event) => {
-            switch (event.key) {
-                case "w":
-                    keys.w.pressed = true;
-                    lastKey = "up";
-                    break;
-                case "a":
-                    keys.a.pressed = true;
-                    lastKey = "left";
-                    break;
-                case "s":
-                    keys.s.pressed = true;
-                    lastKey = "down";
-                    break;
-                case "d":
-                    keys.d.pressed = true;
-                    lastKey = "right";
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        // Handle Key Up Events
-        const handleKeyUp = (event) => {
-            switch (event.key) {
-                case "w":
-                    keys.w.pressed = false;
-                    break;
-                case "a":
-                    keys.a.pressed = false;
-                    break;
-                case "s":
-                    keys.s.pressed = false;
-                    break;
-                case "d":
-                    keys.d.pressed = false;
-                    break;
-                default:
-                    break;
-            }
-        }
     
         // Add Keyboard Event Listeners
         document.addEventListener('keydown', handleKeyDown);
@@ -370,7 +413,10 @@ export default function AdventureMap({translation, sidebarHovered, jwtToken, act
                     />
                 </div>
             :
-                <canvas className="adventure-game-canvas"></canvas>
+                <>
+                    <div className="adventure-canvas-shadow"></div>
+                    <canvas className="adventure-game-canvas"></canvas>
+                </>
             }
         </motion.div>
     );
