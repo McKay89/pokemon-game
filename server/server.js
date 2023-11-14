@@ -210,6 +210,32 @@ app.get('/api/user/cards/:username', async (req, res) => {
     });
 })
 
+// Set User Save State //
+app.post('/api/user/save/:userid', async (req, res) => {
+    const userSave = await getFromTable.getUserSaveById(sql, req.params.userid);
+
+    if(userSave.length == 0) {
+        if(await insertIntoTable.setUserSave(sql, req.params.userid, JSON.stringify(req.body))) {
+            res.status(200).json({ message: "savegame_success" });
+        }
+    } else {
+        if(await updateTable.updateUserSave(sql, req.params.userid, JSON.stringify(req.body))) {
+            res.status(200).json({ message: "savegame_success" });
+        }
+    }
+})
+
+// Get User Save State //
+app.get('/api/user/save/:userid', async (req, res) => {
+    const userSave = await getFromTable.getUserSaveById(sql, req.params.userid);
+    
+    if(userSave.length == 0) {
+        res.status(404).json({ message: "Not Found" });
+    } else {
+        res.status(200).json(JSON.parse(userSave[0].data));
+    }
+})
+
 
 
 // ENDPOINTS IGNORES JWT //
