@@ -3,6 +3,16 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from 'framer-motion';
 import Loading from "../extras/Loading";
 import jwt_decode from 'jwt-decode';
+
+// Import Game Components
+import Hud from './components/HUD/Hud';
+
+// Import Classes
+import { Dungeon001 } from './collisions';
+import { Boundary, Sprite } from './classes';
+
+// Import Images
+import GameData from './data/GameData';
 import DungeonMap from '../../assets_tmp/adventure/maps/dungeon_001.png';
 import DungeonForeground from '../../assets_tmp/adventure/maps/dungeon_001_foreground.png';
 import PlayerDownImage from '../../assets_tmp/adventure/player_moves/move_down.png';
@@ -10,9 +20,6 @@ import PlayerUpImage from '../../assets_tmp/adventure/player_moves/move_up.png';
 import PlayerLeftImage from '../../assets_tmp/adventure/player_moves/move_left.png';
 import PlayerRightImage from '../../assets_tmp/adventure/player_moves/move_right.png';
 import RectangularCollision from './collisions/RectangularCollision';
-import { Dungeon001 } from './collisions';
-import { Boundary, Sprite } from './classes';
-import GameData from './data/GameData';
 import Gif from '../../assets_tmp/adventure/gif/campfire.png';
 import './style/AdventureMap.css';
 
@@ -21,7 +28,10 @@ export default function AdventureMap({translation, sidebarHovered, jwtToken, act
     const location = useLocation();
     const [loading, setLoading] = useState(false);
     const [decodedToken, setDecodedToken] = useState({});
+    const [bgPosition, setBgPosition] = useState({ x: 0, y: 0 });
     const gameData = GameData();
+    const [userSave, setUserSave] = useState(null);
+    const [gameNotification, setGameNotification] = useState("");
     const Collisions = {
         dungeon001: Dungeon001()
     }
@@ -179,7 +189,7 @@ export default function AdventureMap({translation, sidebarHovered, jwtToken, act
         );
     }
 
-    const prepareBackgroundSprite = (canvas) => {
+    const prepareBackgroundSprite = () => {
         images.background.sprite = createSprite(
             { 
                 x: gameData.maps.dungeon_001.offset.x,
@@ -188,9 +198,10 @@ export default function AdventureMap({translation, sidebarHovered, jwtToken, act
             images.background.image,
             undefined, undefined, undefined, undefined, undefined
         );
+        setBgPosition({ x: gameData.maps.dungeon_001.offset.x, y: gameData.maps.dungeon_001.offset.y });
     }
 
-    const prepareForegroundSprite = (canvas) => {
+    const prepareForegroundSprite = () => {
         images.foreground.sprite = createSprite(
             { 
                 x: gameData.maps.dungeon_001.offset.x,
@@ -201,7 +212,7 @@ export default function AdventureMap({translation, sidebarHovered, jwtToken, act
         );
     }
 
-    const prepareTestAnimSprite = (canvas) => {
+    const prepareTestAnimSprite = () => {
         images.testAnim.sprite = createSprite(
             { 
                 x: 708,
@@ -265,6 +276,7 @@ export default function AdventureMap({translation, sidebarHovered, jwtToken, act
 
     // Handle Character Move Logic
     const handleCharacterMove = (boundaries, movableObjects, moving, direction, coordX, coordY) => {
+        setBgPosition({ x: images.background.sprite.position.x, y: images.background.sprite.position.y })
         images.player.sprite.moving = true;
         images.player.sprite.image = direction;
 
@@ -292,6 +304,98 @@ export default function AdventureMap({translation, sidebarHovered, jwtToken, act
         })
     }
 
+    const handleSaveGame = async (timeData) => {
+        const saveData = {
+            timeData: timeData,
+            backgroundPosition: {
+                x: bgPosition.x,
+                y: bgPosition.y
+            }
+        }
+
+        try {
+            const response = await fetch(`/api/user/save/${decodedToken.userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${jwtToken}`
+                },
+                body: JSON.stringify(saveData)
+            })
+
+            if(response.status === 200) {
+                setGameNotification(translation("adventure:savegame_success"));
+                setTimeout(() => {
+                    setGameNotification("");
+                }, 5000)
+            } else {
+                setGameNotification(translation("adventure:savegame_error"));
+                setTimeout(() => {
+                    setGameNotification("");
+                }, 5000)
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const loadObjectPositions = (movableObjects) => {
+        const saveCoordX = userSave.backgroundPosition.x;
+        const saveCoordY = userSave.backgroundPosition.y;
+        const bgCoordX = images.background.sprite.position.x;
+        const bgCoordY = images.background.sprite.position.y;
+
+        if(saveCoordX > bgCoordX) {
+            movableObjects.forEach(movable => {
+                movable.position.x -= saveCoordX - bgCoordX;
+            })
+        } else {
+            movableObjects.forEach(movable => {
+                movable.position.x -= bgCoordX - saveCoordX;
+            })
+        }
+        if(saveCoordY > bgCoordY) {
+            movableObjects.forEach(movable => {
+                movable.position.y -= saveCoordY - bgCoordY;
+            })
+        } else {
+            movableObjects.forEach(movable => {
+                movable.position.y -= bgCoordY - saveCoordY;
+            })
+        }
+    }
+
+    // Get User Save
+    useEffect(() => {
+        if(jwtToken == null) {
+            navigate("/");
+        } else {
+            setLoading(true);
+            const decToken = jwt_decode(jwtToken);
+            setDecodedToken(decToken);
+
+            // Get User Save State
+            const getUserSave = async () => {
+                try {
+                    const response = await fetch(`/api/user/save/${decToken.userId}`, {
+                        headers: {
+                            Authorization: `Bearer ${jwtToken}`
+                        }
+                    });
+
+                    if(response.status === 200) {
+                        const data = await response.json();
+                        setUserSave(data);
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+            getUserSave();
+            setLoading(false);
+        }
+    }, [])
+
     // Create Canvas & Player
     useEffect(() => {
         // Canvas Settings
@@ -311,13 +415,13 @@ export default function AdventureMap({translation, sidebarHovered, jwtToken, act
         preparePlayerSprite(canvas);
 
         // Create Background Sprite
-        prepareBackgroundSprite(canvas);
+        prepareBackgroundSprite();
 
         // Create Foreground Sprite
-        prepareForegroundSprite(canvas);
+        prepareForegroundSprite();
 
         // Create Test GIF Sprite
-        prepareTestAnimSprite(canvas);
+        prepareTestAnimSprite();
 
         // Collect Sprites which can moving
         const movableObjects = [
@@ -326,6 +430,11 @@ export default function AdventureMap({translation, sidebarHovered, jwtToken, act
             images.testAnim.sprite,
             ...boundaries
         ]
+
+        // Set the Positions get by Save State
+        if(userSave != null) {
+            loadObjectPositions(movableObjects);
+        }
 
         // Start Frame Animation
         const startAnimate = () => {
@@ -377,24 +486,7 @@ export default function AdventureMap({translation, sidebarHovered, jwtToken, act
             document.removeEventListener('keydown', handleKeyDown);
             document.removeEventListener('keyup', handleKeyUp);
         }
-    }, [])
-    
-
-    // Check user is logged in & get user data
-    useEffect(() => {
-        if(jwtToken == null) {
-            navigate("/");
-        } else {
-            setLoading(true);
-            const decToken = jwt_decode(jwtToken);
-            setDecodedToken(decToken);
-
-            // Fetch necessary user data
-            // ...
-
-            setLoading(false);
-        }
-    }, [])
+    }, [userSave])
 
     return(
         <motion.div
@@ -414,6 +506,14 @@ export default function AdventureMap({translation, sidebarHovered, jwtToken, act
                 </div>
             :
                 <>
+                    <div className="adventure-canvas-HUD">
+                        <Hud
+                            translation={translation}
+                            handleSaveGame={handleSaveGame}
+                            userSave={userSave}
+                            gameNotification={gameNotification}
+                        />
+                    </div>
                     <div className="adventure-canvas-shadow"></div>
                     <canvas className="adventure-game-canvas"></canvas>
                 </>
