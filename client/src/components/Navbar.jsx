@@ -201,7 +201,10 @@ export default function Navbar({translation, handleSidebarHover, login, handleLo
                     </li>
                   <li
                     onMouseOver={() => playSFX(sfxURLs.menuHoverSFX, soundsVolume)}
-                    onClick={() => playSFX(sfxURLs.menuClickSFX, soundsVolume)}
+                    onClick={() => {
+                      playSFX(sfxURLs.menuClickSFX, soundsVolume);
+                      navigateToPage("/multiplayer");
+                    }}
                     className="menu-item"
                   >
                     <i style={{backgroundImage: "url(/images/icons/menu/online.svg)"}} className="menu-icon"></i> &nbsp;
