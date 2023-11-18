@@ -7,9 +7,17 @@
                     Developed by McKay89
 */
 
-// EXPRESS //
+// SERVER //
     const express = require('express');
+    const http = require('http');
+    const socketIo = require('socket.io');
     const app = express();
+    const server = http.createServer(app);
+    const io = socketIo(server, {
+        cors: {
+            origin: "*",
+        },
+    });
     app.use(express.json());
     app.use(express.static(__dirname + '/public'));
     var fs = require("fs");
@@ -30,7 +38,7 @@
 
 // CORS POLICY //
     const cors = require('cors');
-    app.use(cors({origin:'http://localhost:5173'}));
+    app.use(cors({origin:'http://localhost:5173'}));  
 
 // CONNECT TO DATABASE //
     var sql = require("mssql");
@@ -97,6 +105,125 @@
             throw err;
         }
     }
+
+// FUNCTIONS //
+    const createRoomId = () => {
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        const charactersLength = characters.length;
+        let counter = 1;
+        while (counter < 12) {
+            if(counter % 4 === 0) {
+                result += "-";
+            } else {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            counter += 1;
+        }
+
+        if(Object.values(onlineRooms).indexOf(result) > -1) {
+            createRoomId();
+        } else {
+            return result;
+        }
+    }
+
+// ONLINE ROOMS //
+    const onlineRooms = {};
+
+// WEBSOCKET EVENT HANDLERS //
+    io.on('connection', (socket) => {
+        console.log('User Connected:', socket.id);
+    
+        // Create a private room
+        socket.on('createRoom', (creator) => {
+            const roomData = {
+                roomName: `${creator}'s Room`,
+                roomId: createRoomId(),
+                createrId: socket.id,
+                creatorName: creator,
+                players: [ { socketId: socket.id, userName: creator } ],
+                messages: []
+            }
+            onlineRooms[roomData.roomName] = roomData;
+            socket.join(roomData.roomName);
+        
+            try {
+                io.to(roomData.roomName).emit('createRoom', onlineRooms[roomData.roomName]);
+            } catch (error) {
+                console.error('Error sending updateRoom event:', error);
+            }
+        });
+    
+        // Connect to a private room
+        socket.on('joinRoom', (roomId, username) => {
+            let foundedRoom = null;
+            for(let room in onlineRooms) {
+                if(onlineRooms[room].roomId === roomId) {
+                    foundedRoom = onlineRooms[room];
+                }
+            }
+
+            if (foundedRoom && onlineRooms[foundedRoom.roomName].players.length < 2) {
+                onlineRooms[foundedRoom.roomName].players.push({
+                    socketId: socket.id,
+                    userName: username
+                });
+                socket.join(foundedRoom.roomName);
+                io.to(foundedRoom.roomName).emit('joinRoom', onlineRooms[foundedRoom.roomName]);
+            } else {
+                socket.emit('roomError', 'The room is full or not exists.');
+            }
+        });
+
+        // Send message in private Room
+        socket.on('sendMessage', (roomId, username, message) => {
+            let foundedRoom = null;
+            for(let room in onlineRooms) {
+                if(onlineRooms[room].roomId === roomId) {
+                    foundedRoom = onlineRooms[room];
+                }
+            }
+
+            console.log(roomId);
+            console.log(username);
+
+            if (foundedRoom) {
+                console.log("SZERÓ");
+                onlineRooms[foundedRoom.roomName].messages.push({
+                    socketId: socket.id,
+                    userName: username,
+                    message: message
+                });
+                io.to(foundedRoom.roomName).emit('sendMessage', onlineRooms[foundedRoom.roomName]);
+            } else {
+                socket.emit('roomError', 'Room not found !');
+            }
+        });
+    
+        // Leave a private room
+        socket.on('leaveRoom', (roomName) => {
+            if (onlineRooms[roomName]) {
+                const index = onlineRooms[roomName].players.indexOf(socket.id);
+                if (index !== -1) {
+                    onlineRooms[roomName].players.splice(index, 1);
+                    socket.leave(roomName);
+                    io.to(roomName).emit('updateRoom', onlineRooms[roomName]);
+                }
+            }
+        });
+    
+        // User disconnect
+        socket.on('disconnect', () => {
+            console.log('User disconnected:', socket.id);
+        });
+    });
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+});
 
 
 // JWT Validation //
@@ -246,4 +373,4 @@ app.use(
 );
 
 // SETUP SERVER ON PORT //
-app.listen(3001, () => console.log('Server started on port 3001'));
+server.listen(3001, () => console.log('Server started on port 3001'));
