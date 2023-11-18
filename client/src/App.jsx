@@ -18,6 +18,7 @@ import TestDownload from './components/pages/TestDownload';
 import BackgroundCover from './components/BackgroundCover';
 import CardCollection from './components/pages/CardCollection';
 import AdventureMap from './components/adventure/AdventureMap';
+import MultiplayerRoom from './components/online/MultiplayerRoom';
 import './App.css'
 
 const resources = {
@@ -166,6 +167,15 @@ function App() {
             {/* Adventure Game Component */}
             <Route path='/adventure' element={
                 <AdventureMap
+                  translation={t}
+                  sidebarHovered={sidebarHovered}
+                  jwtToken={jwtToken}
+                />
+              }
+            />
+            {/* Multiplayer Component */}
+            <Route path='/multiplayer' element={
+                <MultiplayerRoom
                   translation={t}
                   sidebarHovered={sidebarHovered}
                   jwtToken={jwtToken}
