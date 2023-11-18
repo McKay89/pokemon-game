@@ -1,0 +1,270 @@
+.multiplayer-room-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 90%;
+    height: 100%;
+    background: #000000c7;
+    transition: 1s;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.multiplayer-room-container-hovered {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80%;
+    height: 100%;
+    background: #000000c7;
+    transition: 1s;
+    overflow: hidden;
+}
+
+.profile-loading-screen {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: #000000da;
+}
+
+.multiplayer-room-list-container {
+    position: absolute;
+    top: 180px;
+    left: 20%;
+    width: 800px;
+    height: 600px;
+    background: #000000b4;
+    border: 4px inset #868484;
+}
+
+.room-list-title {
+    position: absolute;
+    top: 130px;
+    left: 20%;
+    font-size: 34px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.room-container-menu {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.room-container-menu > div {
+    width: 50%;
+    text-align: center;
+    cursor: pointer;
+    background: rgba(99, 104, 200, 0.551);
+}
+
+.room-container-menu > div:hover {
+    background: rgba(117, 200, 99, 0.551);
+}
+
+.room-menu-active {
+    background: rgba(117, 200, 99, 0.551) !important;
+}
+
+.room-body-container {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.room-body-container::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #99c8d1;
+	border-radius: 10px;
+}
+
+.room-body-container::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: none;
+}
+
+.room-body-container::-webkit-scrollbar-thumb
+{
+	background-color: #3366FF;
+	border-radius: 10px;
+	background-image: -webkit-linear-gradient(0deg,
+	                                          rgba(255, 255, 255, 0.5) 25%,
+											  transparent 25%,
+											  transparent 50%,
+											  rgba(255, 255, 255, 0.5) 50%,
+											  rgba(255, 255, 255, 0.5) 75%,
+											  transparent 75%,
+											  transparent)
+}
+
+.create-room-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgb(11, 81, 125);
+    padding: 15px;
+    font-size: 40px;
+    border: 3px solid #fff;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.create-room-btn:hover {
+    background: rgb(11, 125, 49);
+}
+
+.waiting-room-container {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #1a1919;
+    display: flex;
+    flex-direction: row;
+}
+
+.waiting-room-chatbox {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 70%;
+    height: 100%;
+    border-right: 2px solid #fff;
+    overflow-y: auto;
+}
+
+.waiting-room-chatbox::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #99c8d1;
+	border-radius: 10px;
+}
+
+.waiting-room-chatbox::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: none;
+}
+
+.waiting-room-chatbox::-webkit-scrollbar-thumb
+{
+	background-color: #3366FF;
+	border-radius: 10px;
+	background-image: -webkit-linear-gradient(0deg,
+	                                          rgba(255, 255, 255, 0.5) 25%,
+											  transparent 25%,
+											  transparent 50%,
+											  rgba(255, 255, 255, 0.5) 50%,
+											  rgba(255, 255, 255, 0.5) 75%,
+											  transparent 75%,
+											  transparent)
+}
+
+.waiting-room-userlist {
+    position: relative;
+    top: 0;
+    right: 0;
+    width: 30%;
+    height: 100%;
+}
+
+.waiting-room-userlist > span {
+    position: relative;
+    top: 10px;
+    left: 20%;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.join-room-input {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 60px;
+    text-align: center;
+    outline: none;
+    background: rgb(20, 67, 134);
+    font-size: 28px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+}
+
+.join-btn-active {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 50px;
+    outline: none;
+    background: rgb(28, 111, 32);
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.join-btn-inactive {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 50px;
+    outline: none;
+    background: rgb(74, 74, 74);
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.waiting-room-chat {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 90%;
+    background: #201e1e;
+}
+
+.waiting-room-message {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10%;
+    background: #353232;
+    border-top: 2px solid #ffffff77;
+}
+
+.waiting-room-chat-input {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+    font-size: 24px;
+    background: none;
+    outline: none;
+    color: #fff;
+}
