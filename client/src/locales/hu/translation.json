@@ -73,6 +73,8 @@
     "loading_match_statistics_text": "Meccs statisztika betöltése",
     "loading_user_cards_text": "Kártyakollekció betöltése",
     "loading_background_text": "Háttér betöltése",
+    "downloading_data_text": "Adatok letöltése",
+    "loading_data_text": "Adatok betöltése",
     "cards_search_placeholder": "Szűrés név alapján",
     "card_type_pokemon": "Pokémon Kártya",
     "card_type_spell": "Varázs Kártya",

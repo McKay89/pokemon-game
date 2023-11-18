@@ -73,6 +73,8 @@
     "loading_match_statistics_text": "Loading Match Statistics",
     "loading_user_cards_text": "Loading Card Collection",
     "loading_background_text": "Loading Background",
+    "downloading_data_text": "Downloading data",
+    "loading_data_text": "Loading data",
     "cards_search_placeholder": "Filter by name",
     "card_type_pokemon": "Pokémon Card",
     "card_type_spell": "Spell Card",
