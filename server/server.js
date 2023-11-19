@@ -137,19 +137,26 @@
     
         // Create a private room
         socket.on('createRoom', (creator) => {
+            const roomId = createRoomId();
+            const spectatorId = createRoomId();
+            const roomName = `${creator}'s Room`;
+
             const roomData = {
-                roomName: `${creator}'s Room`,
-                roomId: createRoomId(),
+                roomName: roomName,
+                roomId: roomId,
+                roomJoinId: `${roomName}-${roomId}`,
+                spectatorId: spectatorId,
                 createrId: socket.id,
                 creatorName: creator,
                 players: [ { socketId: socket.id, userName: creator } ],
+                spectators: [ ],
                 messages: []
             }
-            onlineRooms[roomData.roomName] = roomData;
-            socket.join(roomData.roomName);
-        
+            onlineRooms[roomData.roomJoinId] = roomData;
+            socket.join(roomData.roomJoinId);
+
             try {
-                io.to(roomData.roomName).emit('createRoom', onlineRooms[roomData.roomName]);
+                io.to(roomData.roomJoinId).emit('createRoom', onlineRooms[roomData.roomJoinId]);
             } catch (error) {
                 console.error('Error sending updateRoom event:', error);
             }
@@ -159,18 +166,18 @@
         socket.on('joinRoom', (roomId, username) => {
             let foundedRoom = null;
             for(let room in onlineRooms) {
-                if(onlineRooms[room].roomId === roomId) {
+                if(onlineRooms[room].roomId === roomId.toUpperCase()) {
                     foundedRoom = onlineRooms[room];
                 }
             }
 
-            if (foundedRoom && onlineRooms[foundedRoom.roomName].players.length < 2) {
-                onlineRooms[foundedRoom.roomName].players.push({
+            if (foundedRoom && onlineRooms[foundedRoom.roomJoinId].players.length < 2) {
+                onlineRooms[foundedRoom.roomJoinId].players.push({
                     socketId: socket.id,
                     userName: username
                 });
-                socket.join(foundedRoom.roomName);
-                io.to(foundedRoom.roomName).emit('joinRoom', onlineRooms[foundedRoom.roomName]);
+                socket.join(foundedRoom.roomJoinId);
+                io.to(foundedRoom.roomJoinId).emit('joinRoom', onlineRooms[foundedRoom.roomJoinId]);
             } else {
                 socket.emit('roomError', 'The room is full or not exists.');
             }
@@ -185,31 +192,118 @@
                 }
             }
 
-            console.log(roomId);
-            console.log(username);
-
             if (foundedRoom) {
-                console.log("SZERÓ");
-                onlineRooms[foundedRoom.roomName].messages.push({
+                onlineRooms[foundedRoom.roomJoinId].messages.push({
                     socketId: socket.id,
                     userName: username,
                     message: message
                 });
-                io.to(foundedRoom.roomName).emit('sendMessage', onlineRooms[foundedRoom.roomName]);
+                io.to(foundedRoom.roomJoinId).emit('updateRoom', onlineRooms[foundedRoom.roomJoinId]);
             } else {
                 socket.emit('roomError', 'Room not found !');
             }
         });
+
+        // Change Creator Status in waiting room
+        socket.on('changeCreatorStatus', (roomId, creatorName, status) => {
+            let foundedRoom = null;
+            for(let room in onlineRooms) {
+                if(onlineRooms[room].roomId === roomId && onlineRooms[room].creatorName === creatorName) {
+                    foundedRoom = onlineRooms[room];
+                }
+            }
+
+            if(foundedRoom) {
+                if(status === "player") {
+                    if(onlineRooms[foundedRoom.roomJoinId].players.includes(x => x.userName === creatorName)) {
+                        socket.emit('roomError', 'Already a Player !');
+                    } else {
+                        let userIndex = onlineRooms[foundedRoom.roomJoinId].spectators.findIndex(x => x.userName === creatorName);
+                    
+                        if(onlineRooms[foundedRoom.roomJoinId].players.length < 2) {
+                            onlineRooms[foundedRoom.roomJoinId].players.unshift(onlineRooms[foundedRoom.roomJoinId].spectators[userIndex]);
+                            onlineRooms[foundedRoom.roomJoinId].spectators.splice(userIndex, 1);
+
+                            io.to(foundedRoom.roomJoinId).emit('updateRoom', onlineRooms[foundedRoom.roomJoinId]);
+                        } else {
+                            socket.emit('roomError', 'The player list is full !');
+                        }
+                    }
+                } else {
+                    if(onlineRooms[foundedRoom.roomJoinId].spectators.includes(x => x.userName === creatorName)) {
+                        socket.emit('roomError', 'Already a Spectator !');
+                    } else {
+                        let userIndex = onlineRooms[foundedRoom.roomJoinId].players.findIndex(x => x.userName === creatorName);
+
+                        if(onlineRooms[foundedRoom.roomJoinId].spectators.length < 5) {
+                            onlineRooms[foundedRoom.roomJoinId].spectators.unshift(onlineRooms[foundedRoom.roomJoinId].players[userIndex]);
+                            onlineRooms[foundedRoom.roomJoinId].players.splice(userIndex, 1);
+    
+                            io.to(foundedRoom.roomJoinId).emit('updateRoom', onlineRooms[foundedRoom.roomJoinId]);
+                        } else {
+                            socket.emit('roomError', 'Spectator list is full !');
+                        }
+                    }
+                }
+            } else {
+                socket.emit('roomError', 'Room not found !');
+            }
+        })
+
+        // Kick user from room
+        socket.on('kickUser', (roomId, userName, status) => {
+            let foundedRoom = null;
+            for(let room in onlineRooms) {
+                if(onlineRooms[room].roomId === roomId) {
+                    foundedRoom = onlineRooms[room];
+                }
+            }
+
+            if(foundedRoom) {
+                const userIndex = onlineRooms[foundedRoom.roomJoinId][status].findIndex(x => x.userName === userName);
+                onlineRooms[foundedRoom.roomJoinId][status].splice(userIndex, 1);
+            
+                io.to(foundedRoom.roomJoinId).emit('updateRoom', onlineRooms[foundedRoom.roomJoinId]);
+            } else {
+                socket.emit('roomError', 'Room not found !');
+            }
+        })
     
         // Leave a private room
-        socket.on('leaveRoom', (roomName) => {
-            if (onlineRooms[roomName]) {
-                const index = onlineRooms[roomName].players.indexOf(socket.id);
-                if (index !== -1) {
-                    onlineRooms[roomName].players.splice(index, 1);
-                    socket.leave(roomName);
-                    io.to(roomName).emit('updateRoom', onlineRooms[roomName]);
+        socket.on('leaveRoom', (roomId, userName) => {
+            let foundedRoom = null;
+            for(let room in onlineRooms) {
+                if(onlineRooms[room].roomId === roomId) {
+                    foundedRoom = onlineRooms[room];
                 }
+            }
+
+            if(foundedRoom) {
+                let player = onlineRooms[foundedRoom.roomJoinId].players.find(x => x.userName === userName);
+                let spectator = onlineRooms[foundedRoom.roomJoinId].spectators.find(x => x.userName === userName);
+
+                if(player && player.userName === onlineRooms[foundedRoom.roomJoinId].creatorName || 
+                   spectator && spectator.userName === onlineRooms[foundedRoom.roomJoinId].creatorName
+                ) {
+                    io.to(foundedRoom.roomJoinId).emit('roomDeleted', foundedRoom.roomJoinId);
+                    socket.removeAllListeners(`updateRoom_${foundedRoom.roomJoinId}`);
+                    socket.removeAllListeners(`roomDeleted_${foundedRoom.roomJoinId}`);
+                    socket.leave(foundedRoom.roomJoinId);
+
+                    delete onlineRooms[`${userName}'s Room`];
+                } else {
+                    if(player) {
+                        const playerIndex = onlineRooms[foundedRoom.roomJoinId].players.findIndex(x => x.userName === userName);
+                        onlineRooms[foundedRoom.roomJoinId].players.splice(playerIndex, 1);
+                    } else if(spectator) {
+                        const spectatorIndex = onlineRooms[foundedRoom.roomJoinId].spectators.findIndex(x => x.userName === userName);
+                        onlineRooms[foundedRoom.roomJoinId].spectators.splice(spectatorIndex, 1);
+                    }
+
+                    io.to(foundedRoom.roomJoinId).emit('updateRoom', onlineRooms[foundedRoom.roomJoinId]);
+                }
+            } else {
+                socket.emit('roomError', 'Room not found !');
             }
         });
     
