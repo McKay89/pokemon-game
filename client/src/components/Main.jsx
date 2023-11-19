@@ -41,7 +41,7 @@ export default function Main({translation, sidebarHovered}) {
             <span>Pokemon - The Card Game</span><br />
             <span>Developed by McKay89</span><br />
             <span>Version ~ in development phase</span><br />
-            <span>Last update: 2023.11.04</span>
+            <span>Last update: 2023.11.19</span>
           </div>
           <Outlet /> 
         </motion.div>
