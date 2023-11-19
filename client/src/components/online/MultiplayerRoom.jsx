@@ -57,7 +57,7 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
             setSocket(newSocket);
         
             return () => {
-            newSocket.disconnect();
+                newSocket.disconnect();
             };
         }
     }, []);
@@ -73,9 +73,29 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                 setJoinedRoom(roomData);
             };
 
+            const deleteRoom = (roomId) => {
+                setJoinedRoom(null);
+
+                // Delete Event Handlers
+                socket.off(`updateRoom_${roomId}`, updateJoinRoom);
+                socket.off(`joinRoom_${roomId}`, updateJoinRoom);
+                socket.off(`createRoom_${roomId}`, updateCreateRoom);
+            };
+
             const updateRoom = (roomData) => {
-                console.log(roomData);
-                setJoinedRoom(roomData);
+                let playerIndex = roomData && roomData.players.findIndex(x => x.userName === decodedToken.username);
+                let spectatorIndex = roomData && roomData.spectators.findIndex(x => x.userName === decodedToken.username);
+                
+                if(playerIndex === -1 && spectatorIndex === -1) {
+                    setJoinedRoom(null);
+
+                    // Delete Event Handlers
+                    socket.off(`updateRoom_${roomData.roomJoinId}`, updateJoinRoom);
+                    socket.off(`joinRoom_${roomData.roomJoinId}`, updateJoinRoom);
+                    socket.off(`createRoom_${roomData.roomJoinId}`, updateCreateRoom);
+                } else {
+                    setJoinedRoom(roomData);
+                }                
             };
         
             const handleRoomError = (errorMessage) => {
@@ -84,13 +104,15 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
         
             socket.on('createRoom', updateCreateRoom);
             socket.on('joinRoom', updateJoinRoom);
-            socket.on('sendMessage', updateRoom);
+            socket.on('roomDeleted', deleteRoom);
+            socket.on('updateRoom', updateRoom);
             socket.on('roomError', handleRoomError);
         
             return () => {
-                socket.off('roomError', updateCreateRoom);
-                socket.off('roomError', updateJoinRoom);
-                socket.off('roomError', updateRoom);
+                socket.off('createRoom', updateCreateRoom);
+                socket.off('joinRoom', updateJoinRoom);
+                socket.off('roomDeleted', deleteRoom);
+                socket.off('updateRoom', updateRoom);
                 socket.off('roomError', handleRoomError);
             };
         }
@@ -101,6 +123,7 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
     };
     
     const handleJoinRoom = () => {
+        setRoomId("");
         socket.emit('joinRoom', roomId, decodedToken.username);
     }
 
@@ -110,10 +133,30 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
             setChatMessage("");
         }
     }
+
+    const handleChangeCreatorStatus = (status) => {
+        socket.emit('changeCreatorStatus', joinedRoom.roomId, joinedRoom.creatorName, status);
+    }
     
-    const leaveRoom = (roomName) => {
-        socket.emit('leaveRoom', roomName);
+    const handleLeaveRoom = () => {
+        socket.emit('leaveRoom', joinedRoom.roomId, decodedToken.username);
+
+        // Delete Event Handlers
+        socket.off('updateRoom', updateRoom);
+        socket.off('roomDeleted', deleteRoom);
+        socket.off('joinRoom', updateJoinRoom);
+        socket.off('createRoom', updateCreateRoom);
+
+        // Create Event Handlers
+        socket.on('createRoom', updateCreateRoom);
+        socket.on('joinRoom', updateJoinRoom);
+        socket.on('roomDeleted', deleteRoom);
+        socket.on('updateRoom', updateRoom);
     };
+
+    const handleKickPlayer = (status, username) => {
+        socket.emit('kickUser', joinedRoom.roomId, username, status);
+    }
 
     const handlePageChange = (page) => {
         setActivePage(page);
@@ -126,6 +169,7 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
     const handleChatMessage = (event) => {
         setChatMessage(event.target.value);
     }
+
 
     return (
         <motion.div
@@ -145,13 +189,16 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                 </div>
             : activePage === "create" ?
                 <>
-                    <span className="room-list-title">
-                        { joinedRoom ?
-                            <span>{joinedRoom.roomName}</span>
-                        :
-                            <span>Create a private room</span>
-                        }
-                    </span>
+                    { joinedRoom ?
+                        <div className="waiting-room-title-container">
+                            <div className="room-title-1"><span>Open</span></div>
+                            <div className="room-title-2"><span>{joinedRoom.roomName}</span></div>
+                            <div className="room-title-3"><span>JOIN LINK</span><br /><span>{joinedRoom.roomId}</span></div>
+                            <div className="room-title-4"><span>SPECTATOR LINK</span><br /><span>{joinedRoom.spectatorId}</span></div>
+                        </div>
+                    :
+                        <span className="room-list-title">Create a private room</span>
+                    }
                     <div className="multiplayer-room-list-container">
                         { loading ?
                             <Loading
@@ -175,17 +222,76 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                             value={chatMessage}
                                             onChange={(e) => handleChatMessage(e)}
                                             onKeyDown={handleSendMessage}
+                                            placeholder="Your message here"
                                         />
                                     </div>
                                 </div>
                                 <div className="waiting-room-userlist">
-                                    <span>Users</span><hr />
+                                    <div className="waiting-room-players">
+                                        <span>Players&nbsp;&nbsp; {joinedRoom.players.length} / 2</span>
+                                        <Tooltip
+                                            title={<span style={{ color: "#fff", fontSize: "14px" }}>Join as Player</span>}
+                                            placement='right'
+                                            arrow
+                                            TransitionComponent={Zoom}
+                                            TransitionProps={{ timeout: 600 }}
+                                        >
+                                            <span onClick={() => handleChangeCreatorStatus("player")}>JOIN</span>
+                                        </Tooltip>
+                                    </div>
                                     {joinedRoom.players.map((p, index) => (
                                         <React.Fragment key={index}>
-                                            <span>{p.userName}</span>
-                                            <br />
+                                            <div className="waiting-room-player">
+                                                <span>{p.userName}</span>
+                                                { p.userName === decodedToken.username ?
+                                                    undefined
+                                                :
+                                                    <Tooltip
+                                                        title={<span style={{ color: "#fff", fontSize: "14px" }}>Remove player from the Room</span>}
+                                                        placement='right'
+                                                        arrow
+                                                        TransitionComponent={Zoom}
+                                                        TransitionProps={{ timeout: 600 }}
+                                                    >
+                                                        <span onClick={() => handleKickPlayer("players", p.userName)}><i class="fa-solid fa-square-xmark"></i></span>
+                                                    </Tooltip>
+                                                }
+                                            </div>
                                         </React.Fragment>
                                     ))}
+                                    <div className="waiting-room-spectators">
+                                        <span>Players&nbsp;&nbsp; {joinedRoom.spectators.length} / 5</span>
+                                        <Tooltip
+                                            title={<span style={{ color: "#fff", fontSize: "14px" }}>Join as Spectator</span>}
+                                            placement='right'
+                                            arrow
+                                            TransitionComponent={Zoom}
+                                            TransitionProps={{ timeout: 600 }}
+                                        >
+                                            <span onClick={() => handleChangeCreatorStatus("spectator")}>JOIN</span>
+                                        </Tooltip>
+                                    </div>
+                                    {joinedRoom.spectators && joinedRoom.spectators.map((s, index) => (
+                                        <React.Fragment key={index}>
+                                            <div className="waiting-room-player">
+                                                <span>{s.userName}</span>
+                                                { s.userName === decodedToken.username ?
+                                                    undefined
+                                                :
+                                                    <Tooltip
+                                                        title={<span style={{ color: "#fff", fontSize: "14px" }}>Remove player from the Room</span>}
+                                                        placement='right'
+                                                        arrow
+                                                        TransitionComponent={Zoom}
+                                                        TransitionProps={{ timeout: 600 }}
+                                                    >
+                                                        <span onClick={() => handleKickPlayer("spectators", s.userName)}><i class="fa-solid fa-square-xmark"></i></span>
+                                                    </Tooltip>
+                                                }
+                                            </div>
+                                        </React.Fragment>
+                                    ))}
+                                    <div className="waiting-room-leave" onClick={handleLeaveRoom}><span>Leave Room</span></div>
                                 </div>
                             </div>
                         :
@@ -203,13 +309,16 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                 </>
             : activePage === "join" ?
                 <>
-                    <span className="room-list-title">
-                        { joinedRoom ?
-                            <span>{joinedRoom.roomName}</span>
-                        :
-                            <span>Join to a private Room</span>
-                        }
-                    </span>
+                    { joinedRoom ?
+                        <div className="waiting-room-title-container">
+                            <div className="room-title-1"><span>Open</span></div>
+                            <div className="room-title-2"><span>{joinedRoom.roomName}</span></div>
+                            <div className="room-title-3"><span></span></div>
+                            <div className="room-title-4"><span></span></div>
+                        </div>
+                    :
+                        <span className="room-list-title">Join to a private room</span>
+                    }
                     <div className="multiplayer-room-list-container">
                         { loading ?
                             <Loading
@@ -233,17 +342,32 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                             value={chatMessage}
                                             onChange={(e) => handleChatMessage(e)}
                                             onKeyDown={handleSendMessage}
+                                            placeholder="Your message here"
                                         />
                                     </div>
                                 </div>
                                 <div className="waiting-room-userlist">
-                                    <span>Users</span><hr />
+                                    <div className="waiting-room-players">
+                                        <span>Players&nbsp;&nbsp; {joinedRoom.players.length} / 2</span>
+                                    </div>
                                     {joinedRoom.players.map((p, index) => (
                                         <React.Fragment key={index}>
-                                            <span>{p.userName}</span>
-                                            <br />
+                                            <div className="waiting-room-player">
+                                                <span>{p.userName}</span>
+                                            </div>
                                         </React.Fragment>
                                     ))}
+                                    <div className="waiting-room-spectators">
+                                        <span>Spectators&nbsp;&nbsp; {joinedRoom.spectators.length} / 5</span>
+                                    </div>
+                                    {joinedRoom.spectators && joinedRoom.spectators.map((s, index) => (
+                                        <React.Fragment key={index}>
+                                            <div className="waiting-room-player">
+                                                <span>{s.userName}</span>
+                                            </div>
+                                        </React.Fragment>
+                                    ))}
+                                    <div className="waiting-room-leave" onClick={handleLeaveRoom}><span>Leave Room</span></div>
                                 </div>
                             </div>
                         :
@@ -258,6 +382,7 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                         value={roomId}
                                         onChange={(e) => handleRoomId(e)}
                                         maxLength="11"
+                                        placeholder="ROOM-ID"
                                     />
                                     <button
                                         className={roomId && roomId.length === 11 ? "join-btn-active" : "join-btn-inactive"}
