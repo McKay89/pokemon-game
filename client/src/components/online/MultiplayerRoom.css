@@ -8,6 +8,7 @@
     transition: 1s;
     overflow: hidden;
     z-index: 2;
+    user-select: none;
 }
 
 .multiplayer-room-container-hovered {
@@ -18,6 +19,7 @@
     height: 100%;
     background: #000000c7;
     transition: 1s;
+    user-select: none;
     overflow: hidden;
 }
 
@@ -32,9 +34,10 @@
 
 .multiplayer-room-list-container {
     position: absolute;
-    top: 180px;
-    left: 20%;
-    width: 800px;
+    top: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
     height: 600px;
     background: #000000b4;
     border: 4px inset #868484;
@@ -42,8 +45,8 @@
 
 .room-list-title {
     position: absolute;
-    top: 130px;
-    left: 20%;
+    top: 100px;
+    left: 15%;
     font-size: 34px;
     color: #fff;
     font-weight: bold;
@@ -267,4 +270,201 @@
     background: none;
     outline: none;
     color: #fff;
+}
+
+.waiting-room-players {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 45px;
+    background: rgb(95, 66, 182);
+    margin-bottom: 10px;
+    text-align: center;
+    font-family: "OCR A Std", monospace;
+}
+
+.waiting-room-players > span:nth-child(1) {
+    position: relative;
+    width: 70%;
+    padding: 5px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.waiting-room-players > span:nth-child(2) {
+    position: relative;
+    top: 5px;
+    width: 30%;
+    height: 70%;
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    background: rgb(9, 71, 9);
+    transition: 0.3s;
+}
+
+.waiting-room-players > span:nth-child(2):hover {
+    background: rgb(36, 130, 36);
+}
+
+.waiting-room-spectators {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 45px;
+    background: rgb(95, 66, 182);
+    margin-top: 50px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-family: "OCR A Std", monospace;
+}
+
+.waiting-room-spectators > span:nth-child(1) {
+    position: relative;
+    width: 70%;
+    padding: 5px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.waiting-room-spectators > span:nth-child(2) {
+    position: relative;
+    top: 5px;
+    width: 30%;
+    height: 70%;
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    background: rgb(9, 71, 9);
+    transition: 0.3s;
+}
+
+.waiting-room-spectators > span:nth-child(2):hover {
+    background: rgb(36, 130, 36);
+}
+
+.waiting-room-player {
+    position: relative;
+    left: 0;
+    width: 100%;
+    height: 35px;
+    background: rgb(66, 63, 63);
+    font-size: 18px;
+    padding-top: 3px;
+    padding-left: 15px;
+    border-bottom: 1px solid #fff;
+}
+
+.waiting-room-player > span:nth-child(2) {
+    position: absolute;
+    right: 10px;
+}
+
+.fa-square-xmark {
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.fa-square-xmark:hover {
+    color: rgb(95, 230, 88);
+}
+
+.waiting-room-leave {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    background: rgb(149, 22, 22);
+    text-align: center;
+    border-top: 2px solid #fff;
+    font-family: "OCR A Std", monospace;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.waiting-room-leave:hover {
+    background: rgb(90, 15, 15);
+}
+
+.waiting-room-leave > span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.waiting-room-title-container {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 60px;
+    background: rgb(3, 17, 1);
+    border: 2px inset #fff;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.room-title-1 {
+    width: 10%;
+    padding: 15px;
+}
+
+.room-title-1 > span {
+    position: relative;
+    width: 100%;
+    background: rgb(8, 102, 8);
+    font-size: 18px;
+    font-weight: bold;
+    padding: 8px;
+    border-radius: 10px;
+}
+
+.room-title-2 {
+    width: 50%;
+    padding: 10px;
+}
+
+.room-title-2 > span {
+    position: relative;
+    width: 100%;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 8px;
+    letter-spacing: 3px;
+    border-radius: 10px;
+}
+
+.room-title-3 {
+    width: 20%;
+    text-align: center;
+}
+
+.room-title-3 > span:nth-child(3) {
+    color: rgb(165, 203, 28);
+    font-size: 22px;
+    letter-spacing: 3px;
+}
+
+.room-title-4 {
+    width: 20%;
+    text-align: center;
+}
+
+.room-title-4 > span:nth-child(3) {
+    color: rgb(165, 203, 28);
+    font-size: 22px;
+    letter-spacing: 3px;
 }
