@@ -141,6 +141,9 @@
     background: #1a1919;
     display: flex;
     flex-direction: row;
+    opacity: 0;
+    animation: appearWaitingRoom 1s linear 1;
+    animation-fill-mode: forwards;
 }
 
 .waiting-room-chatbox {
@@ -150,23 +153,22 @@
     width: 70%;
     height: 100%;
     border-right: 2px solid #fff;
-    overflow-y: auto;
 }
 
-.waiting-room-chatbox::-webkit-scrollbar-track
+.waiting-room-chat::-webkit-scrollbar-track
 {
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
 	background-color: #99c8d1;
 	border-radius: 10px;
 }
 
-.waiting-room-chatbox::-webkit-scrollbar
+.waiting-room-chat::-webkit-scrollbar
 {
 	width: 10px;
 	background-color: none;
 }
 
-.waiting-room-chatbox::-webkit-scrollbar-thumb
+.waiting-room-chat::-webkit-scrollbar-thumb
 {
 	background-color: #3366FF;
 	border-radius: 10px;
@@ -246,7 +248,10 @@
     left: 0;
     width: 100%;
     height: 90%;
-    background: #201e1e;
+    background: #000000;
+    align-items: center;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .waiting-room-message {
@@ -263,13 +268,25 @@
     position: relative;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 95%;
     height: 100%;
     padding: 5px;
     font-size: 24px;
     background: none;
     outline: none;
+    border: none;
     color: #fff;
+}
+
+.fa-paper-plane {
+    position: relative;
+    top: -2px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.fa-paper-plane:hover {
+    color: #0f0;
 }
 
 .waiting-room-players {
@@ -354,14 +371,37 @@
     left: 0;
     width: 100%;
     height: 35px;
-    background: rgb(66, 63, 63);
-    font-size: 18px;
-    padding-top: 3px;
+    background: rgb(11, 70, 18);
+    font-size: 20px;
+    padding-top: 1px;
     padding-left: 15px;
     border-bottom: 1px solid #fff;
+    border-left: 8px inset #00fef5;
+    font-family: "OCR A Std", monospace;
+    letter-spacing: 1px;
 }
 
 .waiting-room-player > span:nth-child(2) {
+    position: absolute;
+    right: 10px;
+}
+
+.waiting-room-spectator {
+    position: relative;
+    left: 0;
+    width: 100%;
+    height: 35px;
+    background: rgb(12, 15, 141);
+    font-size: 20px;
+    padding-top: 1px;
+    padding-left: 15px;
+    border-bottom: 1px solid #fff;
+    border-left: 8px inset #00fef5;
+    font-family: "OCR A Std", monospace;
+    letter-spacing: 1px;
+}
+
+.waiting-room-spectator > span:nth-child(2) {
     position: absolute;
     right: 10px;
 }
@@ -467,4 +507,101 @@
     color: rgb(165, 203, 28);
     font-size: 22px;
     letter-spacing: 3px;
+}
+
+.waiting-room-user-amount {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.roomid-to-clipboard {
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.roomid-to-clipboard:hover {
+    border: 1px solid #fff;
+    background: rgba(63, 121, 36, 0.533);
+    border-radius: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.chatbox-message {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    width: 90%;
+    height: auto;
+    font-size: 18px;
+    color: #fff;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    opacity: 0;
+    animation: appearMessage 0.4s linear 1;
+    animation-fill-mode: forwards;
+}
+
+.message-head {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: calc(100% + 20px);
+    transform: translateX(-10px);
+    height: 30px;
+    background: #191616;
+    border: 1px solid #fff;
+    border-radius: 10px;
+}
+
+.message-body {
+    height: auto;
+    background: #3a3737;
+    padding: 7px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    box-shadow: 0px 2px 1px 1px rgba(255, 255, 255, 0.75);
+    -webkit-box-shadow: 0px 2px 1px 1px rgba(255, 255, 255, 0.75);
+    -moz-box-shadow: 0px 2px 1px 1px rgba(255, 255, 255, 0.75);
+}
+
+.message-head > div:nth-child(1) {
+    width: 50%;
+    padding-left: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: rgb(10, 229, 245);
+}
+
+.message-head > div:nth-child(2) {
+    width: 50%;
+    padding-right: 10px;
+    padding-top: 3px;
+    text-align: right;
+    font-size: 14px;
+    font-weight: bold;
+    color: rgb(10, 229, 245);
+}
+
+@keyframes appearMessage {
+    0% {
+        transform: translateX(-50%) scale(0);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(-50%) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes appearWaitingRoom {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
