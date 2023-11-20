@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { motion } from 'framer-motion';
 import Tooltip from '@mui/material/Tooltip';
@@ -14,11 +14,16 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
     const location = useLocation();
     const [decodedToken, setDecodedToken] = useState({});
     const [loading, setLoading] = useState(false);
+    const [loadingRoom, setLoadingRoom] = useState(false);
     const [activePage, setActivePage] = useState("join");
     const [socket, setSocket] = useState(null);
     const [joinedRoom, setJoinedRoom] = useState(null);
     const [roomId, setRoomId] = useState("");
     const [chatMessage, setChatMessage] = useState("");
+    const [chatMessages, setChatMessages] = useState([]);
+    const messagesEndRef = useRef(null);
+    const [roomIDClipboard, setRoomIDClipboard] = useState("");
+    const [spectatorIDClipboard, setSpectatorIDClipboard] = useState("");
     const [error, setError] = useState('');
 
     const pageTransition = {
@@ -65,7 +70,8 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
     useEffect(() => {
         if(socket) {
             const updateCreateRoom = (roomData) => {
-                console.log(roomData);
+                setRoomIDClipboard(roomData.roomId);
+                setSpectatorIDClipboard(roomData.spectatorId);
                 setJoinedRoom(roomData);
             };
 
@@ -75,12 +81,19 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
 
             const deleteRoom = (roomId) => {
                 setJoinedRoom(null);
+                setChatMessages([]);
+                setChatMessage("");
 
                 // Delete Event Handlers
                 socket.off(`updateRoom_${roomId}`, updateJoinRoom);
                 socket.off(`joinRoom_${roomId}`, updateJoinRoom);
                 socket.off(`createRoom_${roomId}`, updateCreateRoom);
+                socket.off(`updateMessages${roomId}`, updateMessages);
             };
+
+            const updateMessages = (message) => {
+                setChatMessages(prevMessages => [...prevMessages, message]);
+            }
 
             const updateRoom = (roomData) => {
                 let playerIndex = roomData && roomData.players.findIndex(x => x.userName === decodedToken.username);
@@ -88,6 +101,8 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                 
                 if(playerIndex === -1 && spectatorIndex === -1) {
                     setJoinedRoom(null);
+                    setChatMessages([]);
+                    setChatMessage("");
 
                     // Delete Event Handlers
                     socket.off(`updateRoom_${roomData.roomJoinId}`, updateJoinRoom);
@@ -106,6 +121,7 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
             socket.on('joinRoom', updateJoinRoom);
             socket.on('roomDeleted', deleteRoom);
             socket.on('updateRoom', updateRoom);
+            socket.on('updateMessages', updateMessages);
             socket.on('roomError', handleRoomError);
         
             return () => {
@@ -113,22 +129,48 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                 socket.off('joinRoom', updateJoinRoom);
                 socket.off('roomDeleted', deleteRoom);
                 socket.off('updateRoom', updateRoom);
+                socket.off('updateMessages', updateMessages);
                 socket.off('roomError', handleRoomError);
             };
         }
     }, [socket]);
 
+    useEffect(() => {
+        scrollToBottom()
+    }, [chatMessages]);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    }
+
     const createRoom = () => {
-        socket.emit('createRoom', decodedToken.username);
+        setLoadingRoom(true);
+        setTimeout(() => {
+            socket.emit('createRoom', decodedToken.username);
+            setLoadingRoom(false);
+        }, 3000)
     };
     
     const handleJoinRoom = () => {
-        setRoomId("");
-        socket.emit('joinRoom', roomId, decodedToken.username);
+        setLoadingRoom(true);
+        setTimeout(() => {
+            setRoomId("");
+            socket.emit('joinRoom', roomId, decodedToken.username);
+            setLoadingRoom(false);
+        }, 3000)
     }
 
     const handleSendMessage = (event) => {
         if(event.key === "Enter") {
+            if(chatMessage !== "") {
+                socket.emit('sendMessage', joinedRoom.roomId, decodedToken.username, chatMessage);
+                setChatMessage("");
+            }
+        }
+    }
+
+    const handleSendMessageBtn = (event) => {
+        if(chatMessage !== "") {
             socket.emit('sendMessage', joinedRoom.roomId, decodedToken.username, chatMessage);
             setChatMessage("");
         }
@@ -140,18 +182,6 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
     
     const handleLeaveRoom = () => {
         socket.emit('leaveRoom', joinedRoom.roomId, decodedToken.username);
-
-        // Delete Event Handlers
-        socket.off('updateRoom', updateRoom);
-        socket.off('roomDeleted', deleteRoom);
-        socket.off('joinRoom', updateJoinRoom);
-        socket.off('createRoom', updateCreateRoom);
-
-        // Create Event Handlers
-        socket.on('createRoom', updateCreateRoom);
-        socket.on('joinRoom', updateJoinRoom);
-        socket.on('roomDeleted', deleteRoom);
-        socket.on('updateRoom', updateRoom);
     };
 
     const handleKickPlayer = (status, username) => {
@@ -193,8 +223,30 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                         <div className="waiting-room-title-container">
                             <div className="room-title-1"><span>Open</span></div>
                             <div className="room-title-2"><span>{joinedRoom.roomName}</span></div>
-                            <div className="room-title-3"><span>JOIN LINK</span><br /><span>{joinedRoom.roomId}</span></div>
-                            <div className="room-title-4"><span>SPECTATOR LINK</span><br /><span>{joinedRoom.spectatorId}</span></div>
+                            <div className="room-title-3">
+                                <span>JOIN LINK</span><br />
+                                <Tooltip
+                                    title={<span style={{ color: "#fff", fontSize: "14px" }}>Click for a copy</span>}
+                                    placement='top'
+                                    arrow
+                                    TransitionComponent={Zoom}
+                                    TransitionProps={{ timeout: 600 }}
+                                >
+                                    <span className="roomid-to-clipboard" onClick={() => {navigator.clipboard.writeText(roomIDClipboard)}}>{joinedRoom.roomId}</span>
+                                </Tooltip>
+                            </div>
+                            <div className="room-title-4">
+                                <span>SPECTATOR LINK</span><br />
+                                <Tooltip
+                                    title={<span style={{ color: "#fff", fontSize: "14px" }}>Click for a copy</span>}
+                                    placement='top'
+                                    arrow
+                                    TransitionComponent={Zoom}
+                                    TransitionProps={{ timeout: 600 }}
+                                >
+                                    <span className="roomid-to-clipboard" onClick={() => {navigator.clipboard.writeText(spectatorIDClipboard)}}>{joinedRoom.spectatorId}</span>
+                                </Tooltip>
+                            </div>
                         </div>
                     :
                         <span className="room-list-title">Create a private room</span>
@@ -205,16 +257,31 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                 text={translation("downloading_data_text")}
                                 scale={1.4}
                             />
+                        : loadingRoom ?
+                            <Loading
+                                text={"Creating Online Room ..."}
+                                scale={1.4}
+                            />
                         : joinedRoom ?
                             <div className="waiting-room-container">
                                 <div className="waiting-room-chatbox">
                                     <div className="waiting-room-chat">
-                                        {joinedRoom.messages.map((m, index) => (
-                                            <React.Fragment key={index}>
-                                                <span>{m.message}</span>
-                                                <br /><hr />
-                                            </React.Fragment>
+                                        {chatMessages.map((message, index) => (
+                                            <div className="chatbox-message" key={index}>
+                                                <div className="message-head">
+                                                    <div>
+                                                        {message.userName}
+                                                    </div>
+                                                    <div>
+                                                        {message.date}
+                                                    </div>
+                                                </div>
+                                                <div className="message-body">
+                                                    {message.message}
+                                                </div>
+                                            </div>
                                         ))}
+                                        <div ref={messagesEndRef} />
                                     </div>
                                     <div className="waiting-room-message">
                                         <input
@@ -224,11 +291,15 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                             onKeyDown={handleSendMessage}
                                             placeholder="Your message here"
                                         />
+                                        <i onClick={handleSendMessageBtn} className="fa-solid fa-paper-plane"></i>
                                     </div>
                                 </div>
                                 <div className="waiting-room-userlist">
                                     <div className="waiting-room-players">
-                                        <span>Players&nbsp;&nbsp; {joinedRoom.players.length} / 2</span>
+                                        <div className="waiting-room-user-amount">
+                                            <span>Players</span>
+                                            <span>{joinedRoom.players.length} / 2</span>
+                                        </div>
                                         <Tooltip
                                             title={<span style={{ color: "#fff", fontSize: "14px" }}>Join as Player</span>}
                                             placement='right'
@@ -260,7 +331,10 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                         </React.Fragment>
                                     ))}
                                     <div className="waiting-room-spectators">
-                                        <span>Players&nbsp;&nbsp; {joinedRoom.spectators.length} / 5</span>
+                                        <div className="waiting-room-user-amount">
+                                            <span>Spectators</span>
+                                            <span>{joinedRoom.spectators.length} / 5</span>
+                                        </div>
                                         <Tooltip
                                             title={<span style={{ color: "#fff", fontSize: "14px" }}>Join as Spectator</span>}
                                             placement='right'
@@ -273,7 +347,7 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                     </div>
                                     {joinedRoom.spectators && joinedRoom.spectators.map((s, index) => (
                                         <React.Fragment key={index}>
-                                            <div className="waiting-room-player">
+                                            <div className="waiting-room-spectator">
                                                 <span>{s.userName}</span>
                                                 { s.userName === decodedToken.username ?
                                                     undefined
@@ -313,8 +387,8 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                         <div className="waiting-room-title-container">
                             <div className="room-title-1"><span>Open</span></div>
                             <div className="room-title-2"><span>{joinedRoom.roomName}</span></div>
-                            <div className="room-title-3"><span></span></div>
-                            <div className="room-title-4"><span></span></div>
+                            <div className="room-title-3"></div>
+                            <div className="room-title-4"></div>
                         </div>
                     :
                         <span className="room-list-title">Join to a private room</span>
@@ -325,16 +399,31 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                 text={translation("downloading_data_text")}
                                 scale={1.4}
                             />
+                        : loadingRoom ?
+                            <Loading
+                                text={"Connecting to Room ..."}
+                                scale={1.4}
+                            />
                         : joinedRoom ?
                             <div className="waiting-room-container">
                                 <div className="waiting-room-chatbox">
                                     <div className="waiting-room-chat">
-                                        {joinedRoom.messages.map((m, index) => (
-                                            <React.Fragment key={index}>
-                                                <span>{m.message}</span>
-                                                <br /><hr />
-                                            </React.Fragment>
+                                        {chatMessages.map((message, index) => (
+                                            <div className="chatbox-message" key={index}>
+                                            <div className="message-head">
+                                                <div>
+                                                    {message.userName}
+                                                </div>
+                                                <div>
+                                                    {message.date}
+                                                </div>
+                                            </div>
+                                            <div className="message-body">
+                                                {message.message}
+                                            </div>
+                                        </div>
                                         ))}
+                                        <div ref={messagesEndRef} />
                                     </div>
                                     <div className="waiting-room-message">
                                         <input
@@ -344,11 +433,15 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                             onKeyDown={handleSendMessage}
                                             placeholder="Your message here"
                                         />
+                                        <i onClick={handleSendMessageBtn} className="fa-solid fa-paper-plane"></i>
                                     </div>
                                 </div>
                                 <div className="waiting-room-userlist">
                                     <div className="waiting-room-players">
-                                        <span>Players&nbsp;&nbsp; {joinedRoom.players.length} / 2</span>
+                                        <div className="waiting-room-user-amount">
+                                            <span>Players</span>
+                                            <span>{joinedRoom.players.length} / 2</span>
+                                        </div>
                                     </div>
                                     {joinedRoom.players.map((p, index) => (
                                         <React.Fragment key={index}>
@@ -358,11 +451,14 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                         </React.Fragment>
                                     ))}
                                     <div className="waiting-room-spectators">
-                                        <span>Spectators&nbsp;&nbsp; {joinedRoom.spectators.length} / 5</span>
+                                        <div className="waiting-room-user-amount">
+                                            <span>Spectators</span>
+                                            <span>{joinedRoom.spectators.length} / 5</span>
+                                        </div>
                                     </div>
                                     {joinedRoom.spectators && joinedRoom.spectators.map((s, index) => (
                                         <React.Fragment key={index}>
-                                            <div className="waiting-room-player">
+                                            <div className="waiting-room-spectator">
                                                 <span>{s.userName}</span>
                                             </div>
                                         </React.Fragment>
