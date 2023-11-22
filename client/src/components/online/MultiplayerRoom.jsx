@@ -1,11 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { motion } from 'framer-motion';
+import { DndContext } from '@dnd-kit/core';
+import { Draggable } from './components/Draggable';
+import { DroppablePlayers } from './components/DroppablePlayers';
+import { DroppableSpectators } from './components/DroppableSpectators';
 import Tooltip from '@mui/material/Tooltip';
 import Zoom from '@mui/material/Zoom';
 import jwt_decode from 'jwt-decode';
 import Loading from "../extras/Loading";
 import io from 'socket.io-client';
+import VersusImage from '../../../public/images/multiplayer/versus.png';
+import User1Image from '../../../public/images/users/user1.jpg';
+import User2Image from '../../../public/images/users/user2.jpg';
 import './MultiplayerRoom.css';
 
 
@@ -25,6 +32,9 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
     const [roomIDClipboard, setRoomIDClipboard] = useState("");
     const [spectatorIDClipboard, setSpectatorIDClipboard] = useState("");
     const [error, setError] = useState('');
+    const [isOver1, setIsOver1] = useState(false);
+    const [isOver2, setIsOver2] = useState(false);
+    let switchStatus = null;
 
     const pageTransition = {
         initial: {
@@ -110,7 +120,8 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                     socket.off(`createRoom_${roomData.roomJoinId}`, updateCreateRoom);
                 } else {
                     setJoinedRoom(roomData);
-                }                
+                }   
+                switchStatus = null;             
             };
         
             const handleRoomError = (errorMessage) => {
@@ -175,16 +186,13 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
             setChatMessage("");
         }
     }
-
-    const handleChangeCreatorStatus = (status) => {
-        socket.emit('changeCreatorStatus', joinedRoom.roomId, joinedRoom.creatorName, status);
-    }
     
     const handleLeaveRoom = () => {
         socket.emit('leaveRoom', joinedRoom.roomId, decodedToken.username);
     };
 
     const handleKickPlayer = (status, username) => {
+        console.log("OK");
         socket.emit('kickUser', joinedRoom.roomId, username, status);
     }
 
@@ -197,8 +205,69 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
     }
 
     const handleChatMessage = (event) => {
-        setChatMessage(event.target.value);
+        const message = event.target.value;
+        setChatMessage(message);
+
+        if(message === "") {
+            socket.emit('typeMessage', joinedRoom.roomId, false);
+        } else {
+            socket.emit('typeMessage', joinedRoom.roomId, true);
+        }
     }
+
+    const handleDragEnd = ({over}) => {
+        if(switchStatus !== null) {
+            socket.emit('changeUserStatus', joinedRoom.roomId, switchStatus.socketId, switchStatus.status);
+        }
+        switchStatus = null;
+        setIsOver1(false);
+        setIsOver2(false);
+    }
+      
+    const handleDragMove = (event, socketId) => {
+        const rect = event.active.rect;
+        const droppableElement1 = document.getElementById('d-1');
+        const droppableElement2 = document.getElementById('d-2');
+    
+        if (rect && droppableElement1 && droppableElement2) {
+            const draggableRect = {
+                x: rect.current.translated.left,
+                y: rect.current.translated.top,
+                width: rect.current.translated.width,
+                height: rect.current.translated.height,
+            };
+            const droppableRect1 = droppableElement1.getBoundingClientRect();
+            const droppableRect2 = droppableElement2.getBoundingClientRect();
+    
+            if (
+                draggableRect.x + draggableRect.width >= droppableRect1.left &&
+                draggableRect.x <= droppableRect1.right &&
+                draggableRect.y + draggableRect.height >= droppableRect1.top &&
+                draggableRect.y <= droppableRect1.bottom
+            ) {
+                setIsOver1(true);
+                switchStatus = {
+                    socketId: socketId,
+                    status: "player"
+                };
+            } else if(
+                draggableRect.x + draggableRect.width >= droppableRect2.left &&
+                draggableRect.x <= droppableRect2.right &&
+                draggableRect.y + draggableRect.height >= droppableRect2.top &&
+                draggableRect.y <= droppableRect2.bottom
+            ) {
+                setIsOver2(true);
+                switchStatus = {
+                    socketId: socketId,
+                    status: "spectator"
+                };
+            } else {
+                setIsOver1(false);
+                setIsOver2(false);
+                switchStatus = null;
+            }
+        }
+    };
 
 
     return (
@@ -221,12 +290,12 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                 <>
                     { joinedRoom ?
                         <div className="waiting-room-title-container">
-                            <div className="room-title-1"><span>Open</span></div>
+                            <div className="room-title-1"><span>{translation("multiplayer_room_open_text")}</span></div>
                             <div className="room-title-2"><span>{joinedRoom.roomName}</span></div>
                             <div className="room-title-3">
-                                <span>JOIN LINK</span><br />
+                                <span>{translation("multiplayer_join_link_text")}</span><br />
                                 <Tooltip
-                                    title={<span style={{ color: "#fff", fontSize: "14px" }}>Click for a copy</span>}
+                                    title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("multiplayer_copy_clipboard")}</span>}
                                     placement='top'
                                     arrow
                                     TransitionComponent={Zoom}
@@ -236,9 +305,9 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                 </Tooltip>
                             </div>
                             <div className="room-title-4">
-                                <span>SPECTATOR LINK</span><br />
+                                <span>{translation("multiplayer_spectator_link_text")}</span><br />
                                 <Tooltip
-                                    title={<span style={{ color: "#fff", fontSize: "14px" }}>Click for a copy</span>}
+                                    title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("multiplayer_copy_clipboard")}</span>}
                                     placement='top'
                                     arrow
                                     TransitionComponent={Zoom}
@@ -249,7 +318,7 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                             </div>
                         </div>
                     :
-                        <span className="room-list-title">Create a private room</span>
+                        <span className="room-list-title">{translation("multiplayer_create_room")}</span>
                     }
                     <div className="multiplayer-room-list-container">
                         { loading ?
@@ -259,13 +328,13 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                             />
                         : loadingRoom ?
                             <Loading
-                                text={"Creating Online Room ..."}
+                                text={translation("loading_room_creation")}
                                 scale={1.4}
                             />
                         : joinedRoom ?
                             <div className="waiting-room-container">
                                 <div className="waiting-room-chatbox">
-                                    <div className="waiting-room-chat">
+                                    <div className="waiting-room-chat" id="valami">
                                         {chatMessages.map((message, index) => (
                                             <div className="chatbox-message" key={index}>
                                                 <div className="message-head">
@@ -289,93 +358,110 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                             value={chatMessage}
                                             onChange={(e) => handleChatMessage(e)}
                                             onKeyDown={handleSendMessage}
-                                            placeholder="Your message here"
+                                            placeholder={translation("multiplayer_message_input_placeholder")}
                                         />
                                         <i onClick={handleSendMessageBtn} className="fa-solid fa-paper-plane"></i>
                                     </div>
                                 </div>
                                 <div className="waiting-room-userlist">
-                                    <div className="waiting-room-players">
-                                        <div className="waiting-room-user-amount">
-                                            <span>Players</span>
-                                            <span>{joinedRoom.players.length} / 2</span>
-                                        </div>
-                                        <Tooltip
-                                            title={<span style={{ color: "#fff", fontSize: "14px" }}>Join as Player</span>}
-                                            placement='right'
-                                            arrow
-                                            TransitionComponent={Zoom}
-                                            TransitionProps={{ timeout: 600 }}
-                                        >
-                                            <span onClick={() => handleChangeCreatorStatus("player")}>JOIN</span>
-                                        </Tooltip>
-                                    </div>
-                                    {joinedRoom.players.map((p, index) => (
-                                        <React.Fragment key={index}>
-                                            <div className="waiting-room-player">
-                                                <span>{p.userName}</span>
-                                                { p.userName === decodedToken.username ?
-                                                    undefined
-                                                :
-                                                    <Tooltip
-                                                        title={<span style={{ color: "#fff", fontSize: "14px" }}>Remove player from the Room</span>}
-                                                        placement='right'
-                                                        arrow
-                                                        TransitionComponent={Zoom}
-                                                        TransitionProps={{ timeout: 600 }}
-                                                    >
-                                                        <span onClick={() => handleKickPlayer("players", p.userName)}><i class="fa-solid fa-square-xmark"></i></span>
-                                                    </Tooltip>
-                                                }
+                                    <DndContext onDragEnd={handleDragEnd}>
+                                        <div className="waiting-room-players">
+                                            <div className="waiting-room-user-amount">
+                                                <i class="fa-solid fa-headset room-amount-icon"></i>
+                                                <span>{translation("multiplayer_waiting_players")} {joinedRoom.players.length} / 2</span>
                                             </div>
-                                        </React.Fragment>
-                                    ))}
-                                    <div className="waiting-room-spectators">
-                                        <div className="waiting-room-user-amount">
-                                            <span>Spectators</span>
-                                            <span>{joinedRoom.spectators.length} / 5</span>
                                         </div>
-                                        <Tooltip
-                                            title={<span style={{ color: "#fff", fontSize: "14px" }}>Join as Spectator</span>}
-                                            placement='right'
-                                            arrow
-                                            TransitionComponent={Zoom}
-                                            TransitionProps={{ timeout: 600 }}
-                                        >
-                                            <span onClick={() => handleChangeCreatorStatus("spectator")}>JOIN</span>
-                                        </Tooltip>
-                                    </div>
-                                    {joinedRoom.spectators && joinedRoom.spectators.map((s, index) => (
-                                        <React.Fragment key={index}>
-                                            <div className="waiting-room-spectator">
-                                                <span>{s.userName}</span>
-                                                { s.userName === decodedToken.username ?
-                                                    undefined
-                                                :
-                                                    <Tooltip
-                                                        title={<span style={{ color: "#fff", fontSize: "14px" }}>Remove player from the Room</span>}
-                                                        placement='right'
-                                                        arrow
-                                                        TransitionComponent={Zoom}
-                                                        TransitionProps={{ timeout: 600 }}
-                                                    >
-                                                        <span onClick={() => handleKickPlayer("spectators", s.userName)}><i class="fa-solid fa-square-xmark"></i></span>
-                                                    </Tooltip>
-                                                }
+                                        <DroppablePlayers id="droppable-1">
+                                        <div className="droppable-container-1" id="d-1" style={{ background: isOver1 ? '#4794EC66' : 'none', animation: isOver1 ? "userPlaceAreaAnim 1s linear infinite" : undefined }}>
+                                            { joinedRoom.players.length === 0 ?
+                                                <>
+                                                    <div className="player-list-player-1">
+                                                        <span></span>
+                                                    </div>
+                                                    <div className="player-list-versus" style={{backgroundImage: `url(${VersusImage})`}}></div>
+                                                    <div className="player-list-player-2">
+                                                        <span></span>
+                                                    </div>
+                                                </>
+                                            : joinedRoom.players.length === 1 ?
+                                                <>
+                                                    <DndContext onDragMove={(e) => handleDragMove(e, joinedRoom.players[0].socketId)} onDragEnd={handleDragEnd}>
+                                                        <Draggable id={`draggable-player-0`} className="player-list-player-1">
+                                                            <div className="versus-player-name-1">
+                                                                <span>{joinedRoom.players[0].userName}</span>
+                                                            </div>
+                                                            <div className="versus-player-logo-1" style={{backgroundImage: `url(${User1Image})`}}>
+                                                                <i className={joinedRoom.players[0].typing ? "fa-solid fa-pencil fa-bounce fa-pencil-p" : undefined}></i> 
+                                                            </div>
+                                                        </Draggable>
+                                                    </DndContext>
+                                                    <div className="player-list-versus" style={{backgroundImage: `url(${VersusImage})`}}> </div>
+                                                    <div className="player-list-player-2">
+
+                                                    </div>
+                                                </>
+                                            : joinedRoom.players.length === 2 ?
+                                                <>
+                                                    <DndContext onDragMove={(e) => handleDragMove(e, joinedRoom.players[0].socketId)} onDragEnd={handleDragEnd}>
+                                                        <Draggable id={`draggable-player-0`} className="player-list-player-1">
+                                                            <div className="versus-player-name-1">
+                                                                <span>{joinedRoom.players[0].userName}</span>
+                                                            </div>
+                                                            <div className="versus-player-logo-1" style={{backgroundImage: `url(${User1Image})`}}>
+                                                                <i className={joinedRoom.players[0].typing ? "fa-solid fa-pencil fa-bounce fa-pencil-p" : undefined}></i> 
+                                                            </div>
+                                                        </Draggable>
+                                                    </DndContext>
+                                                    <div className="player-list-versus" style={{backgroundImage: `url(${VersusImage})`}}></div>
+                                                    <DndContext onDragMove={(e) => handleDragMove(e, joinedRoom.players[1].socketId)} onDragEnd={handleDragEnd}>
+                                                        <Draggable id={`draggable-player-1`} className="player-list-player-2">
+                                                            <div className="versus-player-name-2">
+                                                                <span>{joinedRoom.players[1].userName}</span>
+                                                            </div>
+                                                            <div className="versus-player-logo-2" style={{backgroundImage: `url(${User2Image})`}}>
+                                                                <i className={joinedRoom.players[1].typing ? "fa-solid fa-pencil fa-bounce fa-pencil-p" : undefined}></i> 
+                                                            </div>
+                                                        </Draggable>
+                                                    </DndContext>
+                                                </>
+                                            : undefined }
+                                        </div>
+                                        </DroppablePlayers>
+                                        <div className="waiting-room-spectators">
+                                            <div className="waiting-room-user-amount">
+                                                <i class="fa-regular fa-eye room-amount-icon"></i>
+                                                <span>{translation("multiplayer_waiting_spectators")} {joinedRoom.spectators.length} / 5</span>
                                             </div>
-                                        </React.Fragment>
-                                    ))}
-                                    <div className="waiting-room-leave" onClick={handleLeaveRoom}><span>Leave Room</span></div>
+                                        </div>
+                                        <DroppableSpectators id="droppable-2">
+                                        <div className="droppable-container-2" id="d-2" style={{ background: isOver2 ? '#4794EC66' : 'none', animation: isOver2 ? "userPlaceAreaAnim 1s linear infinite" : undefined }}>
+                                            {joinedRoom.spectators && joinedRoom.spectators.map((s, index) => (
+                                                <React.Fragment key={index}>
+                                                    <DndContext onDragMove={(e) => handleDragMove(e, s.socketId)} onDragEnd={handleDragEnd}>
+                                                        <Draggable
+                                                            id={`draggable-spectator-${index}`}
+                                                            className="waiting-room-spectator"
+                                                        >
+                                                            <span>{s.userName}</span>
+                                                            <i className={s.typing ? "fa-solid fa-pencil fa-bounce fa-pencil-s" : undefined}></i>
+                                                        </Draggable>
+                                                    </DndContext>
+                                                </React.Fragment>
+                                            ))}
+                                        </div>
+                                        </DroppableSpectators>
+                                        <div className="waiting-room-leave" onClick={handleLeaveRoom}><span>{translation("multiplayer_waiting_leave_room")}</span></div>
+                                    </DndContext>
                                 </div>
                             </div>
                         :
                             <>
                                 <div className="room-container-menu">
-                                    <div className={activePage === "join" ? "room-menu-active" : ""} onClick={() => handlePageChange("join")}>Join to Room</div>
-                                    <div className={activePage === "create" ? "room-menu-active" : ""} onClick={() => handlePageChange("create")}>Create a Room</div>
+                                    <div className={activePage === "join" ? "room-menu-active" : ""} onClick={() => handlePageChange("join")}>{translation("multiplayer_join_to_room")}</div>
+                                    <div className={activePage === "create" ? "room-menu-active" : ""} onClick={() => handlePageChange("create")}>{translation("multiplayer_create_a_room")}</div>
                                 </div>
                                 <div className="room-body-container">
-                                    <span className="create-room-btn" onClick={createRoom}>Create a Room</span>
+                                    <span className="create-room-btn" onClick={createRoom}>{translation("multiplayer_create_the_room")}</span>
                                 </div>
                             </>
                         }
@@ -385,13 +471,13 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                 <>
                     { joinedRoom ?
                         <div className="waiting-room-title-container">
-                            <div className="room-title-1"><span>Open</span></div>
+                            <div className="room-title-1"><span>{translation("multiplayer_room_open_text")}</span></div>
                             <div className="room-title-2"><span>{joinedRoom.roomName}</span></div>
                             <div className="room-title-3"></div>
                             <div className="room-title-4"></div>
                         </div>
                     :
-                        <span className="room-list-title">Join to a private room</span>
+                        <span className="room-list-title">{translation("multiplayer_join_room")}</span>
                     }
                     <div className="multiplayer-room-list-container">
                         { loading ?
@@ -401,7 +487,7 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                             />
                         : loadingRoom ?
                             <Loading
-                                text={"Connecting to Room ..."}
+                                text={translation("loading_room_join")}
                                 scale={1.4}
                             />
                         : joinedRoom ?
@@ -431,7 +517,7 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                             value={chatMessage}
                                             onChange={(e) => handleChatMessage(e)}
                                             onKeyDown={handleSendMessage}
-                                            placeholder="Your message here"
+                                            placeholder={translation("multiplayer_message_input_placeholder")}
                                         />
                                         <i onClick={handleSendMessageBtn} className="fa-solid fa-paper-plane"></i>
                                     </div>
@@ -439,38 +525,80 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                 <div className="waiting-room-userlist">
                                     <div className="waiting-room-players">
                                         <div className="waiting-room-user-amount">
-                                            <span>Players</span>
-                                            <span>{joinedRoom.players.length} / 2</span>
+                                            <i class="fa-solid fa-headset room-amount-icon"></i>
+                                            <span>{translation("multiplayer_waiting_players")} {joinedRoom.players.length} / 2</span>
                                         </div>
                                     </div>
-                                    {joinedRoom.players.map((p, index) => (
-                                        <React.Fragment key={index}>
-                                            <div className="waiting-room-player">
-                                                <span>{p.userName}</span>
-                                            </div>
-                                        </React.Fragment>
-                                    ))}
+                                    <div className="droppable-container-3">
+                                        { joinedRoom.players.length === 0 ?
+                                            <>
+                                                <div className="player-list-player-1">
+                                                    <span></span>
+                                                </div>
+                                                <div className="player-list-versus" style={{backgroundImage: `url(${VersusImage})`}}></div>
+                                                <div className="player-list-player-2">
+                                                    <span></span>
+                                                </div>
+                                            </>
+                                        : joinedRoom.players.length === 1 ?
+                                            <>
+                                                <div className="player-list-player-1">
+                                                    <div className="versus-player-name-1">
+                                                        <span>{joinedRoom.players[0].userName}</span>
+                                                    </div>
+                                                    <div className="versus-player-logo-1" style={{backgroundImage: `url(${User1Image})`}}>
+                                                        <i className={joinedRoom.players[0].typing ? "fa-solid fa-pencil fa-bounce fa-pencil-p" : undefined}></i> 
+                                                    </div>
+                                                </div>
+                                                <div className="player-list-versus" style={{backgroundImage: `url(${VersusImage})`}}> </div>
+                                                <div className="player-list-player-2">
+
+                                                </div>
+                                            </>
+                                        : joinedRoom.players.length === 2 ?
+                                            <>
+                                                <div className="player-list-player-1">
+                                                    <div className="versus-player-name-1">
+                                                        <span>{joinedRoom.players[0].userName}</span>
+                                                    </div>
+                                                    <div className="versus-player-logo-1" style={{backgroundImage: `url(${User1Image})`}}>
+                                                        <i className={joinedRoom.players[0].typing ? "fa-solid fa-pencil fa-bounce fa-pencil-p" : undefined}></i> 
+                                                    </div>
+                                                </div>
+                                                <div className="player-list-versus" style={{backgroundImage: `url(${VersusImage})`}}></div>
+                                                <div className="player-list-player-2">
+                                                    <div className="versus-player-name-2">
+                                                        <span>{joinedRoom.players[1].userName}</span>
+                                                    </div>
+                                                    <div className="versus-player-logo-2" style={{backgroundImage: `url(${User2Image})`}}>
+                                                        <i className={joinedRoom.players[1].typing ? "fa-solid fa-pencil fa-bounce fa-pencil-p" : undefined}></i> 
+                                                    </div>
+                                                </div>
+                                            </>
+                                        : undefined }
+                                    </div>
                                     <div className="waiting-room-spectators">
                                         <div className="waiting-room-user-amount">
-                                            <span>Spectators</span>
-                                            <span>{joinedRoom.spectators.length} / 5</span>
+                                            <i class="fa-regular fa-eye room-amount-icon"></i>
+                                            <span>{translation("multiplayer_waiting_spectators")} {joinedRoom.spectators.length} / 5</span>
                                         </div>
                                     </div>
                                     {joinedRoom.spectators && joinedRoom.spectators.map((s, index) => (
                                         <React.Fragment key={index}>
                                             <div className="waiting-room-spectator">
                                                 <span>{s.userName}</span>
+                                                <i className={s.typing ? "fa-solid fa-pencil fa-bounce fa-pencil-s" : undefined}></i>
                                             </div>
                                         </React.Fragment>
                                     ))}
-                                    <div className="waiting-room-leave" onClick={handleLeaveRoom}><span>Leave Room</span></div>
+                                    <div className="waiting-room-leave" onClick={handleLeaveRoom}><span>{translation("multiplayer_waiting_leave_room")}</span></div>
                                 </div>
                             </div>
                         :
                             <>
                                 <div className="room-container-menu">
-                                    <div className={activePage === "join" ? "room-menu-active" : ""} onClick={() => handlePageChange("join")}>Join to Room</div>
-                                    <div className={activePage === "create" ? "room-menu-active" : ""} onClick={() => handlePageChange("create")}>Create a Room</div>
+                                    <div className={activePage === "join" ? "room-menu-active" : ""} onClick={() => handlePageChange("join")}>{translation("multiplayer_join_to_room")}</div>
+                                    <div className={activePage === "create" ? "room-menu-active" : ""} onClick={() => handlePageChange("create")}>{translation("multiplayer_create_a_room")}</div>
                                 </div>
                                 <div className="room-body-container">
                                     <input
@@ -478,13 +606,13 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                         value={roomId}
                                         onChange={(e) => handleRoomId(e)}
                                         maxLength="11"
-                                        placeholder="ROOM-ID"
+                                        placeholder={translation("multiplayer_room_id")}
                                     />
                                     <button
                                         className={roomId && roomId.length === 11 ? "join-btn-active" : "join-btn-inactive"}
                                         onClick={roomId && roomId.length === 11 ? handleJoinRoom : undefined}
                                     >
-                                        JOIN
+                                        {translation("multiplayer_join_the_room")}
                                     </button>
                                 </div>
                             </>
