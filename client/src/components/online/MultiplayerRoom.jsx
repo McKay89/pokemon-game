@@ -334,21 +334,44 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                         : joinedRoom ?
                             <div className="waiting-room-container">
                                 <div className="waiting-room-chatbox">
-                                    <div className="waiting-room-chat" id="valami">
+                                    <div className="waiting-room-chat">
                                         {chatMessages.map((message, index) => (
-                                            <div className="chatbox-message" key={index}>
-                                                <div className="message-head">
-                                                    <div>
-                                                        {message.userName}
+                                            message.userName === decodedToken.username ?
+                                                <div className="chatbox-message-1" key={index}>
+                                                    <div className="message-body-1">
+                                                        {message.message}
                                                     </div>
-                                                    <div>
-                                                        {message.date}
+                                                    <Tooltip
+                                                        title={<span style={{ color: "#fff", fontSize: "14px" }}>{message.userName}</span>}
+                                                        placement='top'
+                                                        arrow
+                                                        TransitionComponent={Zoom}
+                                                        TransitionProps={{ timeout: 600 }}
+                                                    >
+                                                        <div className="message-logo-1">
+                                                            <span>{message.userName.slice(0, 1)}</span>
+                                                        </div>
+                                                    </Tooltip>
+                                                    <span className="message-date-1">{message.date}</span>
+                                                </div>
+                                            :
+                                                <div className="chatbox-message-2" key={index}>
+                                                    <Tooltip
+                                                        title={<span style={{ color: "#fff", fontSize: "14px" }}>{message.userName}</span>}
+                                                        placement='top'
+                                                        arrow
+                                                        TransitionComponent={Zoom}
+                                                        TransitionProps={{ timeout: 600 }}
+                                                    >
+                                                        <div className="message-logo-2">
+                                                            <span>{message.userName.slice(0, 1)}</span>
+                                                        </div>
+                                                    </Tooltip>
+                                                    <div className="message-body-2">
+                                                        {message.message}
                                                     </div>
+                                                    <span className="message-date-2">{message.date}</span>
                                                 </div>
-                                                <div className="message-body">
-                                                    {message.message}
-                                                </div>
-                                            </div>
                                         ))}
                                         <div ref={messagesEndRef} />
                                     </div>
@@ -494,20 +517,43 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                             <div className="waiting-room-container">
                                 <div className="waiting-room-chatbox">
                                     <div className="waiting-room-chat">
-                                        {chatMessages.map((message, index) => (
-                                            <div className="chatbox-message" key={index}>
-                                            <div className="message-head">
-                                                <div>
-                                                    {message.userName}
+                                    {chatMessages.map((message, index) => (
+                                            message.userName === decodedToken.username ?
+                                                <div className="chatbox-message-1" key={index}>
+                                                    <div className="message-body-1">
+                                                        {message.message}
+                                                    </div>
+                                                    <Tooltip
+                                                        title={<span style={{ color: "#fff", fontSize: "14px" }}>{message.userName}</span>}
+                                                        placement='top'
+                                                        arrow
+                                                        TransitionComponent={Zoom}
+                                                        TransitionProps={{ timeout: 600 }}
+                                                    >
+                                                        <div className="message-logo-1">
+                                                            <span>{message.userName.slice(0, 1)}</span>
+                                                        </div>
+                                                    </Tooltip>
+                                                    <span className="message-date-1">{message.date}</span>
                                                 </div>
-                                                <div>
-                                                    {message.date}
+                                            :
+                                                <div className="chatbox-message-2" key={index}>
+                                                    <Tooltip
+                                                        title={<span style={{ color: "#fff", fontSize: "14px" }}>{message.userName}</span>}
+                                                        placement='top'
+                                                        arrow
+                                                        TransitionComponent={Zoom}
+                                                        TransitionProps={{ timeout: 600 }}
+                                                    >
+                                                        <div className="message-logo-2">
+                                                            <span>{message.userName.slice(0, 1)}</span>
+                                                        </div>
+                                                    </Tooltip>
+                                                    <div className="message-body-2">
+                                                        {message.message}
+                                                    </div>
+                                                    <span className="message-date-2">{message.date}</span>
                                                 </div>
-                                            </div>
-                                            <div className="message-body">
-                                                {message.message}
-                                            </div>
-                                        </div>
                                         ))}
                                         <div ref={messagesEndRef} />
                                     </div>
