@@ -4,7 +4,7 @@
     right: 0;
     width: 90%;
     height: 100%;
-    background: #000000c7;
+    background: #00000000;
     transition: 1s;
     overflow: hidden;
     z-index: 2;
@@ -17,7 +17,7 @@
     right: 0;
     width: 80%;
     height: 100%;
-    background: #000000c7;
+    background: #00000000;
     transition: 1s;
     user-select: none;
     overflow: hidden;
@@ -34,18 +34,18 @@
 
 .multiplayer-room-list-container {
     position: absolute;
-    top: 150px;
+    top: 120px;
     left: 50%;
     transform: translateX(-50%);
     width: 70%;
-    height: 600px;
+    height: 700px;
     background: #000000b4;
     border: 4px inset #868484;
 }
 
 .room-list-title {
     position: absolute;
-    top: 100px;
+    top: 70px;
     left: 15%;
     font-size: 34px;
     color: #fff;
@@ -219,7 +219,7 @@
     top: 70%;
     left: 50%;
     transform: translateX(-50%);
-    width: 200px;
+    width: 300px;
     height: 50px;
     outline: none;
     background: rgb(28, 111, 32);
@@ -233,7 +233,7 @@
     top: 70%;
     left: 50%;
     transform: translateX(-50%);
-    width: 200px;
+    width: 300px;
     height: 50px;
     outline: none;
     background: rgb(74, 74, 74);
@@ -291,8 +291,6 @@
 
 .waiting-room-players {
     position: relative;
-    display: flex;
-    flex-direction: row;
     top: 0;
     left: 0;
     width: 100%;
@@ -303,34 +301,8 @@
     font-family: "OCR A Std", monospace;
 }
 
-.waiting-room-players > span:nth-child(1) {
-    position: relative;
-    width: 70%;
-    padding: 5px;
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.waiting-room-players > span:nth-child(2) {
-    position: relative;
-    top: 5px;
-    width: 30%;
-    height: 70%;
-    padding: 5px;
-    font-size: 16px;
-    font-weight: bold;
-    background: rgb(9, 71, 9);
-    transition: 0.3s;
-}
-
-.waiting-room-players > span:nth-child(2):hover {
-    background: rgb(36, 130, 36);
-}
-
 .waiting-room-spectators {
     position: relative;
-    display: flex;
-    flex-direction: row;
     top: 0;
     left: 0;
     width: 100%;
@@ -340,30 +312,6 @@
     margin-bottom: 10px;
     text-align: center;
     font-family: "OCR A Std", monospace;
-}
-
-.waiting-room-spectators > span:nth-child(1) {
-    position: relative;
-    width: 70%;
-    padding: 5px;
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.waiting-room-spectators > span:nth-child(2) {
-    position: relative;
-    top: 5px;
-    width: 30%;
-    height: 70%;
-    padding: 5px;
-    font-size: 16px;
-    font-weight: bold;
-    background: rgb(9, 71, 9);
-    transition: 0.3s;
-}
-
-.waiting-room-spectators > span:nth-child(2):hover {
-    background: rgb(36, 130, 36);
 }
 
 .waiting-room-player {
@@ -379,6 +327,8 @@
     border-left: 8px inset #00fef5;
     font-family: "OCR A Std", monospace;
     letter-spacing: 1px;
+    margin-bottom: 10px;
+    z-index: 10;
 }
 
 .waiting-room-player > span:nth-child(2) {
@@ -399,6 +349,7 @@
     border-left: 8px inset #00fef5;
     font-family: "OCR A Std", monospace;
     letter-spacing: 1px;
+    z-index: 10;
 }
 
 .waiting-room-spectator > span:nth-child(2) {
@@ -446,7 +397,7 @@
     position: absolute;
     display: flex;
     flex-direction: row;
-    top: 90px;
+    top: 60px;
     left: 50%;
     transform: translateX(-50%);
     width: 70%;
@@ -510,11 +461,47 @@
 }
 
 .waiting-room-user-amount {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
-    flex-direction: column;
-    width: 60%;
-    font-size: 16px;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    font-size: 20px;
     font-weight: bold;
+    gap: 20px;
+    overflow: hidden;
+}
+
+.room-amount-icon {
+    position: absolute;
+    top: 0;
+    right: 5px;
+    font-size: 40px;
+    color: rgb(198, 211, 13);
+}
+
+.fa-pencil-s {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+}
+
+.fa-pencil-p {
+    position: relative;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 40px;
+}
+
+.waiting-room-user-amount > span {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    transform: translateY(-50%);
 }
 
 .roomid-to-clipboard {
@@ -586,6 +573,115 @@
     color: rgb(10, 229, 245);
 }
 
+.waiting-room-droppable-players {
+    position: relative;
+    width: 100%;
+    min-height: 90px;
+}
+
+.waiting-room-droppable-spectators {
+    position: relative;
+    width: 100%;
+    min-height: 225px;
+}
+
+.droppable-container-1 {
+    position: relative;
+    width: 100%;
+    height: 150px;
+    display: flex;
+    flex-direction: row;
+    overflow: visible;
+}
+
+.droppable-container-3 {
+    position: relative;
+    width: 100%;
+    height: 150px;
+    display: flex;
+    flex-direction: row;
+    overflow: visible;
+}
+
+.player-list-player-1 {
+    display: flex;
+    flex-direction: column;
+    width: 38%;
+    height: 150px;
+    z-index: 10;
+}
+
+.versus-player-name-1 {
+    position: absolute;
+    bottom: 0;
+    width: 50%;
+    height: 30px;
+    background: #a39898;
+    text-align: center;
+    color: #000;
+    font-size: 18px;
+    font-weight: bold;
+    border-top: 3px solid #fff;
+    z-index: 12;
+}
+
+.versus-player-name-2 {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 50%;
+    height: 30px;
+    background: #a39898;
+    text-align: center;
+    color: #000;
+    font-size: 18px;
+    font-weight: bold;
+    border-top: 3px solid #fff;
+    z-index: 12;
+}
+
+.versus-player-logo-1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 150px;
+    background-size: 100% 100%;
+    border-right: 1px solid #fff;
+}
+
+.versus-player-logo-2 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 150px;
+    background-size: 100% 100%;
+    border-left: 1px solid #fff;
+}
+
+.player-list-player-2 {
+    display: flex;
+    flex-direction: column;
+    width: 38%;
+    height: 150px;
+    z-index: 10;
+}
+
+.player-list-versus {
+    width: 24%;
+    height: 150px;
+    background-size: 100% 100%;
+    animation: versusAnim 5s ease-in-out infinite;
+    z-index: 12;
+}
+
+.droppable-container-2 {
+    position: relative;
+    width: 100%;
+    height: 225px;
+}
+
 @keyframes appearMessage {
     0% {
         transform: translateX(-50%) scale(0);
@@ -603,5 +699,29 @@
     }
     100% {
         opacity: 1;
+    }
+}
+
+@keyframes userPlaceAreaAnim {
+    0% {
+        background: #4794EC00;
+    }
+    50% {
+        background: #4794EC66;
+    }
+    100% {
+        background: #4794EC00;
+    }
+}
+
+@keyframes versusAnim {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
     }
 }
