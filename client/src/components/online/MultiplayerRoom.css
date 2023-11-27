@@ -250,7 +250,7 @@
     flex-direction: column;
     width: 100%;
     height: 90%;
-    background: rgb(21, 80, 107);
+    background: rgb(10, 50, 68);
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -583,7 +583,7 @@
     position: relative;
     max-width: 100%;
     width: fit-content;
-    background: #6ec406;
+    background: #427bf4;
     padding: 7px;
     font-size: 18px;
     font-weight: bold;
