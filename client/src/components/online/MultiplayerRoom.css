@@ -583,7 +583,7 @@
     position: relative;
     max-width: 100%;
     width: fit-content;
-    background: #427bf4;
+    background: rgb(72, 172, 254);
     padding: 7px;
     font-size: 18px;
     font-weight: bold;
