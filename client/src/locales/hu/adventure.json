@@ -1,0 +1,12 @@
+{
+    "weekday_monday": "Hétfő",
+    "weekday_tuesday": "Kedd",
+    "weekday_wednesday": "Szerda",
+    "weekday_thursday": "Csütörtök",
+    "weekday_friday": "Péntek",
+    "weekday_saturday": "Szombat",
+    "weekday_sunday": "Vasárnap",
+    "day_counter": "NAP",
+    "savegame_success": "Játék sikeresen elmentve",
+    "savegame_error": "Játék mentése sikertelen"
+}
