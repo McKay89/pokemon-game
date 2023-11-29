@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "config": {
-    "serverAddress": "http://localhost:3001"
+    "serverAddress": "http://backend:3001"
   },
   "scripts": {
     "dev": "vite",
