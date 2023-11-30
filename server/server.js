@@ -51,8 +51,8 @@
         server: dbHost, 
         database: dbDatabase,
         options: {
-            encrypt: false, // Ne használj SSL titkosítást
-            trustServerCertificate: true // Elfogadni az önt aláírt tanúsítványt
+            encrypt: false,
+            trustServerCertificate: true
         }
     };
 
@@ -166,10 +166,12 @@
                     players: [ {
                         socketId: socket.id,
                         userName: creator,
-                        typing: false
+                        typing: false,
+                        ready: false
                     } ],
                     spectators: [ ],
-                    messages: []
+                    messages: [],
+                    matchStarted: false
                 }
                 onlineRooms[roomData.roomJoinId] = roomData;
                 socket.join(roomData.roomJoinId);
@@ -210,19 +212,24 @@
                 }
     
                 if (foundedRoom && onlineRooms[foundedRoom.roomJoinId][status].length < max) {
-                    onlineRooms[foundedRoom.roomJoinId][status].push({
-                        socketId: socket.id,
-                        userName: username,
-                        typing: false
-                    });
-                    socket.join(foundedRoom.roomJoinId);
-    
-                    activeUsers[socket.id] = {
-                        roomName: foundedRoom.roomJoinId,
-                        socketId: socket.id
-                    };
-    
-                    io.to(foundedRoom.roomJoinId).emit('joinRoom', onlineRooms[foundedRoom.roomJoinId]);
+                    if(foundedRoom.matchStarted) {
+                        socket.emit('roomError', 'The match has been already started.');
+                    } else {
+                        onlineRooms[foundedRoom.roomJoinId][status].push({
+                            socketId: socket.id,
+                            userName: username,
+                            typing: false,
+                            ready: false
+                        });
+                        socket.join(foundedRoom.roomJoinId);
+        
+                        activeUsers[socket.id] = {
+                            roomName: foundedRoom.roomJoinId,
+                            socketId: socket.id
+                        };
+        
+                        io.to(foundedRoom.roomJoinId).emit('joinRoom', onlineRooms[foundedRoom.roomJoinId]);
+                    }
                 } else {
                     socket.emit('roomError', 'The room is full or not exists.');
                 }
@@ -309,11 +316,13 @@
                         socket.emit('roomError', 'Already a Player !');
                     } else {
                         if(onlineRooms[foundedRoom.roomJoinId].players.length < 2) {
-                            let spectatorIndex = onlineRooms[foundedRoom.roomJoinId].spectators.findIndex(x => x.socketId === socketId);
+                            const spectatorIndex = onlineRooms[foundedRoom.roomJoinId].spectators.findIndex(x => x.socketId === socketId);
 
+                            onlineRooms[foundedRoom.roomJoinId].spectators[spectatorIndex].ready = false;
                             onlineRooms[foundedRoom.roomJoinId].players.push(onlineRooms[foundedRoom.roomJoinId].spectators[spectatorIndex]);
                             onlineRooms[foundedRoom.roomJoinId].spectators.splice(spectatorIndex, 1);
 
+                            io.to(socketId).emit('changeReadyStatus');
                             io.to(foundedRoom.roomJoinId).emit('updateRoom', onlineRooms[foundedRoom.roomJoinId]);
                         } else {
                             socket.emit('roomError', 'The player list is full !');
@@ -325,12 +334,14 @@
                     if(userIndex !== -1) {
                         socket.emit('roomError', 'Already a Spectator !');
                     } else {
-                        let playerIndex = onlineRooms[foundedRoom.roomJoinId].players.findIndex(x => x.socketId === socketId);
-
                         if(onlineRooms[foundedRoom.roomJoinId].spectators.length < 5) {
+                            const playerIndex = onlineRooms[foundedRoom.roomJoinId].players.findIndex(x => x.socketId === socketId);
+
+                            onlineRooms[foundedRoom.roomJoinId].players[playerIndex].ready = false;
                             onlineRooms[foundedRoom.roomJoinId].spectators.push(onlineRooms[foundedRoom.roomJoinId].players[playerIndex]);
                             onlineRooms[foundedRoom.roomJoinId].players.splice(playerIndex, 1);
-    
+                            
+                            io.to(socketId).emit('changeReadyStatus');
                             io.to(foundedRoom.roomJoinId).emit('updateRoom', onlineRooms[foundedRoom.roomJoinId]);
                         } else {
                             socket.emit('roomError', 'Spectator list is full !');
@@ -443,6 +454,23 @@
                 socket.emit('roomError', 'Room not found !');
             }
         });
+
+        // Player Ready Status
+        socket.on('setReady', (roomId, userName, status) => {
+            const foundedRoom = findRoom(roomId);
+
+            if(foundedRoom) {
+                const playerIndex = foundedRoom.players.findIndex(x => x.userName === userName);
+                if(playerIndex !== -1) {
+                    foundedRoom.players[playerIndex].ready = status;
+                    io.to(foundedRoom.roomJoinId).emit('updateRoom', onlineRooms[foundedRoom.roomJoinId]);
+                } else {
+                    socket.emit('roomError', 'Player not found !');
+                }
+            } else {
+                socket.emit('roomError', 'Room not found !');
+            }
+        })
     
         // User disconnect
         socket.on('disconnect', () => {
