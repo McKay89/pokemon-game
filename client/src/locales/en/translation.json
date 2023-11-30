@@ -106,10 +106,16 @@
     "multiplayer_join_as_spectator": "Join as Spectator",
     "multiplayer_waiting_switch": "JOIN",
     "multiplayer_waiting_remove_user": "Kick user from the room",
-    "multiplayer_waiting_leave_room": "Leave Room",
+    "multiplayer_waiting_room_leave": "Leave Room",
+    "multiplayer_waiting_room_settings": "Settings",
+    "multiplayer_waiting_room_ready": "READY",
     "multiplayer_join_to_room": "Join to Room",
     "multiplayer_create_a_room": "Create a Room",
     "multiplayer_create_the_room": "Create the Room",
     "multiplayer_join_the_room": "Join to this Room",
-    "multiplayer_room_id": "ROOM-ID"
+    "multiplayer_room_id": "ROOM-ID",
+    "multiplayer_modal_leave_title": "Leaving the room",
+    "multiplayer_modal_leave_t1": "You are about to leave the room.",
+    "multiplayer_modal_leave_t2": "This will require a confirmation.",
+    "multiplayer_modal_leave_confirm": "Confirm"
 }

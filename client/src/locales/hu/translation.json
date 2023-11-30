@@ -106,10 +106,16 @@
     "multiplayer_join_as_spectator": "Csatlakozás nézőként",
     "multiplayer_waiting_switch": "CSATLAKOZÁS",
     "multiplayer_waiting_remove_user": "Felhasználó kidobása a szobából",
-    "multiplayer_waiting_leave_room": "Szoba elhagyása",
+    "multiplayer_waiting_room_leave": "Szoba elhagyása",
+    "multiplayer_waiting_room_settings": "Beállítások",
+    "multiplayer_waiting_room_ready": "KÉSZ",
     "multiplayer_join_to_room": "Csatlakozás szobához",
     "multiplayer_create_a_room": "Szoba létrehozása",
     "multiplayer_create_the_room": "Szoba létrehozása",
     "multiplayer_join_the_room": "Csatlakozás a szobához",
-    "multiplayer_room_id": "SZOBA-KÓD"
+    "multiplayer_room_id": "SZOBA-KÓD",
+    "multiplayer_modal_leave_title": "Szoba elhagyása",
+    "multiplayer_modal_leave_t1": "Elhagyni készülsz a szobát.",
+    "multiplayer_modal_leave_t2": "Ehhez szükség lesz egy megerősítésre.",
+    "multiplayer_modal_leave_confirm": "Megerősít"
 }
