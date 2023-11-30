@@ -367,33 +367,6 @@
     color: rgb(95, 230, 88);
 }
 
-.waiting-room-leave {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 60px;
-    background: rgb(149, 22, 22);
-    text-align: center;
-    border-top: 2px solid #fff;
-    font-family: "OCR A Std", monospace;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.waiting-room-leave:hover {
-    background: rgb(90, 15, 15);
-}
-
-.waiting-room-leave > span {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    font-size: 24px;
-    font-weight: 500;
-}
-
 .waiting-room-title-container {
     position: absolute;
     display: flex;
@@ -518,21 +491,6 @@
     padding-right: 5px;
 }
 
-.chatbox-message {
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%) scale(0);
-    width: 90%;
-    height: auto;
-    font-size: 18px;
-    color: #fff;
-    margin-bottom: 20px;
-    margin-top: 20px;
-    opacity: 0;
-    animation: appearMessage 0.4s linear 1;
-    animation-fill-mode: forwards;
-}
-
 .chatbox-message-1 {
     position: relative;
     display: flex;
@@ -546,7 +504,7 @@
     align-items: right;
     justify-content: right;
     color: #000000b1;
-    animation: appearMessage 0.3s linear 1;
+    animation: appearMessage 0.2s linear 1;
     animation-fill-mode: forwards;
 }
 
@@ -564,7 +522,7 @@
     align-items: left;
     justify-content: left;
     color: #000000b1;
-    animation: appearMessage 0.3s linear 1;
+    animation: appearMessage 0.2s linear 1;
     animation-fill-mode: forwards;
 }
 
@@ -577,6 +535,7 @@
     font-size: 18px;
     font-weight: bold;
     border-radius: 15px;
+    user-select: text;
 }
 
 .message-body-2 {
@@ -588,6 +547,7 @@
     font-size: 18px;
     font-weight: bold;
     border-radius: 15px;
+    user-select: text;
 }
 
 .message-logo-1 {
@@ -627,14 +587,14 @@
 .message-date-1 {
     position: absolute;
     bottom: -22px;
-    right: 50px;
+    right: 0;
     color: #ffffff8f;
 }
 
 .message-date-2 {
     position: absolute;
     bottom: -22px;
-    left: 50px;
+    left: 0;
     color: #ffffff8f;
 }
 
@@ -779,6 +739,213 @@
     position: relative;
     width: 100%;
     height: 225px;
+}
+
+.waiting-room-actions-container {
+    position: absolute;
+    bottom: 54px;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+}
+
+.waiting-room-settings {
+    width: 50%;
+    height: 50px;
+    background: #126c7a;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.waiting-room-settings:hover {
+    background: #0a4a53;
+}
+
+.waiting-room-leave {
+    width: 50%;
+    height: 50px;
+    background: #9f1111;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.waiting-room-leave:hover {
+    background: #7a1212;
+}
+
+.waiting-room-ready-disabled {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    background: rgb(100, 100, 100);
+    border-top: 2px solid #fff;
+}
+
+.waiting-room-ready-disabled > span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.waiting-room-ready-ok {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    border-top: 2px solid #fff;
+    animation: readyOkAnim 0.6s ease-in 1;
+    animation-fill-mode: forwards;
+    cursor: pointer;
+}
+
+.waiting-room-ready-ok > span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.waiting-room-ready {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    background: rgb(122, 98, 18);
+    border-top: 2px solid #fff;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.waiting-room-ready:hover {
+    background: rgb(8, 74, 1);
+}
+
+.waiting-room-ready > span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.waiting-room-ready-bg {
+    position: absolute;
+    right: 0;
+    width: 50px;
+    height: 50px;
+    background-size: 120% 120%;
+    animation: appearReady 0.2s linear 1;
+    animation-fill-mode: both;
+}
+
+.versus-player-ready-1 {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 30px;
+    background: rgba(6, 43, 1, 0.736);
+    border-bottom: 2px solid #fff;
+    z-index: 10;
+    animation: appearReady 0.3s ease-in-out 1;
+    animation-fill-mode: forwards;
+}
+
+.versus-player-ready-1 > span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.versus-player-ready-2 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 30px;
+    background: rgba(6, 43, 1, 0.736);
+    border-bottom: 2px solid #fff;
+    z-index: 10;
+    animation: appearReady 0.3s ease-in-out 1;
+    animation-fill-mode: forwards;
+}
+
+.versus-player-ready-2 > span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.multiplayer-modal-confirm-leave-btn {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 25px;
+    background: #871919;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 10px;
+    letter-spacing: 2px;
+    cursor: pointer;
+}
+
+.multiplayer-modal-confirm-leave-btn:hover {
+    background: #cf1c1c;
+    color: #000;
+    border: 2px solid #fff;
+}
+
+@keyframes readyOkAnim {
+    0% {
+        background: #fff;
+        color: #000;
+    }
+    100% {
+        background: rgb(8, 74, 1);
+        color: #fff;
+    }
+}
+
+@keyframes appearReady {
+    0% {
+        opacity: 0;
+        top: -20px;
+    }
+    100% {
+        opacity: 1;
+        top: 0;
+    }
 }
 
 @keyframes appearMessage {
