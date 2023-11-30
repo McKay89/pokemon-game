@@ -26,6 +26,7 @@
     position: absolute;
     font-size: 27px;
     font-weight: bold;
+    font-family: "OCR A Std", monospace;
 }
 
 .cardholder-health_1 {
@@ -102,17 +103,17 @@
 
 .cardholder-speed_1 {
     bottom: 27px;
-    left: 353px;
+    left: 355px;
 }
 
 .cardholder-speed_2 {
     bottom: 27px;
-    left: 345px;
+    left: 347px;
 }
 
 .cardholder-speed_3 {
     bottom: 27px;
-    left: 337px;
+    left: 339px;
 }
 
 .cardholder-desc {
