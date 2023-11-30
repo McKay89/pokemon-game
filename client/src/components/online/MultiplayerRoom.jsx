@@ -13,7 +13,8 @@ import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import Zoom from '@mui/material/Zoom';
 import jwt_decode from 'jwt-decode';
-import Loading from "../extras/Loading";
+import Loading from "../extras/loading/Loading";
+import Notification from "../extras/notification/Notification";
 import io from 'socket.io-client';
 import VersusImage from '../../../public/images/multiplayer/versus.png';
 import User1Image from '../../../public/images/users/user1.jpg';
@@ -26,7 +27,7 @@ const modalStyle = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 400,
-    height: '230px',
+    height: 230,
     background: 'linear-gradient(139deg, rgba(70,55,55,1) 0%, rgba(120,98,98,1) 25%, rgba(70,55,55,1) 50%, rgba(120,98,98,1) 75%, rgba(51,40,40,1) 100%);',
     border: '4px solid #fff',
     boxShadow: 24,
@@ -54,6 +55,8 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
     const [isOver2, setIsOver2] = useState(false);
     const [ready, setReady] = useState(false);
     const [openModal, setOpenModal] = useState(false);
+    const [openSettings, setOpenSettings] = useState(false);
+    const [notifyProps, setNotifyProps] = useState(null);
     let switchStatus = null;
 
     const pageTransition = {
@@ -72,9 +75,6 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
             transition: { type: 'tween', ease: 'easeOut', duration: 0.5 }
         },
     };
-
-    const handleOpenModal = () => setOpenModal(true);
-    const handleCloseModal = () => setOpenModal(false);
 
     useEffect(() => {
         if(jwtToken == null) {
@@ -106,10 +106,34 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                 setRoomIDClipboard(roomData.roomId);
                 setSpectatorIDClipboard(roomData.spectatorId);
                 setJoinedRoom(roomData);
+
+                setNotifyProps({
+                    position: "top",
+                    type: "ok",
+                    text: translation("notification_multiplayer_room_created"),
+                    duration: 5000
+                })
+                const timeout = setTimeout(() => {
+                    setNotifyProps(null)
+                }, 5500)
+
+                return () => clearTimeout(timeout);
             };
 
             const updateJoinRoom = (roomData) => {
                 setJoinedRoom(roomData);
+
+                setNotifyProps({
+                    position: "top",
+                    type: "ok",
+                    text: translation("notification_multiplayer_room_joined"),
+                    duration: 5000
+                })
+                const timeout = setTimeout(() => {
+                    setNotifyProps(null)
+                }, 5500)
+
+                return () => clearTimeout(timeout);
             };
 
             const deleteRoom = (roomId) => {
@@ -222,9 +246,11 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
         }
     }
 
-    const handleLeaveConfirmation = () => {
-        setOpenModal(true);
-    }
+    const handleRoomId = (event) => setRoomId(event.target.value);
+    const handlePageChange = (page) => setActivePage(page);
+    const handleLeaveConfirmation = () => setOpenModal(true);
+    const handleCloseModal = () => setOpenModal(false);
+    const handleOpenSettings = () => setOpenSettings(!openSettings);
     
     const handleLeaveRoom = () => {
         setOpenModal(false);
@@ -235,10 +261,6 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
         socket.emit('kickUser', joinedRoom.roomId, username, status);
     }
 
-    const handlePageChange = (page) => {
-        setActivePage(page);
-    }
-
     const handleReady = () => {
         setReady(!ready);
         socket.emit('setReady', joinedRoom.roomId, decodedToken.username, !ready);
@@ -246,10 +268,6 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
 
     const handleSettings = () => {
         // Settings
-    }
-
-    const handleRoomId = (event) => {
-        setRoomId(event.target.value);
     }
 
     const handleChatMessage = (event) => {
@@ -319,6 +337,12 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
 
 
     return (
+        <>
+        { notifyProps !== null ?
+            <Notification
+                props={notifyProps}
+            />
+        : undefined }
         <motion.div
             key={location.pathname}
             className={sidebarHovered ? 'multiplayer-room-container-hovered' : 'multiplayer-room-container'}
@@ -449,7 +473,7 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                                     <div className="player-list-player-1">
                                                         <span></span>
                                                     </div>
-                                                    <div className="player-list-versus" style={{backgroundImage: `url(${VersusImage})`}}></div>
+                                                    <div className="player-list-versus"></div>
                                                     <div className="player-list-player-2">
                                                         <span></span>
                                                     </div>
@@ -659,7 +683,7 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                                 <div className="player-list-player-1">
                                                     <span></span>
                                                 </div>
-                                                <div className="player-list-versus" style={{backgroundImage: `url(${VersusImage})`}}></div>
+                                                <div className="player-list-versus"></div>
                                                 <div className="player-list-player-2">
                                                     <span></span>
                                                 </div>
@@ -804,5 +828,6 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                 </Fade>
             </Modal>
         </motion.div>
+        </>
     );
 }
