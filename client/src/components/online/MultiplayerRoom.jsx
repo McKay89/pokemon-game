@@ -5,6 +5,11 @@ import { DndContext } from '@dnd-kit/core';
 import { Draggable } from './components/Draggable';
 import { DroppablePlayers } from './components/DroppablePlayers';
 import { DroppableSpectators } from './components/DroppableSpectators';
+import Backdrop from '@mui/material/Backdrop';
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
+import Fade from '@mui/material/Fade';
+import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import Zoom from '@mui/material/Zoom';
 import jwt_decode from 'jwt-decode';
@@ -15,6 +20,19 @@ import User1Image from '../../../public/images/users/user1.jpg';
 import User2Image from '../../../public/images/users/user2.jpg';
 import './MultiplayerRoom.css';
 
+const modalStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    height: '230px',
+    background: 'linear-gradient(139deg, rgba(70,55,55,1) 0%, rgba(120,98,98,1) 25%, rgba(70,55,55,1) 50%, rgba(120,98,98,1) 75%, rgba(51,40,40,1) 100%);',
+    border: '4px solid #fff',
+    boxShadow: 24,
+    color: '#ccc',
+    p: 4,
+};
 
 export default function MultiplayerRoom({translation, sidebarHovered, jwtToken}) {
     const navigate = useNavigate();
@@ -34,6 +52,8 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
     const [error, setError] = useState('');
     const [isOver1, setIsOver1] = useState(false);
     const [isOver2, setIsOver2] = useState(false);
+    const [ready, setReady] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
     let switchStatus = null;
 
     const pageTransition = {
@@ -52,6 +72,9 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
             transition: { type: 'tween', ease: 'easeOut', duration: 0.5 }
         },
     };
+
+    const handleOpenModal = () => setOpenModal(true);
+    const handleCloseModal = () => setOpenModal(false);
 
     useEffect(() => {
         if(jwtToken == null) {
@@ -113,6 +136,7 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                     setJoinedRoom(null);
                     setChatMessages([]);
                     setChatMessage("");
+                    setReady(false);
 
                     // Delete Event Handlers
                     socket.off(`updateRoom_${roomData.roomJoinId}`, updateJoinRoom);
@@ -120,9 +144,18 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                     socket.off(`createRoom_${roomData.roomJoinId}`, updateCreateRoom);
                 } else {
                     setJoinedRoom(roomData);
+                    if(playerIndex === -1) {
+                        setReady(joinedRoom.spectators[spectatorIndex].ready);
+                    } else if(spectatorIndex === -1) {
+                        setReady(joinedRoom.players[playerIndex].ready);
+                    }
                 }   
-                switchStatus = null;             
+                switchStatus = null;        
             };
+
+            const updateReadyStatus = () => {
+                setReady(false);
+            }
         
             const handleRoomError = (errorMessage) => {
                 setError(errorMessage);
@@ -133,7 +166,9 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
             socket.on('roomDeleted', deleteRoom);
             socket.on('updateRoom', updateRoom);
             socket.on('updateMessages', updateMessages);
+            socket.on('changeReadyStatus', updateReadyStatus);
             socket.on('roomError', handleRoomError);
+            
         
             return () => {
                 socket.off('createRoom', updateCreateRoom);
@@ -186,18 +221,31 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
             setChatMessage("");
         }
     }
+
+    const handleLeaveConfirmation = () => {
+        setOpenModal(true);
+    }
     
     const handleLeaveRoom = () => {
+        setOpenModal(false);
         socket.emit('leaveRoom', joinedRoom.roomId, decodedToken.username);
     };
 
     const handleKickPlayer = (status, username) => {
-        console.log("OK");
         socket.emit('kickUser', joinedRoom.roomId, username, status);
     }
 
     const handlePageChange = (page) => {
         setActivePage(page);
+    }
+
+    const handleReady = () => {
+        setReady(!ready);
+        socket.emit('setReady', joinedRoom.roomId, decodedToken.username, !ready);
+    }
+
+    const handleSettings = () => {
+        // Settings
     }
 
     const handleRoomId = (event) => {
@@ -410,6 +458,11 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                                 <>
                                                     <DndContext onDragMove={(e) => handleDragMove(e, joinedRoom.players[0].socketId)} onDragEnd={handleDragEnd}>
                                                         <Draggable id={`draggable-player-0`} className="player-list-player-1">
+                                                            { joinedRoom.players[0].ready ?
+                                                                <div className="versus-player-ready-1">
+                                                                    <span>{translation("multiplayer_waiting_room_ready")}</span>
+                                                                </div>
+                                                            : undefined }
                                                             <div className="versus-player-name-1">
                                                                 <span>{joinedRoom.players[0].userName}</span>
                                                             </div>
@@ -427,6 +480,11 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                                 <>
                                                     <DndContext onDragMove={(e) => handleDragMove(e, joinedRoom.players[0].socketId)} onDragEnd={handleDragEnd}>
                                                         <Draggable id={`draggable-player-0`} className="player-list-player-1">
+                                                            { joinedRoom.players[0].ready ?
+                                                                <div className="versus-player-ready-1">
+                                                                    <span>{translation("multiplayer_waiting_room_ready")}</span>
+                                                                </div>
+                                                            : undefined }
                                                             <div className="versus-player-name-1">
                                                                 <span>{joinedRoom.players[0].userName}</span>
                                                             </div>
@@ -438,6 +496,11 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                                     <div className="player-list-versus" style={{backgroundImage: `url(${VersusImage})`}}></div>
                                                     <DndContext onDragMove={(e) => handleDragMove(e, joinedRoom.players[1].socketId)} onDragEnd={handleDragEnd}>
                                                         <Draggable id={`draggable-player-1`} className="player-list-player-2">
+                                                            { joinedRoom.players[1].ready ?
+                                                                <div className="versus-player-ready-2">
+                                                                    <span>{translation("multiplayer_waiting_room_ready")}</span>
+                                                                </div>
+                                                            : undefined }
                                                             <div className="versus-player-name-2">
                                                                 <span>{joinedRoom.players[1].userName}</span>
                                                             </div>
@@ -473,7 +536,22 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                             ))}
                                         </div>
                                         </DroppableSpectators>
-                                        <div className="waiting-room-leave" onClick={handleLeaveRoom}><span>{translation("multiplayer_waiting_leave_room")}</span></div>
+                                        <div className="waiting-room-actions-container">
+                                            <div className="waiting-room-settings" onClick={handleSettings}><span>{translation("multiplayer_waiting_room_settings")}</span></div>
+                                            <div className="waiting-room-leave" onClick={handleLeaveConfirmation}><span>{translation("multiplayer_waiting_room_leave")}</span></div>
+                                        </div>
+                                        { joinedRoom.players.findIndex(x => x.userName === decodedToken.username) !== -1 ?
+                                            <div className={!ready ? "waiting-room-ready" : "waiting-room-ready-ok"} onClick={handleReady}>
+                                                <span>{translation("multiplayer_waiting_room_ready")}</span>
+                                                { ready ? 
+                                                    <div className="waiting-room-ready-bg" style={{
+                                                        backgroundImage: `url(./images/multiplayer/ready.png)`
+                                                    }}></div>
+                                                : undefined }
+                                            </div>
+                                        :
+                                            <div className="waiting-room-ready-disabled"><span>{translation("multiplayer_waiting_room_ready")}</span></div>
+                                        }
                                     </DndContext>
                                 </div>
                             </div>
@@ -589,6 +667,11 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                         : joinedRoom.players.length === 1 ?
                                             <>
                                                 <div className="player-list-player-1">
+                                                    { joinedRoom.players[0].ready ?
+                                                                <div className="versus-player-ready-1">
+                                                                    <span>{translation("multiplayer_waiting_room_ready")}</span>
+                                                                </div>
+                                                            : undefined }
                                                     <div className="versus-player-name-1">
                                                         <span>{joinedRoom.players[0].userName}</span>
                                                     </div>
@@ -604,6 +687,11 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                         : joinedRoom.players.length === 2 ?
                                             <>
                                                 <div className="player-list-player-1">
+                                                    { joinedRoom.players[0].ready ?
+                                                        <div className="versus-player-ready-1">
+                                                            <span>{translation("multiplayer_waiting_room_ready")}</span>
+                                                        </div>
+                                                    : undefined }
                                                     <div className="versus-player-name-1">
                                                         <span>{joinedRoom.players[0].userName}</span>
                                                     </div>
@@ -613,6 +701,11 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                                 </div>
                                                 <div className="player-list-versus" style={{backgroundImage: `url(${VersusImage})`}}></div>
                                                 <div className="player-list-player-2">
+                                                    { joinedRoom.players[1].ready ?
+                                                        <div className="versus-player-ready-2">
+                                                            <span>{translation("multiplayer_waiting_room_ready")}</span>
+                                                        </div>
+                                                    : undefined }
                                                     <div className="versus-player-name-2">
                                                         <span>{joinedRoom.players[1].userName}</span>
                                                     </div>
@@ -637,7 +730,22 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                             </div>
                                         </React.Fragment>
                                     ))}
-                                    <div className="waiting-room-leave" onClick={handleLeaveRoom}><span>{translation("multiplayer_waiting_leave_room")}</span></div>
+                                    <div className="waiting-room-actions-container">
+                                        <div className="waiting-room-settings" onClick={handleSettings}><span>{translation("multiplayer_waiting_room_settings")}</span></div>
+                                        <div className="waiting-room-leave" onClick={handleLeaveConfirmation}><span>{translation("multiplayer_waiting_room_leave")}</span></div>
+                                    </div>
+                                    { joinedRoom.players.findIndex(x => x.userName === decodedToken.username) !== -1 ?
+                                        <div className={!ready ? "waiting-room-ready" : "waiting-room-ready-ok"} onClick={handleReady}>
+                                            <span>{translation("multiplayer_waiting_room_ready")}</span>
+                                            { ready ? 
+                                                <div className="waiting-room-ready-bg" style={{
+                                                    backgroundImage: `url(./images/multiplayer/ready.png)`
+                                                }}></div>
+                                            : undefined }
+                                        </div>
+                                    :
+                                        <div className="waiting-room-ready-disabled"><span>{translation("multiplayer_waiting_room_ready")}</span></div>
+                                    }
                                 </div>
                             </div>
                         :
@@ -667,6 +775,34 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                 </>
             : undefined       
             }
+            <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                open={openModal}
+                onClose={handleCloseModal}
+                closeAfterTransition
+                slots={{ backdrop: Backdrop }}
+                slotProps={{
+                backdrop: {
+                    timeout: 500,
+                },
+                }}
+            >
+                <Fade in={openModal}>
+                    <Box sx={modalStyle}>
+                        <Typography id="transition-modal-title" variant="h5" component="h1">
+                            {translation("multiplayer_modal_leave_title")}
+                        </Typography>
+                        <hr />
+                        <Typography id="transition-modal-description" sx={{ mt: 3 }}>
+                            {translation("multiplayer_modal_leave_t1")}
+                            <br />
+                            {translation("multiplayer_modal_leave_t2")}
+                        </Typography>
+                        <span className="multiplayer-modal-confirm-leave-btn" onClick={handleLeaveRoom}>{translation("multiplayer_modal_leave_confirm")}</span>
+                    </Box>
+                </Fade>
+            </Modal>
         </motion.div>
     );
 }
