@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Loading from './extras/Loading';
+import Loading from './extras/loading/Loading';
 import '../styles/BackgroundCover.css';
 
 export default function BackgroundCover({translation, activeComponent}) {

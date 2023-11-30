@@ -8,7 +8,7 @@ import ProfileMessages from "./profile_components/ProfileMessages";
 import ProfileFriends from "./profile_components/ProfileFriends";
 import ProfileSettings from "./profile_components/ProfileSettings";
 import jwt_decode from 'jwt-decode';
-import Loading from "../extras/Loading";
+import Loading from "../extras/loading/Loading";
 import './style/Profile.css';
 
 export default function Profile({translation, sidebarHovered, jwtToken}) {

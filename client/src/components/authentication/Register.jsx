@@ -7,7 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import InputAdornment from "@mui/material/InputAdornment";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Loading from '../extras/Loading';
+import Loading from '../extras/loading/Loading';
 import Notify from "./Notify";
 import "./Register.css";
 

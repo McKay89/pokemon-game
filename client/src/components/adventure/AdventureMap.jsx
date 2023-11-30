@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from 'framer-motion';
-import Loading from "../extras/Loading";
+import Loading from "../extras/loading/Loading";
 import jwt_decode from 'jwt-decode';
 
 // Import Game Components

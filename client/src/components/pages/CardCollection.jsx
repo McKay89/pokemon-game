@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import Tooltip from '@mui/material/Tooltip';
 import Zoom from '@mui/material/Zoom';
 import jwt_decode from 'jwt-decode';
-import Loading from "../extras/Loading";
+import Loading from "../extras/loading/Loading";
 import CardHolder from './collection_components/CardHolder';
 import './style/CardCollection.css';
 

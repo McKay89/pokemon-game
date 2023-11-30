@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import Loading from "../../../extras/Loading";
+import Loading from "../../../extras/loading/Loading";
 import './MatchStatistics.css';
 
 export default function MatchStatistics({translation, userid, token}) {
