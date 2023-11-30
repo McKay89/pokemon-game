@@ -117,5 +117,7 @@
     "multiplayer_modal_leave_title": "Szoba elhagyása",
     "multiplayer_modal_leave_t1": "Elhagyni készülsz a szobát.",
     "multiplayer_modal_leave_t2": "Ehhez szükség lesz egy megerősítésre.",
-    "multiplayer_modal_leave_confirm": "Megerősít"
+    "multiplayer_modal_leave_confirm": "Megerősít",
+    "notification_multiplayer_room_created": "Szoba sikeresen létrehozva !",
+    "notification_multiplayer_room_joined": "Csatlakoztál egy szobához !"
 }

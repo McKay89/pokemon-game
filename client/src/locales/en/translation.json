@@ -117,5 +117,7 @@
     "multiplayer_modal_leave_title": "Leaving the room",
     "multiplayer_modal_leave_t1": "You are about to leave the room.",
     "multiplayer_modal_leave_t2": "This will require a confirmation.",
-    "multiplayer_modal_leave_confirm": "Confirm"
+    "multiplayer_modal_leave_confirm": "Confirm",
+    "notification_multiplayer_room_created": "Room successfully created !",
+    "notification_multiplayer_room_joined": "Joined to a room !"
 }
