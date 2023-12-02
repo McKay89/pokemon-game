@@ -70,6 +70,21 @@
     font-size: 30px;
 }
 
+.notification-duration-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+}
+
+.notification-duration-bar > div {
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 100%;
+}
+
 @keyframes notifyFadeIn {
     0% {
         right: -350px;
