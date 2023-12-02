@@ -52,12 +52,23 @@ function App() {
   const [activeComponent, setActiveComponent] = useState("main");
 
   useEffect(() => {
+    const testFetch = async () => {
+      try {
+        const response = await fetch(`/api/test`);
+        const data = await response.json();
+        console.log(data.message);
+      } catch(err) {
+        console.log(err);
+      }
+    }
+    testFetch();
+
     const storedData = localStorage.getItem('JWT');
+
     if (storedData) {
       // Check JWT Token
       const JWTValidation = async () => {
         try {
-          
           const response = await fetch(`/api/jwt/verify`, {
             method: 'POST',
             headers: {
@@ -73,9 +84,10 @@ function App() {
           } else if(response.status === 200) {
             const data = await response.json();
             setJwtToken(data.data);
+            console.log("Authorization is success !");
           } else {
             // CATCH OTHER
-            console.log("")
+            console.log("Other error !")
           }
         } catch (err) {
           console.log(err);
