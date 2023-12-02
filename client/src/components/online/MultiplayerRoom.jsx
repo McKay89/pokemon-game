@@ -38,6 +38,9 @@ const modalStyle = {
 export default function MultiplayerRoom({translation, sidebarHovered, jwtToken}) {
     const navigate = useNavigate();
     const location = useLocation();
+    const messagesEndRef = useRef(null);
+    let switchStatus = null;
+    const gameModes = ["Arena", "Survival", "Time Attack", "Something"];
     const [decodedToken, setDecodedToken] = useState({});
     const [loading, setLoading] = useState(false);
     const [loadingRoom, setLoadingRoom] = useState(false);
@@ -47,7 +50,6 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
     const [roomId, setRoomId] = useState("");
     const [chatMessage, setChatMessage] = useState("");
     const [chatMessages, setChatMessages] = useState([]);
-    const messagesEndRef = useRef(null);
     const [roomIDClipboard, setRoomIDClipboard] = useState("");
     const [spectatorIDClipboard, setSpectatorIDClipboard] = useState("");
     const [error, setError] = useState('');
@@ -57,7 +59,7 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
     const [openModal, setOpenModal] = useState(false);
     const [openSettings, setOpenSettings] = useState(false);
     const [notifyProps, setNotifyProps] = useState(null);
-    let switchStatus = null;
+    const [gameMode, setGameMode] = useState(0);
 
     const pageTransition = {
         initial: {
@@ -107,43 +109,17 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                 setSpectatorIDClipboard(roomData.spectatorId);
                 setJoinedRoom(roomData);
 
-                setNotifyProps({
-                    position: "top",
-                    type: "ok",
-                    text: translation("notification_multiplayer_room_created"),
-                    duration: 5000
-                })
-                const notifyTimeout = setTimeout(() => {
-                    setNotifyProps(null)
-                }, 5500)
-
-                return () => clearTimeout(notifyTimeout);
+                handleNotification("top", "ok", "notification_multiplayer_room_created", 5000, null);
             };
 
             const updateJoinRoom = (roomData, joinedUser) => {
                 setJoinedRoom(roomData);
 
                 if(joinedUser === decodedToken.username) {
-                    setNotifyProps({
-                        position: "top",
-                        type: "ok",
-                        text: translation("notification_multiplayer_room_joined"),
-                        duration: 5000
-                    })
+                    handleNotification("top", "ok", "notification_multiplayer_room_joined", 5000, null);
                 } else {
-                    setNotifyProps({
-                        position: "top",
-                        type: "info",
-                        text: joinedUser + translation("notification_multiplayer_user_joined"),
-                        duration: 5000
-                    })
+                    handleNotification("top", "info", "notification_multiplayer_user_joined", 5000, joinedUser);
                 }
-
-                const timeout = setTimeout(() => {
-                    setNotifyProps(null)
-                }, 5500)
-
-                return () => clearTimeout(timeout);
             };
 
             const deleteRoom = (roomId) => {
@@ -190,21 +166,14 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
             const updateReadyStatus = () => {
                 setReady(false);
             }
+
+            const updateKicked = () => {
+                handleNotification("top", "info", "notification_multiplayer_kicked", 5000, null);
+            }
         
             const handleRoomError = (errorMessage) => {
                 setError(errorMessage);
-
-                setNotifyProps({
-                    position: "top",
-                    type: "error",
-                    text: translation(errorMessage),
-                    duration: 5000
-                })
-                const notifyTimeout = setTimeout(() => {
-                    setNotifyProps(null)
-                }, 5500)
-
-                return () => clearTimeout(notifyTimeout);
+                handleNotification("top", "error", errorMessage, 5000, null);
             };
         
             socket.on('createRoom', updateCreateRoom);
@@ -212,6 +181,7 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
             socket.on('roomDeleted', deleteRoom);
             socket.on('updateRoom', updateRoom);
             socket.on('updateMessages', updateMessages);
+            socket.on('kickedFromRoom', updateKicked);
             socket.on('changeReadyStatus', updateReadyStatus);
             socket.on('roomError', handleRoomError);
             
@@ -221,7 +191,9 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                 socket.off('joinRoom', updateJoinRoom);
                 socket.off('roomDeleted', deleteRoom);
                 socket.off('updateRoom', updateRoom);
+                socket.off('kickedFromRoom', updateKicked);
                 socket.off('updateMessages', updateMessages);
+                socket.off('changeReadyStatus', updateReadyStatus);
                 socket.off('roomError', handleRoomError);
             };
         }
@@ -300,6 +272,43 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
             socket.emit('typeMessage', joinedRoom.roomId, false);
         } else {
             socket.emit('typeMessage', joinedRoom.roomId, true);
+        }
+    }
+
+    const handleNotification = (position, type, text, duration, extra) => {
+        if(extra === null) extra = "";
+
+        setNotifyProps({
+            position: position,
+            type: type,
+            text: extra + translation(text),
+            duration: duration
+        })
+        const notifyTimeout = setTimeout(() => {
+            setNotifyProps(null)
+        }, duration + 500)
+
+        return () => clearTimeout(notifyTimeout);
+    }
+
+    const handleSwitchGameMode = (direction) => {
+        switch (direction) {
+            case "up":
+                if(gameMode - 1 < 0) {
+                    setGameMode(gameModes.length - 1);
+                } else {
+                    setGameMode((prevValue) => prevValue - 1);
+                }
+                break;
+            case "down":
+                if(gameModes[gameMode + 1]) {
+                    setGameMode((prevValue) => prevValue + 1);
+                } else {
+                    setGameMode(0);
+                }
+                break;
+            default:
+                break;
         }
     }
 
@@ -427,6 +436,22 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                             />
                         : joinedRoom ?
                             <div className="waiting-room-container">
+                                <div className="waiting-room-settings">
+                                    <div className="waiting-room-settings-top">
+                                        <span className="waiting-room-settings-title">Game Settings</span>
+                                        <i class="fa-solid fa-sliders"></i>
+                                    </div>
+                                    <div className="waiting-room-settings-body">
+                                        <div className="settings-body-gamemode-container">
+                                            <span className="settings-body-gamemode-title">Game Mode</span>
+                                            <div className="settings-body-gamemode">
+                                                <span onClick={() => handleSwitchGameMode("up")}><i class="fa-solid fa-caret-up"></i></span>
+                                                <span>{gameModes[gameMode]}</span>
+                                                <span onClick={() => handleSwitchGameMode("down")}><i class="fa-solid fa-caret-down"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div className="waiting-room-chatbox">
                                     <div className="waiting-room-chat">
                                         {chatMessages.map((message, index) => (
@@ -582,10 +607,7 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                             ))}
                                         </div>
                                         </DroppableSpectators>
-                                        <div className="waiting-room-actions-container">
-                                            <div className="waiting-room-settings" onClick={handleSettings}><span>{translation("multiplayer_waiting_room_settings")}</span></div>
-                                            <div className="waiting-room-leave" onClick={handleLeaveConfirmation}><span>{translation("multiplayer_waiting_room_leave")}</span></div>
-                                        </div>
+                                        <div className="waiting-room-leave" onClick={handleLeaveConfirmation}><span>{translation("multiplayer_waiting_room_leave")}</span></div>
                                         { joinedRoom.players.findIndex(x => x.userName === decodedToken.username) !== -1 ?
                                             <div className={!ready ? "waiting-room-ready" : "waiting-room-ready-ok"} onClick={handleReady}>
                                                 <span>{translation("multiplayer_waiting_room_ready")}</span>
@@ -639,6 +661,9 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                             />
                         : joinedRoom ?
                             <div className="waiting-room-container">
+                                <div className="waiting-room-settings">
+
+                                </div>
                                 <div className="waiting-room-chatbox">
                                     <div className="waiting-room-chat">
                                     {chatMessages.map((message, index) => (
@@ -776,10 +801,7 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                                             </div>
                                         </React.Fragment>
                                     ))}
-                                    <div className="waiting-room-actions-container">
-                                        <div className="waiting-room-settings" onClick={handleSettings}><span>{translation("multiplayer_waiting_room_settings")}</span></div>
-                                        <div className="waiting-room-leave" onClick={handleLeaveConfirmation}><span>{translation("multiplayer_waiting_room_leave")}</span></div>
-                                    </div>
+                                    <div className="waiting-room-leave" onClick={handleLeaveConfirmation}><span>{translation("multiplayer_waiting_room_leave")}</span></div>
                                     { joinedRoom.players.findIndex(x => x.userName === decodedToken.username) !== -1 ?
                                         <div className={!ready ? "waiting-room-ready" : "waiting-room-ready-ok"} onClick={handleReady}>
                                             <span>{translation("multiplayer_waiting_room_ready")}</span>
