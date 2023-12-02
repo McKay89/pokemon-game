@@ -113,22 +113,32 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                     text: translation("notification_multiplayer_room_created"),
                     duration: 5000
                 })
-                const timeout = setTimeout(() => {
+                const notifyTimeout = setTimeout(() => {
                     setNotifyProps(null)
                 }, 5500)
 
-                return () => clearTimeout(timeout);
+                return () => clearTimeout(notifyTimeout);
             };
 
-            const updateJoinRoom = (roomData) => {
+            const updateJoinRoom = (roomData, joinedUser) => {
                 setJoinedRoom(roomData);
 
-                setNotifyProps({
-                    position: "top",
-                    type: "ok",
-                    text: translation("notification_multiplayer_room_joined"),
-                    duration: 5000
-                })
+                if(joinedUser === decodedToken.username) {
+                    setNotifyProps({
+                        position: "top",
+                        type: "ok",
+                        text: translation("notification_multiplayer_room_joined"),
+                        duration: 5000
+                    })
+                } else {
+                    setNotifyProps({
+                        position: "top",
+                        type: "info",
+                        text: joinedUser + translation("notification_multiplayer_user_joined"),
+                        duration: 5000
+                    })
+                }
+
                 const timeout = setTimeout(() => {
                     setNotifyProps(null)
                 }, 5500)
@@ -183,6 +193,18 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
         
             const handleRoomError = (errorMessage) => {
                 setError(errorMessage);
+
+                setNotifyProps({
+                    position: "top",
+                    type: "error",
+                    text: translation(errorMessage),
+                    duration: 5000
+                })
+                const notifyTimeout = setTimeout(() => {
+                    setNotifyProps(null)
+                }, 5500)
+
+                return () => clearTimeout(notifyTimeout);
             };
         
             socket.on('createRoom', updateCreateRoom);
