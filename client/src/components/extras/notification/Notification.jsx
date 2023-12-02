@@ -3,6 +3,8 @@ import "./Notification.css";
 
 export default function Notification({props}) {
     const [fadeOut, setFadeOut] = useState(false);
+    const [notifyProgressBar, setNotifyProgressbar] = useState(100);
+    let progressInterval;
 
     const color = 
         props.type === "ok" ? "#41bc3f" : 
@@ -20,35 +22,50 @@ export default function Notification({props}) {
     };
 
     useEffect(() => {
+        const progressTick = props.duration / 10;
+        const progressValue = 100 / progressTick;
+
         const timeout1 = setTimeout(() => {
             setFadeOut(true);
-            const timeOut2 = setTimeout(() => {
-
-            }, 500)
-
-            return () => clearTimeout(timeout2);
         }, props.duration);
+
+        progressInterval = setInterval(() => {
+            setNotifyProgressbar((prevValue) => prevValue - progressValue);
+        }, 10)
       
         return () => clearTimeout(timeout1);
     }, [])
+
+    useEffect(() => {
+        if(notifyProgressBar <= 0) {
+            clearInterval(progressInterval);
+        }
+    }, [notifyProgressBar])
+    
     
     return(
         <div className="notification-container"  style={notifyStyle1}>
             <div className={ fadeOut ? "notification-container-out" : "notification-container-in" } style={notifyStyle2}>
                 <div className="notification-icon" style={{color: color}}>
                     { props.type === "ok" ?
-                        <i class="fa-solid fa-circle-check notify-icon"></i>
+                        <i className="fa-solid fa-circle-check notify-icon"></i>
                     : props.type === "info" ?
-                        <i class="fa-solid fa-circle-info notify-icon"></i>
+                        <i className="fa-solid fa-circle-info notify-icon"></i>
                     : props.type === "warning" ?
-                        <i class="fa-solid fa-triangle-exclamation notify-icon"></i>
+                        <i className="fa-solid fa-triangle-exclamation notify-icon"></i>
                     : props.type === "error" ?
-                        <i class="fa-solid fa-circle-exclamation notify-icon"></i>
+                        <i className="fa-solid fa-circle-exclamation notify-icon"></i>
                     : undefined }
                 </div>
                 <div className="notification-data">
                     <span className="notification-title">{props.type.toUpperCase()}</span>
                     <span className="notification-text">{props.text}</span>
+                    <div className="notification-duration-bar">
+                        <div style={{
+                            width: `${notifyProgressBar}%`,
+                            backgroundColor: `${color}`
+                        }}></div>
+                    </div>
                 </div>
             </div>
         </div>
