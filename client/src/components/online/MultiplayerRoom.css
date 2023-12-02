@@ -37,7 +37,7 @@
     top: 120px;
     left: 50%;
     transform: translateX(-50%);
-    width: 70%;
+    width: 90%;
     height: 700px;
     background: #000000b4;
     border: 4px inset #868484;
@@ -150,7 +150,7 @@
     position: relative;
     top: 0;
     left: 0;
-    width: 70%;
+    width: 50%;
     height: 100%;
     border-right: 2px solid #fff;
 }
@@ -186,7 +186,7 @@
     position: relative;
     top: 0;
     right: 0;
-    width: 30%;
+    width: 25%;
     height: 100%;
 }
 
@@ -196,6 +196,104 @@
     left: 20%;
     font-size: 18px;
     font-weight: bold;
+}
+
+.waiting-room-settings {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 25%;
+    height: 100%;
+    border-right: 2px solid #fff;
+}
+
+.waiting-room-settings-top {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 45px;
+    background: rgb(102, 108, 0);
+    margin-bottom: 10px;
+    text-align: center;
+    font-family: "OCR A Std", monospace;
+}
+
+.waiting-room-settings-title {
+    position: absolute;
+    top: 50%;
+    left: 30px;
+    transform: translateY(-50%);
+    font-size: 22px;
+}
+
+.fa-sliders {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 32px;
+    color: rgb(198, 211, 13);
+}
+
+.waiting-room-settings-body {
+    position: relative;
+    left: 0;
+    width: 100%;
+    height: 70%;
+}
+
+.settings-body-gamemode-container {
+    position: relative;
+    width: 100%;
+    height: 80px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.077);
+}
+
+.settings-body-gamemode-title {
+    margin-top: 25px;
+    width: 40%;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.settings-body-gamemode {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-body-gamemode > span:nth-child(1),
+.settings-body-gamemode > span:nth-child(3) {
+    left: 30px;
+    height: 25%;
+    background: rgba(255, 255, 255, 0.120);
+    cursor: pointer;
+}
+
+.settings-body-gamemode > span:nth-child(2) {
+    position: relative;
+    top: 3px;
+    height: 50%;
+    font-size: 20px;
+    color: #85de26;
+}
+
+.settings-body-gamemode > span:nth-child(1) {
+    border-bottom-left-radius: 10px;
+}
+
+.settings-body-gamemode > span:nth-child(3) {
+    border-top-left-radius: 10px;
+}
+
+.settings-body-gamemode > span:nth-child(1):hover,
+.settings-body-gamemode > span:nth-child(3):hover {
+    background: rgba(255, 255, 255, 0.188);
 }
 
 .join-room-input {
@@ -374,7 +472,7 @@
     top: 60px;
     left: 50%;
     transform: translateX(-50%);
-    width: 70%;
+    width: 90%;
     height: 60px;
     background: rgb(3, 17, 1);
     border: 2px inset #fff;
@@ -751,38 +849,17 @@
     height: 225px;
 }
 
-.waiting-room-actions-container {
-    position: absolute;
-    bottom: 54px;
-    width: 100%;
-    height: 40px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    text-align: center;
-    cursor: pointer;
-}
-
-.waiting-room-settings {
-    width: 50%;
-    height: 50px;
-    background: #126c7a;
-    padding: 10px;
-    font-size: 18px;
-    font-weight: 600;
-}
-
-.waiting-room-settings:hover {
-    background: #0a4a53;
-}
-
 .waiting-room-leave {
-    width: 50%;
+    position: absolute;
+    bottom: 50px;
+    width: 100%;
     height: 50px;
     background: #9f1111;
-    padding: 10px;
-    font-size: 18px;
+    padding: 5px;
+    font-size: 24px;
     font-weight: 600;
+    text-align: center;
+    cursor: pointer;
 }
 
 .waiting-room-leave:hover {
