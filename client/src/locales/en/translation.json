@@ -121,6 +121,7 @@
     "notification_multiplayer_room_created": "Room successfully created !",
     "notification_multiplayer_room_joined": "Joined to the room !",
     "notification_multiplayer_user_joined": " joined to the room !",
+    "notification_multiplayer_kicked": "You were kicked out of the room !",
     "socket_error_already_in_room": "You are already in a room !",
     "socket_error_match_started": "Can't connect! The match has already started !",
     "socket_error_room_is_full": "Can't connect! The room is full !",

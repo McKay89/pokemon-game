@@ -121,6 +121,7 @@
     "notification_multiplayer_room_created": "Szoba sikeresen létrehozva !",
     "notification_multiplayer_room_joined": "Csatlakoztál a szobához !",
     "notification_multiplayer_user_joined": " csatlakozott a szobához !",
+    "notification_multiplayer_kicked": "Ki lettél rúgva a szobából !",
     "socket_error_already_in_room": "Már bent vagy egy meglévő szobában !",
     "socket_error_match_started": "Nem lehet csatlakozni! A játék már elkezdődött !",
     "socket_error_room_is_full": "Nem lehet csatlakozni! A szoba megtelt !",
