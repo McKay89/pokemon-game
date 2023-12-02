@@ -264,10 +264,13 @@
 
                     try {
                         const clientSocket = io.sockets.sockets[onlineRooms[foundedRoom.roomJoinId][status][userIndex].socketId];
+                        const socketId = onlineRooms[foundedRoom.roomJoinId][status][userIndex].socketId;
                         if (clientSocket) {
-                        clientSocket.leave(foundedRoom.roomJoinId);
+                            clientSocket.leave(foundedRoom.roomJoinId);
                         }
                         delete activeUsers[onlineRooms[foundedRoom.roomJoinId][status][userIndex].socketId];
+                    
+                        io.to(socketId).emit('kickedFromRoom');
                     } catch(err) {
                         console.log(err);
                     }
