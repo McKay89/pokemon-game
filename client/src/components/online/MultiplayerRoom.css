@@ -665,9 +665,13 @@
 .player-list-player-1 {
     display: flex;
     flex-direction: column;
-    width: 38%;
+    width: 50%;
     height: 150px;
     z-index: 10;
+}
+
+.player-list-player-1:active {
+    width: 1000%;
 }
 
 .versus-player-name-1 {
@@ -722,13 +726,19 @@
 .player-list-player-2 {
     display: flex;
     flex-direction: column;
-    width: 38%;
+    width: 50%;
     height: 150px;
     z-index: 10;
 }
 
+.player-list-player-2:active {
+    width: 1000%;
+}
+
 .player-list-versus {
-    width: 24%;
+    position: absolute;
+    left: 39%;
+    width: 80px;
     height: 150px;
     background-size: 100% 100%;
     animation: versusAnim 5s ease-in-out infinite;
