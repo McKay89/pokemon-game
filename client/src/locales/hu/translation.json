@@ -119,5 +119,13 @@
     "multiplayer_modal_leave_t2": "Ehhez szükség lesz egy megerősítésre.",
     "multiplayer_modal_leave_confirm": "Megerősít",
     "notification_multiplayer_room_created": "Szoba sikeresen létrehozva !",
-    "notification_multiplayer_room_joined": "Csatlakoztál egy szobához !"
+    "notification_multiplayer_room_joined": "Csatlakoztál a szobához !",
+    "notification_multiplayer_user_joined": " csatlakozott a szobához !",
+    "socket_error_already_in_room": "Már bent vagy egy meglévő szobában !",
+    "socket_error_match_started": "Nem lehet csatlakozni! A játék már elkezdődött !",
+    "socket_error_room_is_full": "Nem lehet csatlakozni! A szoba megtelt !",
+    "socket_error_room_not_found": "A szoba nem található !",
+    "socket_error_players_full": "A 'Játékos' tér már megtelt !",
+    "socket_error_spectators_full": "A 'Nézői' tér már megtelt !",
+    "socket_error_general": "Hiba történt. Kérlek próbáld újra !"
 }

@@ -119,5 +119,13 @@
     "multiplayer_modal_leave_t2": "This will require a confirmation.",
     "multiplayer_modal_leave_confirm": "Confirm",
     "notification_multiplayer_room_created": "Room successfully created !",
-    "notification_multiplayer_room_joined": "Joined to a room !"
+    "notification_multiplayer_room_joined": "Joined to the room !",
+    "notification_multiplayer_user_joined": " joined to the room !",
+    "socket_error_already_in_room": "You are already in a room !",
+    "socket_error_match_started": "Can't connect! The match has already started !",
+    "socket_error_room_is_full": "Can't connect! The room is full !",
+    "socket_error_room_not_found": "The room is not found !",
+    "socket_error_players_full": "The player area is full !",
+    "socket_error_spectators_full": "The spectator area is full !",
+    "socket_error_general": "An error occured. Please try again !"
 }
