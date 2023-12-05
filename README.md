@@ -1,7 +1,7 @@
 <p align="center">
-  <img width="100" src="./client/public/images/logo/home_logo_3.png" alt="logo">
+  <img width="400" src="./client/public/images/logo/home_logo_3.png" alt="logo">
   <h1 align="center">Pokémon - The Card Game</h1>
-  <span align="center">created by McKay</span>
+  <p align="center">created by McKay</p>
 </p>
 
 A browser-based card game that you can play alone against AI or even online with other players.
@@ -11,3 +11,27 @@ You can get to know the living world and collect valuable relics.
 ## Game Modes
  - Arena Game (Card Game)
  - Adventure Game
+
+## Features
+|Feature                |Game Mode             |In progress |Version  |
+|-----------------------|----------------------|------------|---------|
+|Card Game              |`Solo & Multiplayer`  |`yes`       |`0.0.1`  |
+|Adventure Game         |`Solo`                |`yes`       |`0.0.1`  |
+|Match Statistics       |`Solo & Multiplayer`  |`no`        |`--`     |
+|Collecting Cards       |`Solo`                |`yes`       |`--`     |
+|Friend System          |`--`                  |`no`        |`--`     |
+|Message System         |`--`                  |`no`        |`--`     |
+|Leveling System        |`Solo & Multiplayer`  |`no`        |`--`     |
+|Collecting Coins       |`Multiplayer`         |`no`        |`--`     |
+|HUD & Inventory System |`Multiplayer`         |`yes`       |`0.0.1`  |
+|In-game Store System   |`Solo & Multiplayer`  |`no`        |`--`     |
+|Pokédex                |`Solo`                |`yes`       |`0.0.1`  |
+|Multi-Localization     |`Solo & Multiplayer`  |`yes`       |`0.0.2`  |
+
+## Available Languages
+ - English
+ - Hungarian
+
+ <p align="right">
+    <h3>developed by McKay</h3>
+ </p>
