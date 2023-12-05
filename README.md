@@ -1,7 +1,6 @@
 <p align="center">
   <img width="400" src="./client/public/images/logo/home_logo_3.png" alt="logo">
   <h1 align="center">Pokémon - The Card Game</h1>
-  <p align="center">created by McKay</p>
 </p>
 
 A browser-based card game that you can play alone against AI or even online with other players.
@@ -29,12 +28,12 @@ You can get to know the living world and collect valuable relics.
 |**In-game Store System**   |`Solo & Multiplayer`  |`no`        |               |`--`     |
 |**Pokédex**                |`Solo`                |`yes`       |               |`0.0.1`  |
 |**Multi-Localization**     |`Solo & Multiplayer`  |`yes`       |               |`0.0.2`  |
-|**Test Feature**           |`Solo & Multiplayer`  |`yes`       |<img width="100" src="./client/public/images/progress_bar/p_0.png" alt="0%">               |`0.0.0`  |
+|**Test Feature**           |`Solo & Multiplayer`  |`yes`       |<img width="100" src="./client/public/images/progress_bar/p_44.png" alt="0%">               |`0.0.0`  |
 
 ## Available Languages
  - English
  - Hungarian
 
 
-> ## Game Developing by
-> ### _McKay_
+> ### Game Developing by
+> #### _McKay_
