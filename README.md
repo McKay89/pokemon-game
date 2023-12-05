@@ -9,8 +9,15 @@ You can get to know the living world and collect valuable relics.
 
 
 > ## Game Modes
-> - Arena Game (Card Game)
+> - Arena Game
 > - Adventure Game
+
+---
+
+> ## Available Languages
+> - English
+> - Hungarian
+> - ( Additional languages ​​are planned )
 
 ---
 
@@ -34,18 +41,12 @@ You can get to know the living world and collect valuable relics.
 
 ---
 
-> ## Available Languages
-> - English
-> - Hungarian
-
----
-
 > ## Requirements
 > - Any Internet Browser
 > - Minimum 1366x768 resolution
 > 
 > #### **IMPORTANT**
-> This game is not mobile responsive!
+> This game is **NOT** mobile responsive!
 > For the best gaming experience, we recommend a minimum resolution of **1366x768**.
 
 ---
