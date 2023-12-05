@@ -29,7 +29,7 @@ You can get to know the living world and collect valuable relics.
 |**In-game Store System**   |`Solo & Multiplayer`  |`no`        |               |`--`     |
 |**Pokédex**                |`Solo`                |`yes`       |               |`0.0.1`  |
 |**Multi-Localization**     |`Solo & Multiplayer`  |`yes`       |               |`0.0.2`  |
-|**Test Feature**           |`Solo & Multiplayer`  |`yes`       |<img width="100" src="./client/public/images/logo/home_logo_3.png" alt="logo">               |`0.0.0`  |
+|**Test Feature**           |`Solo & Multiplayer`  |`yes`       |<img width="100" src="./client/public/images/progress_ar/p_0.png" alt="0%">               |`0.0.0`  |
 
 ## Available Languages
  - English
