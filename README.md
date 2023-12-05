@@ -12,8 +12,10 @@ You can get to know the living world and collect valuable relics.
 > - Arena Game (Card Game)
 > - Adventure Game
 
-> ## Features
+---
 
+> ## Features
+>
 > |Feature                    |Game Mode             |In progress |Dev. Progress  | Version |
 > |---------------------------|----------------------|------------|---------------|---------|
 > |**Card Game**              |`Solo & Multiplayer`  |`yes`       |<img width="100" src="./client/public/images/progress_bar/p_5.png" title="5%">               |`0.0.1`  |
@@ -30,9 +32,13 @@ You can get to know the living world and collect valuable relics.
 > |**Multi-Localization**     |`Solo & Multiplayer`  |`yes`       |<img width="100" src="./client/public/images/progress_bar/p_100.png" title="100%">               |`0.0.2`  |
 > |**Music & Sound System**     |`Solo & Multiplayer`  |`yes`       |<img width="100" src="./client/public/images/progress_bar/p_33.png" title="33%">               |`0.0.1`  |
 
+---
+
 > ## Available Languages
 > - English
 > - Hungarian
+
+---
 
 > ## Requirements
 > - Any Internet Browser
@@ -43,5 +49,6 @@ You can get to know the living world and collect valuable relics.
 > For the best gaming experience, we recommend a minimum resolution of **1366x768**.
 
 ---
+
 > ### Game Developing by
 > #### _McKay_
