@@ -3,9 +3,6 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
-  "config": {
-    "serverAddress": "http://localhost:3001"
-  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
