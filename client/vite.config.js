@@ -1,15 +1,18 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vitejs.dev/config/
+/* CONFIG */
+const serverAddress = "http://localhost:3001";
+
 export default defineConfig({
   plugins: [react()],
+  define: {
+    "__SERVER_ADDRESS__": JSON.stringify(serverAddress)
+  },
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:3001",
-        /*target: "http://pserver.mckay-projects.com",*/
-        /*target: "http://84.3.230.1:3001",*/
+        target: serverAddress,
         changeOrigin: true,
         secure: false,
       },
