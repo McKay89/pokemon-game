@@ -83,8 +83,7 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
             navigate("/");
         } else {
             setDecodedToken(jwt_decode(jwtToken))
-            const serverAddress = "http://localhost:3001";
-            const newSocket = io(serverAddress, {
+            const newSocket = io(__SERVER_ADDRESS__, {
                 transportOptions: {
                     polling: {
                         extraHeaders: {
