@@ -249,6 +249,7 @@
     height: 80px;
     display: flex;
     flex-direction: row;
+    margin-bottom: 10px;
     justify-content: center;
     text-align: center;
     background: rgba(255, 255, 255, 0.077);
@@ -280,20 +281,81 @@
     top: 3px;
     height: 50%;
     font-size: 20px;
+    font-weight: bold;
     color: #85de26;
 }
 
 .settings-body-gamemode > span:nth-child(1) {
     border-bottom-left-radius: 10px;
+    box-shadow: 10px -10px 9px -5px rgba(0,0,0,0.75) inset;
+    -webkit-box-shadow: 10px -10px 9px -5px rgba(0,0,0,0.75) inset;
+    -moz-box-shadow: 10px -10px 9px -5px rgba(0,0,0,0.75) inset;
 }
 
 .settings-body-gamemode > span:nth-child(3) {
     border-top-left-radius: 10px;
+    box-shadow: 10px 10px 9px -5px rgba(0,0,0,0.75) inset;
+    -webkit-box-shadow: 10px 10px 9px -5px rgba(0,0,0,0.75) inset;
+    -moz-box-shadow: 10px 10px 9px -5px rgba(0,0,0,0.75) inset;
 }
 
 .settings-body-gamemode > span:nth-child(1):hover,
 .settings-body-gamemode > span:nth-child(3):hover {
     background: rgba(255, 255, 255, 0.188);
+}
+
+.waiting-room-setting-users {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background: rgb(122, 98, 18);
+    text-align: center;
+    padding-top: 7px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.waiting-room-user-management-user {
+    position: relative;
+    width: 100%;
+    height: 35px;
+    background: #2d2020;
+    border-radius: 10px;
+    border: 1px solid #fff;
+    display: flex;
+    flex-direction: row;
+    padding: 6px;
+    margin-bottom: 10px;
+}
+
+.waiting-room-user-management-user > span:nth-child(1) {
+    width: 70%;
+    letter-spacing: 2px;
+}
+
+.waiting-room-user-management-user > span:nth-child(2) {
+    width: 30%;
+    text-align: center;
+    letter-spacing: 1px;
+    background: #ad0e0e;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.waiting-room-user-management-user > span:nth-child(2):hover {
+    background: #840b0b;
+}
+
+.fa-circle-question {
+    font-size: 16px;
+    color: #a8b516;
+    cursor: pointer;
+}
+
+.fa-circle-question:hover {
+    color: #d3dd60;
 }
 
 .join-room-input {
@@ -993,10 +1055,8 @@
 }
 
 .multiplayer-modal-confirm-leave-btn {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-top: 25px;
+    position: relative;
+    left: 70%;
     background: #871919;
     padding-left: 10px;
     padding-right: 10px;
