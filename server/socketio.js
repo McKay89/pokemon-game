@@ -255,16 +255,14 @@
             })
 
             // Kick user from room
-            socket.on('kickUser', (roomId, userName, status) => {
+            socket.on('kickUser', (roomId, socketId, status) => {
                 const foundedRoom = findRoom(roomId);
 
                 if(foundedRoom) {
-                    const userIndex = onlineRooms[foundedRoom.roomJoinId][status].findIndex(x => x.userName === userName);
-                    onlineRooms[foundedRoom.roomJoinId][status].splice(userIndex, 1);
+                    const userIndex = onlineRooms[foundedRoom.roomJoinId][status].findIndex(x => x.socketId === socketId);
 
                     try {
                         const clientSocket = io.sockets.sockets[onlineRooms[foundedRoom.roomJoinId][status][userIndex].socketId];
-                        const socketId = onlineRooms[foundedRoom.roomJoinId][status][userIndex].socketId;
                         if (clientSocket) {
                             clientSocket.leave(foundedRoom.roomJoinId);
                         }
@@ -275,6 +273,7 @@
                         console.log(err);
                     }
                     
+                    onlineRooms[foundedRoom.roomJoinId][status].splice(userIndex, 1);
                     io.to(foundedRoom.roomJoinId).emit('updateRoom', onlineRooms[foundedRoom.roomJoinId]);
                 } else {
                     socket.emit('roomError', 'socket_error_room_not_found');
