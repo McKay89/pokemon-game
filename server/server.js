@@ -7,6 +7,14 @@
                     Developed by McKay89
 */
 
+// CONFIG //
+    /*
+                            '*': incoming requests are allowed from any URL
+        'http://localhost:3000': incoming requests are allowed from this local URL
+    */
+    const clientOrigin = "*";
+
+
 // SERVER //
     const express = require('express');
     const http = require('http');
@@ -15,7 +23,7 @@
     const server = http.createServer(app);
     const io = socketIo(server, {
         cors: {
-            origin: "*",
+            origin: clientOrigin,
         },
     });
     app.use(express.json());
@@ -30,7 +38,7 @@
 
 // CORS POLICY //
     const cors = require('cors');
-    app.use(cors({origin:'http://localhost:5173'}));
+    app.use(cors({origin: clientOrigin}));
 
 // MULTIPLAYER SOCKET-IO
     const multiplayerSocket = require('./socketio.js');
