@@ -120,7 +120,7 @@
     "multiplayer_modal_leave_confirm": "Megerősít",
     "notification_multiplayer_room_created": "Szoba sikeresen létrehozva !",
     "notification_multiplayer_room_joined": "Csatlakoztál a szobához !",
-    "notification_multiplayer_user_joined": " csatlakozott a szobához !",
+    "notification_multiplayer_user_joined": "{{ username }} csatlakozott a szobához !",
     "notification_multiplayer_kicked": "Ki lettél rúgva a szobából !",
     "socket_error_already_in_room": "Már bent vagy egy meglévő szobában !",
     "socket_error_match_started": "Nem lehet csatlakozni! A játék már elkezdődött !",
@@ -128,5 +128,23 @@
     "socket_error_room_not_found": "A szoba nem található !",
     "socket_error_players_full": "A 'Játékos' tér már megtelt !",
     "socket_error_spectators_full": "A 'Nézői' tér már megtelt !",
-    "socket_error_general": "Hiba történt. Kérlek próbáld újra !"
+    "socket_error_general": "Hiba történt. Kérlek próbáld újra !",
+    "time_limit_30s": "30 másodperc",
+    "time_limit_1m": "1 perc",
+    "time_limit_2m": "2 perc",
+    "time_limit_3m": "3 perc",
+    "time_limit_5m": "5 perc",
+    "time_limit_off": "KI",
+    "gamemode_arena": "Aréna",
+    "waitingroom_settings_users": " Felhasználók kezelése",
+    "waitingroom_settings_title": "Játék Beállítások",
+    "waitingroom_settings_gamemode": "Játék mód",
+    "waitingroom_settings_timelimit": "Idő limit",
+    "waitingroom_settings_chat": "Csevegés",
+    "waitingroom_settings_chat_enabled": "Engedélyezve",
+    "waitingroom_settings_chat_disabled": "Letiltva",
+    "waitingroom_settings_timelimit_tooltip": "Ez az időkeret minden körre",
+    "waitingroom_settings_chat_tooltip": "Lehetőség van a játék közben is csevegni",
+    "waitingroom_settings_kick": "Kirúg"
+    
 }
