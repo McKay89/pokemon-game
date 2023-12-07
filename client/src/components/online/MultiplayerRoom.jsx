@@ -17,7 +17,7 @@ import Loading from "../extras/loading/Loading";
 import Notification from "../extras/notification/Notification";
 import io from 'socket.io-client';
 import VersusImage from '../../../public/images/multiplayer/versus.png';
-import User1Image from '../../../public/images/users/user1.jpg';
+import User1Image from '../../../public/images/users/user1.png';
 import User2Image from '../../../public/images/users/user2.jpg';
 import './MultiplayerRoom.css';
 
@@ -27,12 +27,13 @@ const modalStyle = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 400,
-    height: 230,
+    height: 'fit-content',
     background: 'linear-gradient(139deg, rgba(70,55,55,1) 0%, rgba(120,98,98,1) 25%, rgba(70,55,55,1) 50%, rgba(120,98,98,1) 75%, rgba(51,40,40,1) 100%);',
     border: '4px solid #fff',
     boxShadow: 24,
     color: '#ccc',
     p: 4,
+    userSelect: 'none'
 };
 
 export default function MultiplayerRoom({translation, sidebarHovered, jwtToken}) {
@@ -40,7 +41,8 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
     const location = useLocation();
     const messagesEndRef = useRef(null);
     let switchStatus = null;
-    const gameModes = ["Arena", "Survival", "Time Attack", "Something"];
+    const gameModes = [translation("gamemode_arena")];
+    const timeLimits = [translation("time_limit_off"), translation("time_limit_30s"), translation("time_limit_1m"), translation("time_limit_2m"), translation("time_limit_3m"), translation("time_limit_5m")];
     const [decodedToken, setDecodedToken] = useState({});
     const [loading, setLoading] = useState(false);
     const [loadingRoom, setLoadingRoom] = useState(false);
@@ -56,10 +58,13 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
     const [isOver1, setIsOver1] = useState(false);
     const [isOver2, setIsOver2] = useState(false);
     const [ready, setReady] = useState(false);
-    const [openModal, setOpenModal] = useState(false);
+    const [openModalLeave, setOpenModalLeave] = useState(false);
+    const [openModalUsers, setOpenModalUsers] = useState(false);
     const [openSettings, setOpenSettings] = useState(false);
     const [notifyProps, setNotifyProps] = useState(null);
     const [gameMode, setGameMode] = useState(0);
+    const [timeLimit, setTimeLimit] = useState(0);
+    const [chatPanel, setChatPanel] = useState(true);
 
     const pageTransition = {
         initial: {
@@ -241,16 +246,18 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
 
     const handleRoomId = (event) => setRoomId(event.target.value);
     const handlePageChange = (page) => setActivePage(page);
-    const handleLeaveConfirmation = () => setOpenModal(true);
-    const handleCloseModal = () => setOpenModal(false);
+    const handleLeaveConfirmation = () => setOpenModalLeave(true);
+    const handleOpenUserManagement = () => setOpenModalUsers(true);
+    const handleCloseModalLeave = () => setOpenModalLeave(false);
+    const handleCloseModalUsers = () => setOpenModalUsers(false);
     
     const handleLeaveRoom = () => {
-        setOpenModal(false);
+        setOpenModalLeave(false);
         socket.emit('leaveRoom', joinedRoom.roomId, decodedToken.username);
     };
 
-    const handleKickPlayer = (status, username) => {
-        socket.emit('kickUser', joinedRoom.roomId, username, status);
+    const handleKickPlayer = (status, socketId) => {
+        socket.emit('kickUser', joinedRoom.roomId, socketId, status);
     }
 
     const handleReady = () => {
@@ -274,12 +281,10 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
     }
 
     const handleNotification = (position, type, text, duration, extra) => {
-        if(extra === null) extra = "";
-
         setNotifyProps({
             position: position,
             type: type,
-            text: extra + translation(text),
+            text: extra === undefined ? translation(text) : translation(text, { username: extra }),
             duration: duration
         })
         const notifyTimeout = setTimeout(() => {
@@ -308,6 +313,31 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
             default:
                 break;
         }
+    }
+
+    const handleSwitchTimeLimit = (direction) => {
+        switch (direction) {
+            case "up":
+                if(timeLimit - 1 < 0) {
+                    setTimeLimit(timeLimits.length - 1);
+                } else {
+                    setTimeLimit((prevValue) => prevValue - 1);
+                }
+                break;
+            case "down":
+                if(timeLimits[timeLimit + 1]) {
+                    setTimeLimit((prevValue) => prevValue + 1);
+                } else {
+                    setTimeLimit(0);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    const handleSwitchChatPanel = () => {
+        setChatPanel(prevValue => prevValue == true ? false : true);
     }
 
     const handleDragEnd = ({over}) => {
@@ -436,18 +466,58 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                             <div className="waiting-room-container">
                                 <div className="waiting-room-settings">
                                     <div className="waiting-room-settings-top">
-                                        <span className="waiting-room-settings-title">Game Settings</span>
+                                        <span className="waiting-room-settings-title">{translation("waitingroom_settings_title")}</span>
                                         <i class="fa-solid fa-sliders"></i>
                                     </div>
                                     <div className="waiting-room-settings-body">
                                         <div className="settings-body-gamemode-container">
-                                            <span className="settings-body-gamemode-title">Game Mode</span>
+                                            <span className="settings-body-gamemode-title">{translation("waitingroom_settings_gamemode")}</span>
                                             <div className="settings-body-gamemode">
-                                                <span onClick={() => handleSwitchGameMode("up")}><i class="fa-solid fa-caret-up"></i></span>
+                                                <span onClick={() => handleSwitchGameMode("up")}><i className="fa-solid fa-caret-up"></i></span>
                                                 <span>{gameModes[gameMode]}</span>
-                                                <span onClick={() => handleSwitchGameMode("down")}><i class="fa-solid fa-caret-down"></i></span>
+                                                <span onClick={() => handleSwitchGameMode("down")}><i className="fa-solid fa-caret-down"></i></span>
                                             </div>
                                         </div>
+                                        <div className="settings-body-gamemode-container">
+                                            <span className="settings-body-gamemode-title">{translation("waitingroom_settings_timelimit")} &nbsp;
+                                                <Tooltip
+                                                    title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("waitingroom_settings_timelimit_tooltip")}</span>}
+                                                    placement='top'
+                                                    arrow
+                                                    TransitionComponent={Zoom}
+                                                    TransitionProps={{ timeout: 600 }}
+                                                >
+                                                    <i className="fa-solid fa-circle-question"></i>
+                                                </Tooltip>
+                                            </span>
+                                            <div className="settings-body-gamemode">
+                                                <span onClick={() => handleSwitchTimeLimit("up")}><i className="fa-solid fa-caret-up"></i></span>
+                                                <span>{timeLimits[timeLimit]}</span>
+                                                <span onClick={() => handleSwitchTimeLimit("down")}><i className="fa-solid fa-caret-down"></i></span>
+                                            </div>
+                                        </div>
+                                        <div className="settings-body-gamemode-container">
+                                            <span className="settings-body-gamemode-title">{translation("waitingroom_settings_chat")} &nbsp;
+                                                <Tooltip
+                                                    title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("waitingroom_settings_chat_tooltip")}</span>}
+                                                    placement='top'
+                                                    arrow
+                                                    TransitionComponent={Zoom}
+                                                    TransitionProps={{ timeout: 600 }}
+                                                >
+                                                    <i className="fa-solid fa-circle-question"></i>
+                                                </Tooltip>
+                                            </span>
+                                            <div className="settings-body-gamemode">
+                                                <span onClick={handleSwitchChatPanel}><i className="fa-solid fa-caret-up"></i></span>
+                                                <span>{chatPanel ? translation("waitingroom_settings_chat_enabled") : translation("waitingroom_settings_chat_disabled")}</span>
+                                                <span onClick={handleSwitchChatPanel}><i className="fa-solid fa-caret-down"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div onClick={handleOpenUserManagement} className="waiting-room-setting-users">
+                                        <i className="fa-solid fa-users"></i>
+                                        <span>{translation("waitingroom_settings_users")}</span>
                                     </div>
                                 </div>
                                 <div className="waiting-room-chatbox">
@@ -660,7 +730,56 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                         : joinedRoom ?
                             <div className="waiting-room-container">
                                 <div className="waiting-room-settings">
-
+                                    <div className="waiting-room-settings-top">
+                                        <span className="waiting-room-settings-title">{translation("waitingroom_settings_title")}</span>
+                                        <i class="fa-solid fa-sliders"></i>
+                                    </div>
+                                    <div className="waiting-room-settings-body">
+                                        <div className="settings-body-gamemode-container">
+                                            <span className="settings-body-gamemode-title">{translation("waitingroom_settings_gamemode")}</span>
+                                            <div className="settings-body-gamemode">
+                                                <span></span>
+                                                <span>{gameModes[gameMode]}</span>
+                                                <span></span>
+                                            </div>
+                                        </div>
+                                        <div className="settings-body-gamemode-container">
+                                            <span className="settings-body-gamemode-title">{translation("waitingroom_settings_timelimit")} &nbsp;
+                                                <Tooltip
+                                                    title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("waitingroom_settings_timelimit_tooltip")}</span>}
+                                                    placement='top'
+                                                    arrow
+                                                    TransitionComponent={Zoom}
+                                                    TransitionProps={{ timeout: 600 }}
+                                                >
+                                                    <i className="fa-solid fa-circle-question"></i>
+                                                </Tooltip>
+                                            </span>
+                                            <div className="settings-body-gamemode">
+                                                <span></span>
+                                                <span>{timeLimits[timeLimit]}</span>
+                                                <span></span>
+                                            </div>
+                                        </div>
+                                        <div className="settings-body-gamemode-container">
+                                            <span className="settings-body-gamemode-title">{translation("waitingroom_settings_chat")} &nbsp;
+                                                <Tooltip
+                                                    title={<span style={{ color: "#fff", fontSize: "14px" }}>{translation("waitingroom_settings_chat_tooltip")}</span>}
+                                                    placement='top'
+                                                    arrow
+                                                    TransitionComponent={Zoom}
+                                                    TransitionProps={{ timeout: 600 }}
+                                                >
+                                                    <i className="fa-solid fa-circle-question"></i>
+                                                </Tooltip>
+                                            </span>
+                                            <div className="settings-body-gamemode">
+                                                <span></span>
+                                                <span>{chatPanel ? translation("waitingroom_settings_chat_enabled") : translation("waitingroom_settings_chat_disabled")}</span>
+                                                <span></span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div className="waiting-room-chatbox">
                                     <div className="waiting-room-chat">
@@ -844,8 +963,8 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
-                open={openModal}
-                onClose={handleCloseModal}
+                open={openModalLeave}
+                onClose={handleCloseModalLeave}
                 closeAfterTransition
                 slots={{ backdrop: Backdrop }}
                 slotProps={{
@@ -854,7 +973,7 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                 },
                 }}
             >
-                <Fade in={openModal}>
+                <Fade in={openModalLeave}>
                     <Box sx={modalStyle}>
                         <Typography id="transition-modal-title" variant="h5" component="h1">
                             {translation("multiplayer_modal_leave_title")}
@@ -865,7 +984,48 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
                             <br />
                             {translation("multiplayer_modal_leave_t2")}
                         </Typography>
+                        <hr />
                         <span className="multiplayer-modal-confirm-leave-btn" onClick={handleLeaveRoom}>{translation("multiplayer_modal_leave_confirm")}</span>
+                    </Box>
+                </Fade>
+            </Modal>
+            <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                open={openModalUsers}
+                onClose={handleCloseModalUsers}
+                closeAfterTransition
+                slots={{ backdrop: Backdrop }}
+                slotProps={{
+                backdrop: {
+                    timeout: 500,
+                },
+                }}
+            >
+                <Fade in={openModalUsers}>
+                    <Box sx={modalStyle}>
+                        <Typography id="transition-modal-title" variant="h5" component="h1">
+                            {translation("waitingroom_settings_users")}
+                        </Typography>
+                        <hr />
+                        <Typography id="transition-modal-description" sx={{ mt: 3 }}>
+                            {joinedRoom && joinedRoom.players.map((elem, index) => (
+                                elem.userName !== decodedToken.username ?
+                                    <div onClick={() => handleKickPlayer("players", elem.socketId)} key={index} className="waiting-room-user-management-user">
+                                        <span>{elem.userName}</span>
+                                        <span>{translation("waitingroom_settings_kick")}</span>
+                                    </div>
+                                : undefined
+                            ))}
+                            {joinedRoom && joinedRoom.spectators.map((elem, index) => (
+                                elem.userName !== decodedToken.username ?
+                                    <div onClick={() => handleKickPlayer("spectators", elem.socketId)} key={index} className="waiting-room-user-management-user">
+                                        <span>{elem.userName}</span>
+                                        <span>{translation("waitingroom_settings_kick")}</span>
+                                    </div>
+                                : undefined
+                            ))}
+                        </Typography>
                     </Box>
                 </Fade>
             </Modal>
