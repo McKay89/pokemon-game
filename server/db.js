@@ -2,10 +2,17 @@
     require('dotenv').config()
 
 // DB DATA
-    const dbHost = process.env.HOSTNAME;
-    const dbAdmin = process.env.ADMIN_USER;
-    const dbPassword = process.env.ADMIN_PASSWORD;
-    const dbDatabase = process.env.DATABASE;
+    /* LOCAL SQL SERVER */
+        const dbHost = process.env.HOSTNAME;
+        const dbAdmin = process.env.ADMIN_USER;
+        const dbPassword = process.env.ADMIN_PASSWORD;
+        const dbDatabase = process.env.DATABASE;
+
+    /* Deployed SQL Server */
+        // const dbHost = process.env.HOSTNAME2;
+        // const dbAdmin = process.env.ADMIN_USER2;
+        // const dbPassword = process.env.ADMIN_PASSWORD2;
+        // const dbDatabase = process.env.DATABASE2;
 
 // CONNECT TO DATABASE
     var sql = require("mssql");
