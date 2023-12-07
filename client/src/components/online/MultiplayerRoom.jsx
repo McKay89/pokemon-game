@@ -243,7 +243,6 @@ export default function MultiplayerRoom({translation, sidebarHovered, jwtToken})
     const handlePageChange = (page) => setActivePage(page);
     const handleLeaveConfirmation = () => setOpenModal(true);
     const handleCloseModal = () => setOpenModal(false);
-    const handleOpenSettings = () => setOpenSettings(!openSettings);
     
     const handleLeaveRoom = () => {
         setOpenModal(false);
