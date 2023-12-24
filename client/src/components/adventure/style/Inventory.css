@@ -1,0 +1,552 @@
+@font-face {
+    font-family: 'Rocher';
+    src: url(https://assets.codepen.io/9632/RocherColorGX.woff2);
+}
+
+:root {
+    --Mint: 'Rocher', sans-serif;
+}
+
+.inventory-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    user-select: none;
+}
+
+.inventory-slot {
+    position: absolute;
+    width: 68px;
+    height: 68px;
+    border-radius: 3px;
+    border: 1px solid #ffffff00;
+    background-color: #d9ff0217;
+    background-size: 80% 80%;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: 0.3s;
+    animation: appearSlotData 0.7s ease-in-out 1;
+}
+
+.inventory-slot:hover {
+    background-color: #a0ba0f56;
+    background-size: cover;
+    border: 1px solid #fff;
+    box-shadow: 0px 0px 20px 0px rgba(206,255,0,0.45) inset;
+    -webkit-box-shadow: 0px 0px 20px 0px rgba(206,255,0,0.45) inset;
+    -moz-box-shadow: 0px 0px 20px 0px rgba(206,255,0,0.45) inset;
+    transform: scale(1.15);
+}
+
+.inventory-slot > span {
+    position: absolute;
+    bottom: 0;
+    right: 2px;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.inventory-slot1 {
+    top: 211px;
+    left: 241px;
+}
+
+.inventory-slot2 {
+    top: 211px;
+    left: 321px;
+}
+
+.inventory-slot3 {
+    top: 211px;
+    left: 401px;
+}
+
+.inventory-slot4 {
+    top: 211px;
+    left: 481px;
+}
+
+.inventory-slot5 {
+    top: 211px;
+    left: 561px;
+}
+
+.inventory-slot6 {
+    top: 211px;
+    left: 641px;
+}
+
+.inventory-slot7 {
+    top: 291px;
+    left: 241px;
+}
+
+.inventory-slot8 {
+    top: 291px;
+    left: 321px;
+}
+
+.inventory-slot9 {
+    top: 291px;
+    left: 401px;
+}
+
+.inventory-slot10 {
+    top: 291px;
+    left: 481px;
+}
+
+.inventory-slot11 {
+    top: 291px;
+    left: 561px;
+}
+
+.inventory-slot12 {
+    top: 291px;
+    left: 641px;
+}
+
+.inventory-slot13 {
+    top: 371px;
+    left: 241px;
+}
+
+.inventory-slot14 {
+    top: 371px;
+    left: 321px;
+}
+
+.inventory-slot15 {
+    top: 371px;
+    left: 401px;
+}
+
+.inventory-slot16 {
+    top: 371px;
+    left: 481px;
+}
+
+.inventory-slot17 {
+    top: 371px;
+    left: 561px;
+}
+
+.inventory-slot18 {
+    top: 371px;
+    left: 641px;
+}
+
+.inventory-slot19 {
+    top: 451px;
+    left: 241px;
+}
+
+.inventory-slot20 {
+    top: 451px;
+    left: 321px;
+}
+
+.inventory-slot21 {
+    top: 451px;
+    left: 401px;
+}
+
+.inventory-slot22 {
+    top: 451px;
+    left: 481px;
+}
+
+.inventory-slot23 {
+    top: 451px;
+    left: 561px;
+}
+
+.inventory-slot24 {
+    top: 451px;
+    left: 641px;
+}
+
+.inventory-menu {
+    position: absolute;
+    font-size: 35px;
+    color: #a06363;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.inventory-menu:hover {
+    color: #a4bb33;
+}
+
+.inventory-menu-active {
+    position: absolute;
+    font-size: 35px;
+    color: #a4bb33;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.inventory-menu1 {
+    top: 80px;
+    left: 107px;
+}
+
+.inventory-menu2 {
+    top: 165px;
+    left: 110px;
+}
+
+.inventory-menu3 {
+    top: 250px;
+    left: 100px;
+    font-size: 35px;
+}
+
+.inventory-menu3 > i:nth-child(1) {
+    position: absolute;
+    top: 15px;
+}
+
+.inventory-menu3 > i:nth-child(2) {
+    position: absolute;
+    top: 27px;
+    left: 25px;
+    transform: rotate(20deg);
+}
+
+.inventory-menu4 {
+    top: 350px;
+    left: 109px;
+}
+
+.inventory-menu5 {
+    top: 450px;
+    left: 110px;
+}
+
+.inventory-menu6 {
+    top: 550px;
+    left: 107px;
+}
+
+.inventory-title {
+    position: absolute;
+    top: 90px;
+    left: 210px;
+}
+
+.inventory-title > span {
+    font-size: 40px;
+    color: #b0b0b0;
+    letter-spacing: 1px;
+    font-family: Snell Roundhand, cursive;
+}
+
+.inventory-item-container {
+    position: absolute;
+    top: 133px;
+    right: 144px;
+    width: 310px;
+    height: 410px;
+}
+
+.inventory-item-image {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 170px;
+    background-size: 100% 100%;
+    animation: floatingItem 5s ease-in-out infinite;
+    z-index: 101;
+}
+
+.inventory-item-name {
+    position: absolute;
+    top: 220px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    font-family: var(--Mint);
+    font-size: 25px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.mint {
+    font-family: var(--Mint);
+}
+
+.inventory-item-desc {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: 130px;
+    justify-content: center;
+    font-family: Comic Sans MS;
+    text-align: center;
+    padding: 8px;
+    font-size: 20px;
+    background: #2e14149b;
+    border-radius: 10px;
+    border: 1px solid #7dd4127d;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.inventory-item-desc::-webkit-scrollbar {
+    display: none;
+}
+
+.inventory-capacity-container {
+    position: absolute;
+    top: 102px;
+    left: 439px;
+    width: 300px;
+    height: 40px;
+    text-align: right;
+}
+
+.inventory-capacity-container > span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    font-size: 22px;
+    color: #b0b0b0;
+    letter-spacing: 1px;
+    font-family: Snell Roundhand, cursive;
+}
+
+.inventory-capacity-container > span > span {
+    color: #98db12;
+}
+
+.inventory-bagname-container {
+    position: absolute;
+    top: 148px;
+    left: 210px;
+    width: 200px;
+    height: 40px;
+}
+
+.inventory-bagname-container > span {
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    width: 100%;
+    font-size: 18px;
+    font-weight: bold;
+    color: #98db12;
+}
+
+.inventory-item-image-glow {
+    position: absolute;
+    top: 140px;
+    right: 150px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(21,140,166,0.75);
+    z-index: 100;
+    animation: imageGlowing 20s linear infinite;
+}
+
+.inventory-item-image-glow > div {
+    background: rgba(21,140,166,0.75);
+    box-shadow: 0px 0px 33px 15px rgba(194, 205, 46, 0.559);
+    -webkit-box-shadow: 0px 0px 33px 15px rgba(194, 205, 46, 0.559);
+    -moz-box-shadow: 0px 0px 33px 15px rgba(194, 205, 46, 0.559);
+}
+
+.inventory-item-image-glow > div:nth-child(1) {
+    position: absolute;
+    left: 2px;
+    top: 5px;
+    width: 0;
+    height: 90px;
+    z-index: 99;
+}
+
+.inventory-item-image-glow > div:nth-child(2) {
+    position: absolute;
+    left: 2px;
+    top: -90px;
+    width: 0;
+    height: 90px;
+    z-index: 99;
+}
+
+.inventory-item-image-glow > div:nth-child(3) {
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 90px;
+    height: 0;
+    z-index: 99;
+}
+
+.inventory-item-image-glow > div:nth-child(4) {
+    position: absolute;
+    left: -90px;
+    top: 2px;
+    width: 90px;
+    height: 0;
+    z-index: 99;
+}
+
+.inventory-item-actions {
+    position: absolute;
+    bottom: 87px;
+    right: 148px;
+    width: 300px;
+    height: 45px;
+    display: flex;
+    flex-direction: row;
+}
+
+.inventory-item-actions > div {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.inventory-item-use-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 140px;
+    height: 45px;
+    outline: none;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    border-radius: 20px;
+    background: #361b1bb5;
+    color: #72e75d;
+    font-weight: bold;
+}
+
+.inventory-item-use-btn:hover {
+    background: #7a3a3ab5;
+    color: #2ec114;
+}
+
+.inventory-item-drop-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 140px;
+    height: 45px;
+    outline: none;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    border-radius: 20px;
+    background: #361b1bb5;
+    color: #72e75d;
+    font-weight: bold;
+}
+
+.inventory-item-drop-btn:hover {
+    background: #7a3a3ab5;
+    color: #2ec114;
+}
+
+.inventory-item-use-btn-inactive,
+.inventory-item-drop-btn-inactive {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 140px;
+    height: 45px;
+    outline: none;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    border-radius: 20px;
+    background: #361b1bb5;
+    color: #898989;
+    font-weight: bold;
+}
+
+.item-using-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #82ab1a89;
+}
+
+.inventory-gold-container {
+    position: absolute;
+    top: 150px;
+    left: 545px;
+    display: flex;
+    flex-direction: row;
+    width: 200px;
+    height: 35px;
+}
+
+.inventory-gold-container > span {
+    width: 75%;
+    height: 100%;
+    text-align: right;
+    font-size: 22px;
+    font-weight: bold;
+    font-family: Snell Roundhand, cursive;
+    color: #ffdd00;
+    padding: 5px;
+}
+
+.inventory-gold-container > div {
+    width: 25%;
+    height: 100%;
+    background-size: 90% 100%;
+    background-repeat: no-repeat;
+}
+
+@keyframes imageGlowing {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes appearSlotData {
+    0% {
+        transform: scale(0);
+    }
+    75% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes floatingItem {
+    0% {
+        transform: translateX(-50%) translateY(-15px);
+    }
+    50% {
+        transform: translateX(-50%) translateY(15px);
+    }
+    100% {
+        transform: translateX(-50%) translateY(-15px);
+    }
+}
