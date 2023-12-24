@@ -10,6 +10,8 @@ import translationPokemonsEN from "./locales/en/pokemons.json";
 import translationPokemonsHU from "./locales/hu/pokemons.json";
 import translationAdventureEN from "./locales/en/adventure.json";
 import translationAdventureHU from "./locales/hu/adventure.json";
+import translationItemsEN from "./locales/en/items.json";
+import translationItemsHU from "./locales/hu/items.json";
 
 import Main from './components/Main';
 import Profile from './components/pages/Profile';
@@ -26,11 +28,13 @@ const resources = {
     translation: translationEN,
     pokemons: translationPokemonsEN,
     adventure: translationAdventureEN,
+    items: translationItemsEN,
   },
   hu: {
     translation: translationHU,
     pokemons: translationPokemonsHU,
     adventure: translationAdventureHU,
+    items: translationItemsHU,
   },
 };
 
