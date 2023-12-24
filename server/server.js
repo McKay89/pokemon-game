@@ -17,10 +17,16 @@
 
 // SERVER //
     const express = require('express');
-    const http = require('http');
+    // HTTPS
+        // const https = require('https');
+    // HTTP
+        const http = require('http');
     const socketIo = require('socket.io');
     const app = express();
-    const server = http.createServer(app);
+    // HTTPS
+        // const server = https.createServer(app);
+    // HTTP
+        const server = http.createServer(app);
     const io = socketIo(server, {
         cors: {
             origin: clientOrigin,
