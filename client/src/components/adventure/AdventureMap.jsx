@@ -6,6 +6,7 @@ import jwt_decode from 'jwt-decode';
 
 // Import Game Components
 import Hud from './components/HUD/Hud';
+import Menu from './components/Menu';
 
 // Import Classes
 import { Dungeon001 } from './collisions';
@@ -32,6 +33,407 @@ export default function AdventureMap({translation, sidebarHovered, jwtToken, act
     const gameData = GameData();
     const [userSave, setUserSave] = useState(null);
     const [gameNotification, setGameNotification] = useState("");
+    const [isInventoryOpen, setIsInventoryOpen] = useState(false);
+    const [inventory, setInventory] = useState({
+        "gold": 541877,
+        "items": [
+
+        ],
+        "potions": [
+            {
+                "id": 1,
+                "name": "items:Blue1",
+                "desc": "items:Blue1_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue1.png",
+                "img64": "/images/adventure/items/potions/64/Blue1.png",
+                "img128": "/images/adventure/items/potions/128/Blue1.png",
+                "img256": "/images/adventure/items/potions/256/Blue1.png"
+            },
+            {
+                "id": 2,
+                "name": "items:Blue2",
+                "desc": "items:Blue2_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue2.png",
+                "img64": "/images/adventure/items/potions/64/Blue2.png",
+                "img128": "/images/adventure/items/potions/128/Blue2.png",
+                "img256": "/images/adventure/items/potions/256/Blue2.png"
+            },
+            {
+                "id": 3,
+                "name": "items:Blue3",
+                "desc": "items:Blue3_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue3.png",
+                "img64": "/images/adventure/items/potions/64/Blue3.png",
+                "img128": "/images/adventure/items/potions/128/Blue3.png",
+                "img256": "/images/adventure/items/potions/256/Blue3.png"
+            },
+            {
+                "id": 4,
+                "name": "items:Blue4",
+                "desc": "items:Blue4_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue4.png",
+                "img64": "/images/adventure/items/potions/64/Blue4.png",
+                "img128": "/images/adventure/items/potions/128/Blue4.png",
+                "img256": "/images/adventure/items/potions/256/Blue4.png"
+            },
+            {
+                "id": 5,
+                "name": "items:Blue5",
+                "desc": "items:Blue5_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue5.png",
+                "img64": "/images/adventure/items/potions/64/Blue5.png",
+                "img128": "/images/adventure/items/potions/128/Blue5.png",
+                "img256": "/images/adventure/items/potions/256/Blue5.png"
+            },
+            {
+                "id": 6,
+                "name": "items:Blue6",
+                "desc": "items:Blue6_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue6.png",
+                "img64": "/images/adventure/items/potions/64/Blue6.png",
+                "img128": "/images/adventure/items/potions/128/Blue6.png",
+                "img256": "/images/adventure/items/potions/256/Blue6.png"
+            },
+            {
+                "id": 7,
+                "name": "items:Blue7",
+                "desc": "items:Blue7_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue7.png",
+                "img64": "/images/adventure/items/potions/64/Blue7.png",
+                "img128": "/images/adventure/items/potions/128/Blue7.png",
+                "img256": "/images/adventure/items/potions/256/Blue7.png"
+            },
+            {
+                "id": 8,
+                "name": "items:Blue8",
+                "desc": "items:Blue8_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue8.png",
+                "img64": "/images/adventure/items/potions/64/Blue8.png",
+                "img128": "/images/adventure/items/potions/128/Blue8.png",
+                "img256": "/images/adventure/items/potions/256/Blue8.png"
+            },
+            {
+                "id": 9,
+                "name": "items:Blue9",
+                "desc": "items:Blue9_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue9.png",
+                "img64": "/images/adventure/items/potions/64/Blue9.png",
+                "img128": "/images/adventure/items/potions/128/Blue9.png",
+                "img256": "/images/adventure/items/potions/256/Blue9.png"
+            },
+            {
+                "id": 10,
+                "name": "items:Blue10",
+                "desc": "items:Blue10_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue10.png",
+                "img64": "/images/adventure/items/potions/64/Blue10.png",
+                "img128": "/images/adventure/items/potions/128/Blue10.png",
+                "img256": "/images/adventure/items/potions/256/Blue10.png"
+            },
+            {
+                "id": 11,
+                "name": "items:Blue11",
+                "desc": "items:Blue11_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue11.png",
+                "img64": "/images/adventure/items/potions/64/Blue11.png",
+                "img128": "/images/adventure/items/potions/128/Blue11.png",
+                "img256": "/images/adventure/items/potions/256/Blue11.png"
+            },
+            {
+                "id": 12,
+                "name": "items:Blue12",
+                "desc": "items:Blue12_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue12.png",
+                "img64": "/images/adventure/items/potions/64/Blue12.png",
+                "img128": "/images/adventure/items/potions/128/Blue12.png",
+                "img256": "/images/adventure/items/potions/256/Blue12.png"
+            },
+            {
+                "id": 13,
+                "name": "items:Blue13",
+                "desc": "items:Blue13_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue13.png",
+                "img64": "/images/adventure/items/potions/64/Blue13.png",
+                "img128": "/images/adventure/items/potions/128/Blue13.png",
+                "img256": "/images/adventure/items/potions/256/Blue13.png"
+            },
+            {
+                "id": 14,
+                "name": "items:Blue14",
+                "desc": "items:Blue14_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue14.png",
+                "img64": "/images/adventure/items/potions/64/Blue14.png",
+                "img128": "/images/adventure/items/potions/128/Blue14.png",
+                "img256": "/images/adventure/items/potions/256/Blue14.png"
+            },
+            {
+                "id": 15,
+                "name": "items:Blue15",
+                "desc": "items:Blue15_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue15.png",
+                "img64": "/images/adventure/items/potions/64/Blue15.png",
+                "img128": "/images/adventure/items/potions/128/Blue15.png",
+                "img256": "/images/adventure/items/potions/256/Blue15.png"
+            },
+            {
+                "id": 16,
+                "name": "items:Blue16",
+                "desc": "items:Blue16_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue16.png",
+                "img64": "/images/adventure/items/potions/64/Blue16.png",
+                "img128": "/images/adventure/items/potions/128/Blue16.png",
+                "img256": "/images/adventure/items/potions/256/Blue16.png"
+            },
+            {
+                "id": 17,
+                "name": "items:Blue17",
+                "desc": "items:Blue17_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue17.png",
+                "img64": "/images/adventure/items/potions/64/Blue17.png",
+                "img128": "/images/adventure/items/potions/128/Blue17.png",
+                "img256": "/images/adventure/items/potions/256/Blue17.png"
+            },
+            {
+                "id": 18,
+                "name": "items:Blue18",
+                "desc": "items:Blue18_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue18.png",
+                "img64": "/images/adventure/items/potions/64/Blue18.png",
+                "img128": "/images/adventure/items/potions/128/Blue18.png",
+                "img256": "/images/adventure/items/potions/256/Blue18.png"
+            },
+            {
+                "id": 19,
+                "name": "items:Blue19",
+                "desc": "items:Blue19_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue19.png",
+                "img64": "/images/adventure/items/potions/64/Blue19.png",
+                "img128": "/images/adventure/items/potions/128/Blue19.png",
+                "img256": "/images/adventure/items/potions/256/Blue19.png"
+            },
+            {
+                "id": 20,
+                "name": "items:Blue20",
+                "desc": "items:Blue20_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue20.png",
+                "img64": "/images/adventure/items/potions/64/Blue20.png",
+                "img128": "/images/adventure/items/potions/128/Blue20.png",
+                "img256": "/images/adventure/items/potions/256/Blue20.png"
+            },
+            {
+                "id": 21,
+                "name": "items:Blue21",
+                "desc": "items:Blue21_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue21.png",
+                "img64": "/images/adventure/items/potions/64/Blue21.png",
+                "img128": "/images/adventure/items/potions/128/Blue21.png",
+                "img256": "/images/adventure/items/potions/256/Blue21.png"
+            },
+            {
+                "id": 22,
+                "name": "items:Blue22",
+                "desc": "items:Blue22_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue22.png",
+                "img64": "/images/adventure/items/potions/64/Blue22.png",
+                "img128": "/images/adventure/items/potions/128/Blue22.png",
+                "img256": "/images/adventure/items/potions/256/Blue22.png"
+            },
+            {
+                "id": 23,
+                "name": "items:Blue23",
+                "desc": "items:Blue23_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue23.png",
+                "img64": "/images/adventure/items/potions/64/Blue23.png",
+                "img128": "/images/adventure/items/potions/128/Blue23.png",
+                "img256": "/images/adventure/items/potions/256/Blue23.png"
+            },
+            {
+                "id": 24,
+                "name": "items:Blue24",
+                "desc": "items:Blue24_desc",
+                "category": "potions",
+                "type": "items:type_potion",
+                "usable": true,
+                "disposable": true,
+                "amount": 0,
+                "img32": "/images/adventure/items/potions/32/Blue24.png",
+                "img64": "/images/adventure/items/potions/64/Blue24.png",
+                "img128": "/images/adventure/items/potions/128/Blue24.png",
+                "img256": "/images/adventure/items/potions/256/Blue24.png"
+            }
+        ],
+        "fruitables": [
+            {
+                "id": 1,
+                "name": "items:apple",
+                "desc": "items:apple_desc",
+                "effect": "items:apple_effect",
+                "category": "fruitables",
+                "type": "items:type_fruit",
+                "usable": true,
+                "disposable": true,
+                "amount": 2,
+                "img32": "/images/adventure/items/fruits/32/apple.png",
+                "img64": "/images/adventure/items/fruits/64/apple.png",
+                "img128": "/images/adventure/items/fruits/128/apple.png",
+                "img256": "/images/adventure/items/fruits/256/apple.png",
+            },
+            {
+                "id": 2,
+                "name": "items:banana",
+                "desc": "items:banana_desc",
+                "effect": "items:banana_effect",
+                "category": "fruitables",
+                "type": "items:type_fruit",
+                "usable": true,
+                "disposable": true,
+                "amount": 12,
+                "img32": "/images/adventure/items/fruits/32/banana.png",
+                "img64": "/images/adventure/items/fruits/64/banana.png",
+                "img128": "/images/adventure/items/fruits/128/banana.png",
+                "img256": "/images/adventure/items/fruits/256/banana.png",
+            },
+            {
+                "id": 3,
+                "name": "items:strawberry",
+                "desc": "items:strawberry_desc",
+                "effect": "items:strawberry_effect",
+                "category": "fruitables",
+                "type": "items:type_fruit",
+                "usable": true,
+                "disposable": true,
+                "amount": 57,
+                "img32": "/images/adventure/items/fruits/32/strawberry.png",
+                "img64": "/images/adventure/items/fruits/64/strawberry.png",
+                "img128": "/images/adventure/items/fruits/128/strawberry.png",
+                "img256": "/images/adventure/items/fruits/256/strawberry.png",
+            }
+        ],
+        "foods": [
+
+        ],
+        "documents": [
+
+        ],
+        "quests": [
+
+        ]
+    });
     const Collisions = {
         dungeon001: Dungeon001()
     }
@@ -47,6 +449,9 @@ export default function AdventureMap({translation, sidebarHovered, jwtToken, act
             pressed: false
         },
         d: {
+            pressed: false
+        },
+        i: {
             pressed: false
         }
     }
@@ -230,6 +635,12 @@ export default function AdventureMap({translation, sidebarHovered, jwtToken, act
         );
     }
 
+    // Inventory
+    const handleInventory = () => {
+        if(keys.i.pressed) setIsInventoryOpen(true);
+        else setIsInventoryOpen(false);
+    }
+
     // Handle Key Down Events
     const handleKeyDown = (event) => {
         switch (event.key) {
@@ -248,6 +659,10 @@ export default function AdventureMap({translation, sidebarHovered, jwtToken, act
             case "d":
                 keys.d.pressed = true;
                 lastKey = "right";
+                break;
+            case "i":
+                keys.i.pressed = !keys.i.pressed;
+                handleInventory();
                 break;
             default:
                 break;
@@ -365,6 +780,37 @@ export default function AdventureMap({translation, sidebarHovered, jwtToken, act
         }
     }
 
+    // Using Item
+    const handleUseItem = (category, id) => {
+        // Using logic implementation goes here...
+
+        setInventory(prevInventory => {
+            const newInventory = { ...prevInventory };
+            let elemIndex = null;
+        
+            newInventory[category] = newInventory[category].map((elem, index) => {
+                if (elem.id === id) {
+                    elemIndex = index;
+                    const updatedAmount = elem.amount - 1;
+  
+                    return { ...elem, amount: updatedAmount };
+                }
+              return elem;
+            });
+
+            if(newInventory[category][elemIndex].amount <= 0) {
+                newInventory[category].splice(elemIndex, 1);
+            }
+        
+            return newInventory;
+        });
+    }
+
+    // Dropping Item
+    const handleDropItem = (category, id) => {
+        // Dropping logic implementation goes here...
+    }
+
     // Get User Save
     useEffect(() => {
         if(jwtToken == null) {
@@ -459,19 +905,19 @@ export default function AdventureMap({translation, sidebarHovered, jwtToken, act
             images.player.sprite.moving = false;
             
             // Move UP
-            if(keys.w.pressed && lastKey === "up") {
+            if(!keys.i.pressed && keys.w.pressed && lastKey === "up") {
                 handleCharacterMove(boundaries, movableObjects, moving, images.player.sprite.sprites.up, 0, 3);
             }
             // Move DOWN
-            if(keys.s.pressed && lastKey === "down") {
+            if(!keys.i.pressed && keys.s.pressed && lastKey === "down") {
                 handleCharacterMove(boundaries, movableObjects, moving, images.player.sprite.sprites.down, 0, -3);
             }
             // Move LEFT
-            if(keys.a.pressed && lastKey === "left") {
+            if(!keys.i.pressed && keys.a.pressed && lastKey === "left") {
                 handleCharacterMove(boundaries, movableObjects, moving, images.player.sprite.sprites.left, 3, 0);
             }
             // Move RIGHT
-            if(keys.d.pressed && lastKey === "right") {
+            if(!keys.i.pressed && keys.d.pressed && lastKey === "right") {
                 handleCharacterMove(boundaries, movableObjects, moving, images.player.sprite.sprites.right, -3, 0);
             }
         }
@@ -506,6 +952,14 @@ export default function AdventureMap({translation, sidebarHovered, jwtToken, act
                 </div>
             :
                 <>
+                    { isInventoryOpen ?
+                        <Menu
+                            translation={translation}
+                            inventoryData={inventory}
+                            handleUseItem={handleUseItem}
+                            handleDropItem={handleDropItem}
+                        />
+                    : undefined }
                     <div className="adventure-canvas-HUD">
                         <Hud
                             translation={translation}
