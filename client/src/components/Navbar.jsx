@@ -22,15 +22,18 @@ export default function Navbar({translation, handleSidebarHover, login, handleLo
   const [soundsVolume, setSoundsVolume] = useState(0.5);
   const [musicStatus, setMusicStatus] = useState(false);
   const [decodedToken, setDecodedToken] = useState({logged: false});
+  const [isNavbarElementsVisible, setIsNavbarElementsVisible] = useState(false);
   const [sfxURLs] = useState({
     menuHoverSFX: "/audio/sounds/menu/sfx_menu_hover.mp3",
     menuClickSFX: "/audio/sounds/menu/sfx_menu_click.mp3"
   });
 
   useEffect(() => {
+    setIsNavbarElementsVisible(true);
     if(jwtToken != null) {
       setDecodedToken(JWTDecode(jwtToken));
     }
+    
   }, [jwtToken])
   
 
@@ -96,15 +99,16 @@ export default function Navbar({translation, handleSidebarHover, login, handleLo
   }
 
   return (
-    <div className="sidebar-main-container">
+    <div className={jwtToken ? "sidebar-main-container" : "sidebar-main-container-inactive"}>
       <div
         style={{
           backgroundImage: `url(/images/backgrounds/sidebar_bg.png)`
         }}
         onMouseEnter={!fixSidebar ? handleHover : undefined}
         onMouseLeave={!fixSidebar ? handleMouseLeave : undefined}
-        className={`sidebar ${fixSidebar ? 'fixed' : ''}`}
+        className={jwtToken ? `sidebar ${fixSidebar ? 'fixed' : ''}` : "sidebar-inactive"}
       >
+        { jwtToken ?
         <Tooltip
           title={<span style={{ color: "#fff", fontSize: "14px" }}>{fixSidebar ? translation("unfix_sidebar") : translation("fix_sidebar")}</span>}
           placement='left'
@@ -114,9 +118,10 @@ export default function Navbar({translation, handleSidebarHover, login, handleLo
         >
           <i style={{ color: fixSidebar ? '#0f0' : '#fff' }} onClick={toggleSidebarFix} className="fix-sidebar fa-solid fa-screwdriver-wrench"></i>
         </Tooltip>
-        <div className="sidebar-container">
+        : undefined }
+        <div className={jwtToken && isNavbarElementsVisible ? "sidebar-container-visible" : "sidebar-container"}>
           <div className="user-container">
-            { decodedToken.logged ?
+            { jwtToken ?
               <>
                 <div className="user-avatar">
                   <Tooltip
@@ -171,7 +176,7 @@ export default function Navbar({translation, handleSidebarHover, login, handleLo
               </>
             }
           </div>
-          { decodedToken.logged ?
+          { jwtToken ?
             <div className="menu-container">
               <span className="menu-text">{translation("menu_label_text1")}</span>
               <hr />
