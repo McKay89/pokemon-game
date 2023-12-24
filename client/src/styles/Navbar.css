@@ -2,10 +2,23 @@
 
 .sidebar-main-container {
     position: fixed;
+    left: 0;
     width: 20%;
     height: 100%;
     perspective: 600px;
     overflow: hidden;
+    transition: 1s;
+    z-index: 1;
+}
+
+.sidebar-main-container-inactive {
+    position: absolute;
+    left: 100px;
+    width: 50%;
+    height: 100%;
+    perspective: 600px;
+    overflow: hidden;
+    transition: 1s;
     z-index: 1;
 }
 
@@ -24,6 +37,20 @@
     overflow: hidden;
     transition: 1s;
     opacity: 0.6;
+}
+
+.sidebar-inactive {
+    position: absolute;
+    left: 0;
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: #fff;
+    width: 100%;
+    height: 100%;
+    border-radius: 30px;
+    border: 2px solid #ffffff8d;
+    overflow: hidden;
+    transition: 1s;
 }
 
 .sidebar.fixed {
@@ -124,6 +151,21 @@
     z-index: 2;
 }
 
+.sidebar-container-visible {
+    position: absolute;
+    top: 10%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    opacity: 0;
+    animation: appearSidebar 1s ease-in 1;
+    animation-fill-mode: forwards;
+    z-index: 2;
+}
+
 /* SIDEBAR OVERALL - END */
 
 /* USER CONTAINER - START */
@@ -137,6 +179,7 @@
     height: 90px;
     display: flex;
     flex-direction: row;
+    transition: 1s;
 }
 
 .user-login-container {
@@ -154,6 +197,8 @@
     text-align: center;
     border-right: 1px solid #ffffff89;
     user-select: none;
+    opacity: 1;
+    transition: 1s;
 }
 
 .avatar {
@@ -580,3 +625,12 @@ opacity: .24;
 }
 
 /* MENU CONTAINER - END */
+
+@keyframes appearSidebar {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
