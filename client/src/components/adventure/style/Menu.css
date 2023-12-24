@@ -1,0 +1,31 @@
+.adventure-menu-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1240px;
+    height: 750px;
+    background: #ffffff00;
+    z-index: 9999;
+    opacity: 0;
+    animation: appearAdventureMenu 0.2s ease-in 1;
+    animation-fill-mode: forwards;
+}
+
+.menu-inventory {
+    position: absolute;
+    top: 65px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 65px);
+}
+
+@keyframes appearAdventureMenu {
+    0% {
+        backdrop-filter: blur(0px);
+    }
+    100% {
+        opacity: 1;
+        backdrop-filter: blur(10px);
+    }
+}
