@@ -8,5 +8,15 @@
     "weekday_sunday": "Sunday",
     "day_counter": "DAY",
     "savegame_success": "Game Saved Successfully",
-    "savegame_error": "Failed to Save Game"
+    "savegame_error": "Failed to Save Game",
+    "backpack_title": "Backpack",
+    "inventory_capacity": "Capacity:",
+    "items": "Items",
+    "potions": "Potions",
+    "fruitables": "Fruit & Vegetable",
+    "foods": "Food & Drink",
+    "documents": "Documents",
+    "quests": "Quest",
+    "item_use": "USE",
+    "item_drop": "DROP"
 }

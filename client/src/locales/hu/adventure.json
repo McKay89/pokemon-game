@@ -8,5 +8,15 @@
     "weekday_sunday": "Vasárnap",
     "day_counter": "NAP",
     "savegame_success": "Játék sikeresen elmentve",
-    "savegame_error": "Játék mentése sikertelen"
+    "savegame_error": "Játék mentése sikertelen",
+    "backpack_title": "Hátizsák",
+    "inventory_capacity": "Kapacitás:",
+    "items": "Tárgyak",
+    "potions": "Főzetek",
+    "fruitables": "Gyümölcs & Zöldség",
+    "foods": "Étel & Ital",
+    "documents": "Iratok",
+    "quests": "Küldetés",
+    "item_use": "HASZNÁL",
+    "item_drop": "ELDOB"
 }
